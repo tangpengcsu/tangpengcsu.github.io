@@ -302,7 +302,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2017/01/17/dc-raft-and-zab/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2017/01/17/dc-paxos/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -324,8 +324,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/17/dc-raft-and-zab/" itemprop="url">
-                  分布式系统理论进阶 - Raft、Zab
+                <a class="post-title-link" href="/2017/01/17/dc-paxos/" itemprop="url">
+                  分布式系统理论进阶 - Paxos
                 </a>
               
             
@@ -382,8 +382,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/01/17/dc-raft-and-zab/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/17/dc-raft-and-zab/" itemprop="commentCount"></span>
+                <a href="/2017/01/17/dc-paxos/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/17/dc-paxos/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -410,11 +410,12 @@
 
       
         
-          <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p><a href="/2017/01/17/dc-paxos/" title="分布式系统理论进阶 - Paxos">分布式系统理论进阶 - Paxos</a> 介绍了一致性协议 Paxos，今天我们来学习另外两个常见的一致性协议——Raft 和 Zab。通过与 Paxos 对比，了解 Raft 和 Zab 的核心思想、加深对一致性协议的认识。</p>
+          <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p><a href="/2017/01/17/dc-consistency/" title="分布式系统理论基础 -- 一致性、2PC 和 3PC">分布式系统理论基础 – 一致性、2PC 和 3PC</a> 一文介绍了一致性、达成一致性需要面临的各种问题以及 2PC、3PC 模型，Paxos 协议在节点宕机恢复、消息无序或丢失、网络分化的场景下能保证决议的一致性，是被讨论最广泛的一致性协议。</p>
+<p>Paxos 协议同时又以其 “艰深晦涩” 著称，下面结合 <a href="http://research.microsoft.com/en-us/um/people/lamport/pubs/paxos-simple.pdf" title="Paxos Made Simple">Paxos Made Simple</a>、<a href="http://research.microsoft.com/en-us/um/people/lamport/pubs/lamport-paxos.pdf" title="The Part-Time Parliament">The Part-Time Parliament</a> 两篇论文，尝试通过 Paxos 推演、学习和了解 Paxos 协议。</p>
 <hr>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/01/17/dc-raft-and-zab/#more" rel="contents">
+            <a class="btn" href="/2017/01/17/dc-paxos/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -615,7 +616,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2017/01/17/dc-cap/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2017/01/17/dc-consistency/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -637,8 +638,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/17/dc-cap/" itemprop="url">
-                  分布式系统理论基础 -- CAP
+                <a class="post-title-link" href="/2017/01/17/dc-consistency/" itemprop="url">
+                  分布式系统理论基础 -- 一致性、2PC 和 3PC
                 </a>
               
             
@@ -695,8 +696,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/01/17/dc-cap/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/17/dc-cap/" itemprop="commentCount"></span>
+                <a href="/2017/01/17/dc-consistency/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/17/dc-consistency/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -723,11 +724,14 @@
 
       
         
-          <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>CAP 是分布式系统、特别是分布式存储领域中被讨论最多的理论，“<strong>什么是 CAP 定理？</strong>” 在 Quora 分布式系统分类下排名 FAQ 的 No.1。CAP 在程序员中也有较广的普及，它不仅仅是 “<code>C、A、P 不能同时满足，最多只能 3 选 2</code>”，以下尝试综合各方观点，从发展历史、工程实践等角度讲述 CAP 理论。希望大家透过本文对 CAP 理论有更多地了解和认识。</p>
-<hr>
+          <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p><strong>狭义的分布式系统</strong> 指 <em>由网络连接的计算机系统，每个节点独立地承担计算或存储任务，节点间通过网络协同工作</em>。<strong>广义的分布式系统</strong> 是一个相对的概念，正如 <a href="https://en.wikipedia.org/wiki/Leslie_Lamport" title="https://en.wikipedia.org/wiki/Leslie_Lamport">Leslie Lamport</a> 所说：</p>
+<blockquote>
+<p>What is a distributed systeme. Distribution is in the eye of the beholder.<br>To the user sitting at the keyboard, his IBM personal computer is a nondistributed system.<br>To a flea crawling around on the circuit board, or to the engineer who designed it, it’s very much a distributed system.</p>
+</blockquote>
+<p><strong>一致性</strong> 是分布式理论中的 <strong>根本性问题</strong>，近半个世纪以来，科学家们围绕着一致性问题提出了很多理论模型，依据这些理论模型，业界也出现了很多工程实践投影。下面我们从一致性问题、特定条件下解决一致性问题的两种方法 (<code>2PC</code>、<code>3PC</code>) 入门，了解最基础的分布式系统理论。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/01/17/dc-cap/#more" rel="contents">
+            <a class="btn" href="/2017/01/17/dc-consistency/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
