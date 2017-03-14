@@ -302,7 +302,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-new/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-ssh-authentication/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -324,8 +324,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-new/" itemprop="url">
-                  Linux 基础之推陈出新
+                <a class="post-title-link" href="/2016/10/28/linux-ssh-authentication/" itemprop="url">
+                  Redhat 7/CentOS 7 SSH 免密登录
                 </a>
               
             
@@ -382,8 +382,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-new/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-new/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-ssh-authentication/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-ssh-authentication/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -410,12 +410,36 @@
 
       
         
-          <p>本文介绍ip、ss、journalctl和firewall-cmd，它们旨在代替linux中原有的一些命令或服务。</p>
-<p>1、ip<br>ip [OPTIONS] OBJECT COMMAND<br>ip是iproute2软件包里面的一个强大的网络配置工具，它能够替代一些传统的网络管理工具，例如ifconfig、route等，使用权限为超级用户。<br>OPTIONS是修改ip行为或改变其输出的选项。<br>OBJECT是要获取信息的对象。包括：</p>
-<p>address   表示设备的协议(IPv4或IPv6)地址<br>link      表示网络设备<br>monitor   表示监控网络连接信息<br>neighbour 表示管理ARP缓存表<br>netns     表示管理网络命名空间<br>route     表示路由表接口<br>tunnel    表示IP隧道<br>….<br>对象名可以是全称或简写格式，比如address可以简写为addr或a。<br>COMMAND设置针对指定对象执行的操作，它和对象的类型有关。</p>
+          <h2 id="先决条件"><a href="#先决条件" class="headerlink" title="先决条件"></a>先决条件</h2><p><strong>3 台 CentOS 7</strong></p>
+<table>
+<thead>
+<tr>
+<th>HOSTNAME</th>
+<th>IP</th>
+<th>ROLE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>server1</td>
+<td>10.8.26.197</td>
+<td>Master</td>
+</tr>
+<tr>
+<td>server2</td>
+<td>10.8.26.196</td>
+<td>Slave1</td>
+</tr>
+<tr>
+<td>server3</td>
+<td>10.8.26.195</td>
+<td>Slave2</td>
+</tr>
+</tbody>
+</table>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-new/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-ssh-authentication/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -458,7 +482,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-process-and-memory/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-syntax/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -480,8 +504,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-process-and-memory/" itemprop="url">
-                  Linux 基础之进程与内存
+                <a class="post-title-link" href="/2016/10/28/linux-syntax/" itemprop="url">
+                  Linux 基础之语法
                 </a>
               
             
@@ -538,8 +562,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-process-and-memory/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-process-and-memory/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-syntax/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-syntax/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -566,11 +590,12 @@
 
       
         
-          <p>计算机存在的目的就是为了运行各种各样的程序，迄今我们介绍的绝大多数命令，都是为了完成某种计算而用编程语言编写的程序，它们以文件的形式保存在操作系统之中 (比如 /bin 下的各种命令)；但静态的程序并不能“自发的” 产生结果，只有在操作系统中为其指定输入数据并运行起来，才能得到输出结果。而操作系统中程序运行的最主要表现形式便是进程。</p>
-<p>静态程序可以长久的存在，动态的进程具有有限的生命周期。每次程序运行的开始 (如键入一条命令后按下回车键)，操作系统都要为程序的运行准备各种资源，这些资源绝大多数都处于内存之中。为了限制多用户进程的权限，linux 还定义了两种进程运行时态：内核态和用户态；当进程想要请求系统服务时(比如操作一个物理设备)，必须通过系统调用(操作系统提供给用户空间的接口函数) 来实现，此时系统切换到内核态，代表程序执行该系统调用，执行完毕后系统切换回用户态，继续执行程序代码。<br>本文介绍 linux 中关于进程与内存的管理命令 (更多的是查看命令)</p>
+          <p>本文开始正式介绍 shell 脚本的编写方法以及 bash 的语法。</p>
+<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p><code>元字符</code> 用来分隔词 (token) 的单个字符，包括：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">| &amp; ; () &lt;&gt; space tab</div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-process-and-memory/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-syntax/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -613,7 +638,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-rpm/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-network-transmission-and-security/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -635,8 +660,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-rpm/" itemprop="url">
-                  Linux 基础之软件包管理
+                <a class="post-title-link" href="/2016/10/28/linux-network-transmission-and-security/" itemprop="url">
+                  Linux 基础之网络传输与安全
                 </a>
               
             
@@ -693,8 +718,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-rpm/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-rpm/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-network-transmission-and-security/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-network-transmission-and-security/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -721,12 +746,12 @@
 
       
         
-          <p>linux 中软件包的管理随着系统发行版本的不同而不同，RPM 和 DPKG 为最常见的两类软件包管理工具，分别应用于基于 rpm 软件包的 linux 发行版和基于 deb 软件包的 linux 发行版。本文只描述 RPM 的使用方法，另一种命令不同，但用法类似，就不做介绍了。</p>
-<h2 id="1、RPM-包管理器"><a href="#1、RPM-包管理器" class="headerlink" title="1、RPM 包管理器"></a>1、RPM 包管理器</h2><p>选项 -q 表示查询系统安装的软件包</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@centos7 ~]<span class="comment"># rpm -q sudo</span></div><div class="line">sudo-1.8.6p7-16.el7.x86_64</div><div class="line">[root@centos7 ~]<span class="comment"># rpm -q nginx</span></div><div class="line">未安装软件包 nginx</div><div class="line">[root@centos7 ~]<span class="comment">#</span></div></pre></td></tr></table></figure>
+          <p>本篇接着介绍网络相关命令</p>
+<h2 id="1、wget-文件下载工具"><a href="#1、wget-文件下载工具" class="headerlink" title="1、wget 文件下载工具"></a>1、wget 文件下载工具</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget [option]... [URL]...</div></pre></td></tr></table></figure>
+<p>wget 是一个非交互的下载器，支持 HTTP, HTTPS 和 FTP 协议，也可以使用代理。所谓’非交互’意思是说，可以在一个系统中启动一个 wget 下载任务，然后退出系统，wget 会在完成下载 (或出现异常) 之后才退出，不需要用户参与。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-rpm/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-network-transmission-and-security/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -769,7 +794,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-what-is-k8s/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-secrets/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -791,8 +816,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/26/kubernetes-what-is-k8s/" itemprop="url">
-                  什么是 Kubernetes?
+                <a class="post-title-link" href="/2016/10/26/kubernetes-secrets/" itemprop="url">
+                  Secrets
                 </a>
               
             
@@ -849,8 +874,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/26/kubernetes-what-is-k8s/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-what-is-k8s/" itemprop="commentCount"></span>
+                <a href="/2016/10/26/kubernetes-secrets/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-secrets/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -877,10 +902,10 @@
 
       
         
-          <p>Kubernetes 是一个开源的自动化部署，</p>
+          <h2 id="Secrets-构建"><a href="#Secrets-构建" class="headerlink" title="Secrets 构建"></a>Secrets 构建</h2><h3 id="yaml-构建"><a href="#yaml-构建" class="headerlink" title="yaml 构建"></a>yaml 构建</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">test-secret.yaml：</div><div class="line">apiVersion: v1</div><div class="line">kind: Secret</div><div class="line">metadata:</div><div class="line">  name: mysecret</div><div class="line">type: Opaque</div><div class="line">data:</div><div class="line">  password: MWYyZDFlMmU2N2Rm</div><div class="line">  username: YWRtaW4=</div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kubernetes-what-is-k8s/#more" rel="contents">
+            <a class="btn" href="/2016/10/26/kubernetes-secrets/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -923,7 +948,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-volumes/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kuberntes-ha/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -945,8 +970,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/26/kubernetes-volumes/" itemprop="url">
-                  Volumes
+                <a class="post-title-link" href="/2016/10/26/kuberntes-ha/" itemprop="url">
+                  构建 High-Availability 集群
                 </a>
               
             
@@ -1003,8 +1028,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/26/kubernetes-volumes/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-volumes/" itemprop="commentCount"></span>
+                <a href="/2016/10/26/kuberntes-ha/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kuberntes-ha/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1031,29 +1056,13 @@
 
       
         
-          <h2 id="k8s-支持一下类型的-volumes"><a href="#k8s-支持一下类型的-volumes" class="headerlink" title="k8s 支持一下类型的 volumes"></a>k8s 支持一下类型的 volumes</h2><ol>
-<li>emptyDir</li>
-<li>hostPath</li>
-<li>gcePersistentDisk</li>
-<li>awsElasticBlockStore</li>
-<li>nfs</li>
-<li>iscsi</li>
-<li>flocker</li>
-<li>glusterfs</li>
-<li>rbd</li>
-<li>cephfs</li>
-<li>gitRepo</li>
-<li>secret</li>
-<li>persistentVolumeClaim</li>
-<li>downwardAPI</li>
-<li>azureFileVolume</li>
-<li>azureDisk</li>
-<li>vsphereVolume</li>
-<li>Quobyte</li>
-</ol>
+          <p>这篇文章主要介绍怎样部署一个 <code>高可用(HA)</code> 的 Kubernetes 集群。这是一个相当高阶的主题。</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>建立一个真正可靠、高可用性的分布式系统需要若干步骤，它就像是穿着内衣、裤子、皮带、吊带，另外一对内裤和另一条裤子。下面，我们对这些步骤进行详细的探究，但在这里进行了一些总结，以帮助指导用户。</p>
+<p>所涉及的步骤如下：</p>
+<p>-<br>-<br>-<br>-</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kubernetes-volumes/#more" rel="contents">
+            <a class="btn" href="/2016/10/26/kuberntes-ha/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
