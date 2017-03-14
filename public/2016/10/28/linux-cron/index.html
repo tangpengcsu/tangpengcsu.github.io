@@ -1,0 +1,1061 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="在计算机的使用过程中，经常会有一些计划中的任务需要在将来的某个时间执行，linux 中提供了一些方法来设定定时任务。
+1、at命令 at 从文件或标准输入中读取命令并在将来的一个时间执行，只执行一次。at 的正常执行需要有守护进程 atd(关于 systemctl 请看这一篇)：
+12345678#安装 atyum install -y at 或 apt-get install at -y#启动守">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 基础之定时任务">
+<meta property="og:url" content="https://tangpengcsu.github.io/2016/10/28/linux-cron/index.html">
+<meta property="og:site_name" content="北冥有鱼">
+<meta property="og:description" content="在计算机的使用过程中，经常会有一些计划中的任务需要在将来的某个时间执行，linux 中提供了一些方法来设定定时任务。
+1、at命令 at 从文件或标准输入中读取命令并在将来的一个时间执行，只执行一次。at 的正常执行需要有守护进程 atd(关于 systemctl 请看这一篇)：
+12345678#安装 atyum install -y at 或 apt-get install at -y#启动守">
+<meta property="og:updated_time" content="2017-03-13T05:05:40.010Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux 基础之定时任务">
+<meta name="twitter:description" content="在计算机的使用过程中，经常会有一些计划中的任务需要在将来的某个时间执行，linux 中提供了一些方法来设定定时任务。
+1、at命令 at 从文件或标准输入中读取命令并在将来的一个时间执行，只执行一次。at 的正常执行需要有守护进程 atd(关于 systemctl 请看这一篇)：
+12345678#安装 atyum install -y at 或 apt-get install at -y#启动守">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tangpengcsu.github.io/2016/10/28/linux-cron/"/>
+
+
+
+
+
+  <title> Linux 基础之定时任务 | 北冥有鱼 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dda06c0f41d225c14b70c9d51326cc61";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">北冥有鱼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-cron/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Linux 基础之定时任务
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-28T18:39:04+08:00">
+                2016-10-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/10/28/linux-cron/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-cron/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在计算机的使用过程中，经常会有一些计划中的任务需要在将来的某个时间执行，linux 中提供了一些方法来设定定时任务。</p>
+<h2 id="1、at"><a href="#1、at" class="headerlink" title="1、at"></a>1、at</h2><p>命令 at 从文件或标准输入中读取命令并在将来的一个时间执行，只执行一次。at 的正常执行需要有守护进程 atd(关于 systemctl 请看这一篇)：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#安装 at</span></div><div class="line">yum install -y at 或 apt-get install at -y</div><div class="line"><span class="comment">#启动守护进程</span></div><div class="line">service atd start 或 systemctl start atd</div><div class="line"><span class="comment">#查看是否开机启动</span></div><div class="line">chkconfig --list|grep atd 或 systemctl list-unit-files|grep atd</div><div class="line"><span class="comment">#设置开机启动</span></div><div class="line">chkconfig --level 235 atd on 或 systemctl <span class="built_in">enable</span> atd</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>如果不使用管道 | 或指定选项 -f 的话，at 的执行将会是交互式的，需要在 at 的提示符下输入命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># at now +2 minutes #执行 at 并指定执行时刻为现在时间的后两分钟</span></div><div class="line">at&gt; <span class="built_in">echo</span> hello world &gt; /root/temp/file <span class="comment">#手动输入命令并回车</span></div><div class="line">at&gt; &lt;EOT&gt;                              <span class="comment">#ctrl+d 结束输入</span></div><div class="line">job 9 at Thu Dec 22 14:05:00 2016      <span class="comment">#显示任务号及执行时间</span></div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>选项 -l 或命令 atq 查询任务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># atq</span></div><div class="line">9       Thu Dec 22 14:05:00 2016 a root</div></pre></td></tr></table></figure>
+<p>到达时间后任务被执行，生成一个新文件 file 并保存 echo 的输出内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># ls -l file</span></div><div class="line">-rw-r--r-- 1 root root 12 12 月 22 14:05 file</div><div class="line">[root@centos7 temp]<span class="comment"># cat file</span></div><div class="line">hello world</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>at 指定时间的方法很丰富，可以是</p>
+<ol>
+<li>hh:mm 小时: 分钟 (当天，如果时间已过，则在第二天执行)</li>
+<li>midnight(深夜),noon(中午),teatime(下午茶时间，下午 4 点),today,tomorrow 等</li>
+<li>12 小时计时制，时间后加 am(上午) 或 pm(下午)</li>
+<li>指定具体执行日期 mm/dd/yy(月 /日 /年) 或 dd.mm.yy(日. 月. 年)</li>
+<li>相对计时法 now + n units，now 是现在时刻，n 为数字，units 是单位 (minutes、hours、days、weeks)</li>
+</ol>
+<p>如明天下午 2 点 20 分执行创建一个目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># at 02:20pm tomorrow</span></div><div class="line">at&gt; mkdir /root/temp/X</div><div class="line">at&gt; &lt;EOT&gt;</div><div class="line">job 11 at Fri Dec 23 14:20:00 2016</div></pre></td></tr></table></figure>
+<p>选项 -d 或命令 atrm 表示删除任务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># at -d 11 #删除 11 号任务 (上例)</span></div><div class="line">[root@centos7 temp]<span class="comment"># atq</span></div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>可以使用管道 | 或选项 -f 让 at 从标准输入或文件中获得任务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># cat test.txt</span></div><div class="line"><span class="built_in">echo</span> hello world &gt; /root/temp/file</div><div class="line">[root@centos7 temp]<span class="comment"># at -f test.txt 5pm +2 days</span></div><div class="line">job 12 at Sat Dec 24 17:00:00 2016</div><div class="line">[root@centos7 temp]<span class="comment"># cat test.txt|at 16:20 12/23/16</span></div><div class="line">job 13 at Fri Dec 23 16:20:00 2016</div></pre></td></tr></table></figure>
+<p>atd 通过两个文件 /etc/at.allow 和 /etc/at.deny 来决定系统中哪些用户可以使用 at 设置定时任务，它首先检查 /etc/at.allow，如果文件存在，则只有文件中列出的用户 (每行一个用户名)，才能使用 at；如果不存在，则检查文件 /etc/at.deny，不在此文件中的所有用户都可以使用 at。如果 /etc/at.deny 是空文件，则表示系统中所有用户都可以使用 at；如果 /etc/at.deny 文件也不存在，则只有超级用户(root) 才能使用 at。</p>
+<h2 id="2、crontab"><a href="#2、crontab" class="headerlink" title="2、crontab"></a>2、crontab</h2><p>命令 crontab 用来设置、移除、列出服务 crond 表格，crond 服务的作用类似 atd，区别的地方在于 crond 可以设置任务多次执行。相对来说比 atd 更常用。</p>
+<p>同样需要启动服务 crond</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># ps -ef|grep [c]rond</span></div><div class="line">root       733     1  0 12 月 20 ?      00:00:00 /usr/sbin/crond -n</div></pre></td></tr></table></figure>
+<p>系统中每个用户都可以拥有自己的 cron table，同 atd 类似，crond 也有两个文件 /etc/cron.allow 和 /etc/cron.deny 用来限制用户使用 cron，规则也和 atd 的两个文件相同。</p>
+<p>选项 -l 表示列出当前用户的 cron 表项<br>选项 -u 表示指定用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 ~]<span class="comment"># crontab -l -u learner</span></div><div class="line">no crontab <span class="keyword">for</span> learner</div><div class="line">[root@centos7 ~]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>选项 -e 表示编辑用户的 cron table。编辑时系统会选定默认编辑器，在笔者的环境中是 vi</p>
+<p>通过直接编辑文件 /etc/crontab 可以设置系统级别的 cron table。</p>
+<p>使用 crontab -e 的方式编辑时，会在 /tmp 下面生成一个临时文件，保存后 crond 会将内容写入到 /var/spool/cron 下面一个和用户名同名的文件中，crond 会在保存时做语法检查。这也是推荐的设置定时任务的用法。</p>
+<p>语法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* * * * * command</div></pre></td></tr></table></figure>
+<p>每一行表示一个任务，以符号 # 开头的行表示注释，不生效。每个生效行都形如上面所示，一行被分为 6 部分，其中：</p>
+<ul>
+<li>第一部分表示分钟 (0-59)，* 表示每分钟</li>
+<li>第二部分表示小时 (0-23)，* 表示每小时</li>
+<li>第三部分表示日 (1-31)，  * 表示每天</li>
+<li>第四部分表示月 (1-12)，  * 表示每月</li>
+<li>第五部分表示周几 (0-6,0 表示周日)，* 表示一周中每天</li>
+<li>第六部分表示要执行的任务</li>
+</ul>
+<p>关于时间设置的前五部分中，除了 * 表示当前部分的任意时间外，还支持另外三个符号 /、,、- 分别表示每隔、时间点 A 和时间点 B、时间点 A 到时间点 B。</p>
+<p>如每隔 3 分钟测试 10.0.1.252 的连通性，并将结果追加输出到 /root/252.log 中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@centos7 ~]<span class="comment"># crontab -e</span></div><div class="line">*/3 * * * * /usr/bin/ping -c1 10.0.1.252 &amp;&gt;&gt; /root/252.log</div></pre></td></tr></table></figure>
+<p>保存后会有 crontab: installing new crontab 字样出现。注意六个部分都不能为空，命令最好写绝对路径，编辑普通用户的定时任务时，要注意命令的执行权限。</p>
+<p>如一月份到五月份，每周 2 和周 5 凌晨 2:30 执行备份任务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">30 2 * 1-5 2,5 /bin/bash /root/temp/backup.sh</div></pre></td></tr></table></figure>
+<p>这里将备份任务写入到脚本 /root/temp/backup.sh 中执行</p>
+<p>如 3-6 月和 9-12 月，每周一到周五 12 点到 14 点，每 2 分钟执行一次刷新任务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">*/2 12-14 * 3-6,9-12 1-5 /bin/bash /root/temp/refresh.sh</div></pre></td></tr></table></figure>
+<p>混合使用日期时间及特殊符号，可以组合出大多数想要的时间。</p>
+<p>查看定时任务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@centos7 ~]<span class="comment"># crontab -l</span></div><div class="line">*/3 * * * * /usr/bin/ping -c1 10.0.1.252 &amp;&gt;&gt; /root/252.log</div><div class="line">30 2 * 1-5 2,5 /bin/bash /root/temp/backup.sh</div><div class="line">*/2 12-14 * 3-6,9-12 1-5 /bin/bash /root/temp/refresh.sh</div></pre></td></tr></table></figure>
+<p>选项 -r 表示删除定时任务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 ~]<span class="comment"># crontab -r</span></div><div class="line">[root@centos7 ~]<span class="comment"># crontab -l</span></div><div class="line">no crontab <span class="keyword">for</span> root</div></pre></td></tr></table></figure>
+<p>使用 crontab 时经常会遇到的一个问题是，在命令行下能够正常执行的命令或脚本，设置了定时任务时却不能正常执行。造成这种情况的原因一般是因为 crond 为命令或脚本设置了与登录 shell 不同的环境变量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[root@centos7 ~]<span class="comment"># head -3 /etc/crontab</span></div><div class="line">SHELL=/bin/bash</div><div class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</div><div class="line">MAILTO=root</div><div class="line">[root@centos7 ~]<span class="comment">#</span></div><div class="line">[root@centos7 ~]<span class="comment"># echo $PATH</span></div><div class="line">/usr/<span class="built_in">local</span>/sbin:/usr/<span class="built_in">local</span>/bin:/usr/sbin:/usr/bin:/root/bin</div><div class="line">[root@centos7 ~]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>这里 crond 的 PATH 和 shell 中的值不同，PATH 环境变量定义了 shell 执行命令时搜索命令的路径。关于环境变量更多的内容，将在 shell 编程的文章里详细说明。</p>
+<p>对于系统级别的定时任务，这些任务更加重要，大部分 linux 系统在 /etc 中包含了一系列与 cron 有关的子目录：/etc/cron.{hourly,daily,weekly,monthly}，目录中的文件定义了每小时、每天、每周、每月需要运行的脚本，运行这些任务的精确时间在文件 /etc/crontab 中指定。如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">SHELL=/bin/bash</div><div class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</div><div class="line">MAILTO=root</div><div class="line">HOME=/</div><div class="line"></div><div class="line"><span class="comment"># run-parts</span></div><div class="line">01 * * * * root run-parts /etc/cron.hourly</div><div class="line">02 4 * * * root run-parts /etc/cron.daily</div><div class="line">22 4 * * 0 root run-parts /etc/cron.weekly</div><div class="line">42 4 1 * * root run-parts /etc/cron.monthly</div></pre></td></tr></table></figure>
+<p>对于 24 小时开机的服务器来说，这些任务的定期运行，保证了服务器的稳定性。但注意到这些任务的执行一般都在凌晨，对于经常需要关机的 linux 计算机 (如笔记本) 来说，很可能在需要运行 cron 的时候处于关机状态，cron 得不到运行，时间长了会导致系统变慢。对于这样的系统，linux 引入了另一个工具 anacron 来负责执行系统定时任务。</p>
+<p>anacron 的目的并不是完全替代 cron，是作为 cron 的一个补充。anacron 的任务定义在文件 /etc/anacrontab 中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># /etc/anacrontab: configuration file for anacron</span></div><div class="line"></div><div class="line"><span class="comment"># See anacron(8) and anacrontab(5) for details.</span></div><div class="line"></div><div class="line">SHELL=/bin/sh</div><div class="line">PATH=/sbin:/bin:/usr/sbin:/usr/bin</div><div class="line">MAILTO=root</div><div class="line"><span class="comment"># the maximal random delay added to the base delay of the jobs</span></div><div class="line">RANDOM_DELAY=45</div><div class="line"><span class="comment"># the jobs will be started during the following hours only</span></div><div class="line">START_HOURS_RANGE=3-22</div><div class="line"></div><div class="line"><span class="comment">#period in days   delay in minutes   job-identifier   command</span></div><div class="line">1       5       cron.daily              nice run-parts /etc/cron.daily</div><div class="line">7       25      cron.weekly             nice run-parts /etc/cron.weekly</div><div class="line">@monthly 45     cron.monthly            nice run-parts /etc/cron.monthly</div></pre></td></tr></table></figure>
+<p>与 cron 是作为守护进程运行的不同，anacron 是作为普通进程运行并终止的。对于定义的每个任务，anacron 在系统启动后将会检查应当运行的任务，判断上一次运行到现在的时间是否超过了预定天数 (/etc/anacrontab 中任务行第一列)，如果大于预定天数，则会延迟一个时间(/etc/anacrontab 中任务行第二列) 之后运行该任务。这样就保证了任务的执行。关于 anacron 的更多内容，请查阅相关文档。</p>
+<h2 id="3、systemd-timer"><a href="#3、systemd-timer" class="headerlink" title="3、systemd.timer"></a>3、systemd.timer</h2><p>crond 和 atd 服务基于分钟的，意思是说它们每分钟醒来一次检查是否有任务需要执行。如果有任务的执行需要精确到秒，crond 和 atd 是无能为力的。在基于 systemd 的系统上，可以通过计时器 systemd.timer 来实现精确到秒的计划任务。</p>
+<p>上一篇文章中我们提到了 systemd 中服务单元的概念，在这里我们需要用到其中的两种：.service 和. timer。其中. service 负责配置需要运行的任务，.timer 负责配置执行时间。</p>
+<p>我们先看一个例子：</p>
+<p>创建任务脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># cat /root/temp/ping252.sh</span></div><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line">ping -c1 10.0.1.252 &amp;&gt;&gt; /root/temp/252.log</div></pre></td></tr></table></figure>
+<p>配置服务. service</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># cd /usr/lib/systemd/system</span></div><div class="line">[root@centos7 system]<span class="comment"># cat ping252.service</span></div><div class="line">[Unit]</div><div class="line">Description=ping 252</div><div class="line"></div><div class="line">[Service]</div><div class="line">Type=simple</div><div class="line">ExecStart=/root/temp/ping252.sh</div><div class="line">[root@centos7 system]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>配置计时器. timer</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># cd /usr/lib/systemd/system</span></div><div class="line">[root@centos7 system]<span class="comment"># cat ping252.timer</span></div><div class="line">[Unit]</div><div class="line">Description=ping 252 every 30s</div><div class="line"></div><div class="line">[Timer]</div><div class="line"><span class="comment"># Time to wait after enable this unit</span></div><div class="line">OnActiveSec=60</div><div class="line"><span class="comment"># Time between running each consecutive time</span></div><div class="line">OnUnitActiveSec=30</div><div class="line">Unit=ping252.service</div><div class="line"></div><div class="line">[Install]</div><div class="line">WantedBy=multi-user.target</div><div class="line">[root@centos7 system]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>启用计时器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 system]<span class="comment"># systemctl enable ping252.timer</span></div><div class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/ping252.timer to /usr/lib/systemd/system/ping252.timer.</div><div class="line">[root@centos7 system]<span class="comment"># systemctl start ping252.timer</span></div></pre></td></tr></table></figure>
+<p>查看</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#计时器</span></div><div class="line">[root@centos7 system]<span class="comment"># systemctl status ping252.timer</span></div><div class="line">● ping252.timer - ping 252 every 30s</div><div class="line">   Loaded: loaded (/usr/lib/systemd/system/ping252.timer; enabled; vendor preset: disabled)</div><div class="line">   Active: active (waiting) since 五 2016-12-23 14:27:26 CST; 3min 42s ago</div><div class="line"></div><div class="line">12 月 23 14:27:26 centos7 systemd[1]: Started ping 252 every 30s.</div><div class="line">12 月 23 14:27:26 centos7 systemd[1]: Starting ping 252 every 30s.</div><div class="line"><span class="comment">#服务</span></div><div class="line">[root@centos7 system]<span class="comment"># systemctl status ping252</span></div><div class="line">● ping252.service - ping 252</div><div class="line">   Loaded: loaded (/usr/lib/systemd/system/ping252.service; static; vendor preset: disabled)</div><div class="line">   Active: active (running) since 五 2016-12-23 14:35:38 CST; 2ms ago</div><div class="line"> Main PID: 11494 (ping252.sh)</div><div class="line">   CGroup: /system.slice/ping252.service</div><div class="line">           └─11494 /bin/bash /root/temp/ping252.sh</div><div class="line"></div><div class="line">12 月 23 14:35:38 centos7 systemd[1]: Started ping 252.</div><div class="line">12 月 23 14:35:38 centos7 systemd[1]: Starting ping 252...</div></pre></td></tr></table></figure>
+<p>停用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@centos7 system]<span class="comment"># systemctl disable ping252.timer</span></div><div class="line">Removed symlink /etc/systemd/system/multi-user.target.wants/ping252.timer.</div><div class="line">[root@centos7 system]<span class="comment"># systemctl stop ping252.timer</span></div><div class="line">[root@centos7 system]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>计时器启用 1 分钟之后看到 /root/temp/252.log 文件的生成，之后每隔 30 秒都有内容写入。systemd 的服务单元配置文件中被不同的标签分隔成不同的配置区块，其中：</p>
+<p><code>[Unit]</code> 标签下指定了不依赖于特定类型的通用配置信息，比如例子中两个文件都指定了一个选项 Description = 表示描述信息。</p>
+<p><code>[Install]</code> 标签下保存了本单元的安装信息，其中 WantedBy = 表示当使用 systemctl enable 命令启用该单元时，会在指定的目标的. wants / 或. requires / 下创建对应的符号链接 (如上例)。这么做的结果是：当指定的目标启动时本单元也会被启动。</p>
+<p>除了这两个所有配置文件都可以设置的标签外 (其余选项可以通过命令 man 5 systemd.unit 查看)，每个服务单元还有一个特定单元类型的标签，比如我们例子中. service 文件中的[Service] 和. timer 文件中的[Timer]。</p>
+<p><code>[Service]</code> 标签下 Type = 后的值指明了执行方式，设置为 simple 并配合 ExecStart = 表明指定的程序 (我们例子中的脚本) 将不会 fork()而启动；如果设置为 oneshot 表明只执行一次(类似 at)，如果需要让 systemd 在服务进程退出之后仍然认为该服务处于激活状态，则还需要设置 RemainAfterExit=yes。其余选项请用命令 man 5 systemd.service 查看</p>
+<p><code>[Timer]</code> 标签中可以指定多种单调定时器，所谓 “单调时间” 的意思是从开机那一刻 (零点) 起， 只要系统正在运行，该时间就不断的单调均匀递增(但在系统休眠时此时间保持不变)，永远不会往后退，并且与时区也没有关系。 即使在系统运行的过程中，用户向前 / 向后修改系统时间，也不会对 “单调时间” 产生任何影响。包括：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">OnActiveSec=       表示相对于本单元被启用的时间点</div><div class="line">OnBootSec=         表示相对于机器被启动的时间点</div><div class="line">OnStartupSec=      表示相对于 systemd 被首次启动的时间点</div><div class="line">OnUnitActiveSec=   表示相对于匹配单元 (本标签下 Unit = 指定的单元) 最后一次被启动的时间点</div><div class="line">OnUnitInactiveSec= 表示相对于匹配单元 (本标签下 Unit = 指定的单元) 最后一次被停止的时间点</div></pre></td></tr></table></figure>
+<p>我们的例子中使用了其中的两个 OnActiveSec=60 和 OnUnitActiveSec=30 指定本单元在启用之后 60 秒调用 Unit = 后的单元，并在此单元被启用后每隔 30 秒再次启用它，达到了定时周期性的执行的目的。</p>
+<p>这些定时器后指定的时间单位可以是：us(微秒), ms(毫秒), s(秒), m(分), h(时), d(天), w(周), month(月), y(年)。如果省略了单位，则表示使用默认单位‘秒’。可以写成 5h 30min 表示之后的 5 小时 30 分钟。</p>
+<p><code>[Timer]</code> 标签下还可以设置基于挂钟时间 (wall clock) 的日历定时器 OnCalendar=，所谓 “挂钟时间” 是指真实世界中墙上挂钟的时间， 在操作系统中实际上就是系统时间，这个时间是操作系统在启动时从主板的时钟芯片中读取的。由于这个时间是可以手动修改的，所以，这个时间既不一定是单调递增的、也不一定是均匀递增的。其时间格式可以是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Thu,Fri 2012-*-1,5 11:12:13  <span class="comment">#表示 2012 年任意月份的 1 日和 5 日，如果是星期四或星期五，则在时间 11:12:13 执行</span></div><div class="line">*-*-* *:*:00                 <span class="comment">#表示每分钟</span></div><div class="line">*-*-* 00:00:00               <span class="comment">#表示每天</span></div><div class="line">*-01,07-01 00:00:00          <span class="comment">#表示每半年</span></div><div class="line">*:0/15                       <span class="comment">#表示每 15 分钟</span></div><div class="line">12,14,13:20,10,30            <span class="comment">#表示 12/13/14 点的 10 分、20 分、30 分</span></div><div class="line">Mon,Fri *-01/2-01,03 *:30:45 <span class="comment">#表示任意年份奇数月份的 1 日和 3 日，如果是周一或周五，则在每小时的 30 分 45 秒执行</span></div></pre></td></tr></table></figure>
+<p>单调定时器和日历定时器的其他内容可以通过命令 man 7 systemd.time 查询</p>
+<p>Unit= 后指明了与此计时器相关联的服务单元 (我们例子中的 ping252.service)。<br>服务单元中的大部分设置选项允许指定多次，不相冲突的情况下将均生效，如. timer 中可以设置多个 Unit 表示这些服务单元共用一个计时器。</p>
+<p>另外 <code>[Timer]</code> 标签下还可以设置选项 Persistent=，它只对 OnCalendar = 指令定义的日历定时器有意义。如果设为 yes(默认值为 no)，则表示将匹配单元的上次触发时间永久保存在磁盘上。 这样，当定时器单元再次被启动时， 如果匹配单元本应该在定时器单元停止期间至少被启动一次， 那么将立即启动匹配单元。 这样就不会因为关机而错过必须执行的任务。(类似于 anacron 的功能)<br>关于定时器的更多选项可以通过 man systemd.timer 查看</p>
+<p>使用 systemd.timer 设置定时任务可以代替 atd 和 crond 的所有功能，另外 systemd 还接管了许多其他服务，这些内容超出了本篇的范围，在以后的文章中如果涉及到相关的内容，会有相应的介绍。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/28/linux-disk-and-fs/" rel="next" title="Linux 基础之磁盘与文件系统">
+                <i class="fa fa-chevron-left"></i> Linux 基础之磁盘与文件系统
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/28/linux-cgroup/" rel="prev" title="CGroup 介绍、应用实例及原理描述">
+                CGroup 介绍、应用实例及原理描述 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/10/28/linux-cron/"
+     data-title="Linux 基础之定时任务"
+     data-content=""
+     data-url="https://tangpengcsu.github.io/2016/10/28/linux-cron/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/28/linux-cron/"
+           data-title="Linux 基础之定时任务" data-url="https://tangpengcsu.github.io/2016/10/28/linux-cron/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="IAN" />
+          <p class="site-author-name" itemprop="name">IAN</p>
+           
+              <p class="site-description motion-element" itemprop="description">啊~ 五环</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangpengcsu" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/tangpcn" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tpeang" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、at"><span class="nav-number">1.</span> <span class="nav-text">1、at</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、crontab"><span class="nav-number">2.</span> <span class="nav-text">2、crontab</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、systemd-timer"><span class="nav-number">3.</span> <span class="nav-text">3、systemd.timer</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">IAN</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访问数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tangpeng"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="local-search-pop-overlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

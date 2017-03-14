@@ -1,0 +1,1031 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Shipyard," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="简介shipyard 是一个集成管理 Docker 容器、镜像、仓库的系统，他最大亮点应该是支持多节点的集成管理，可以动态加载节点，可托管 node 下的容器。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker 集中化 Web 界面管理平台 shipyard">
+<meta property="og:url" content="https://tangpengcsu.github.io/2016/10/25/shipyard-index/index.html">
+<meta property="og:site_name" content="北冥有鱼">
+<meta property="og:description" content="简介shipyard 是一个集成管理 Docker 容器、镜像、仓库的系统，他最大亮点应该是支持多节点的集成管理，可以动态加载节点，可托管 node 下的容器。">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/shipyard_1.png">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/shipyard_2.png">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/shipyard_3.png">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/shipyard_4.png">
+<meta property="og:updated_time" content="2017-03-14T05:19:14.637Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker 集中化 Web 界面管理平台 shipyard">
+<meta name="twitter:description" content="简介shipyard 是一个集成管理 Docker 容器、镜像、仓库的系统，他最大亮点应该是支持多节点的集成管理，可以动态加载节点，可托管 node 下的容器。">
+<meta name="twitter:image" content="https://tangpengcsu.github.io/images/shipyard_1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tangpengcsu.github.io/2016/10/25/shipyard-index/"/>
+
+
+
+
+
+  <title> Docker 集中化 Web 界面管理平台 shipyard | 北冥有鱼 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dda06c0f41d225c14b70c9d51326cc61";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">北冥有鱼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/25/shipyard-index/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Docker 集中化 Web 界面管理平台 shipyard
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-25T18:39:04+08:00">
+                2016-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Shipyard/" itemprop="url" rel="index">
+                    <span itemprop="name">Shipyard</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/10/25/shipyard-index/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/25/shipyard-index/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>shipyard 是一个集成管理 Docker 容器、镜像、仓库的系统，他最大亮点应该是支持多节点的集成管理，可以动态加载节点，可托管 node 下的容器。</p>
+<a id="more"></a>
+<hr>
+<h2 id="首次部署脚本"><a href="#首次部署脚本" class="headerlink" title="首次部署脚本"></a>首次部署脚本</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="_">-s</span>SL https://shipyard-project.com/deploy | bash <span class="_">-s</span></div></pre></td></tr></table></figure>
+<p>ACTION: 可以使用的指令 (deploy, upgrade, node, remove)</p>
+<ul>
+<li>DISCOVERY: 集群系统采用 Swarm 进行采集和管理 (在节点管理中可以使用‘node’)</li>
+<li>IMAGE: 镜像，默认使用 shipyard 的镜像</li>
+<li>PREFIX: 容器名字的前缀</li>
+<li>SHIPYARD_ARGS: 容器的常用参数</li>
+<li>TLS_CERT_PATH: TLS 证书路径</li>
+<li>PORT: 主程序监听端口 (默认端口: 8080)</li>
+<li>PROXY_PORT: 代理端口 (默认: 2375)</li>
+</ul>
+<hr>
+<h2 id="脚本可选项"><a href="#脚本可选项" class="headerlink" title="脚本可选项"></a>脚本可选项</h2><p>如果你要自定义部署，请参考以下规范</p>
+<ul>
+<li>部署 action：指令有效变量</li>
+<li>deploy: 部署新的 shipyard 实例</li>
+<li>upgrade: 更新已存在的实例（注意：你要保持相同的系统环境、变量来部署同样的配置）</li>
+<li>node: 使用 Swarm 增加一个新的 node</li>
+<li>remove: 删除已存在的 shipyard 实例（容器）</li>
+</ul>
+<hr>
+<h2 id="镜像使用"><a href="#镜像使用" class="headerlink" title="镜像使用"></a>镜像使用</h2><p>你可以采取规范的镜像来部署实例，比如以下的测试版本，你也已这样做</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="_">-s</span>SL https://shipyard-project.com/deploy | IMAGE=shipyard/shipyard:<span class="built_in">test</span> bash <span class="_">-s</span></div></pre></td></tr></table></figure>
+<hr>
+<h2 id="前缀使用"><a href="#前缀使用" class="headerlink" title="前缀使用"></a>前缀使用</h2><p>你可以定义你想要的前缀，比如</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="_">-s</span>SL https://shipyard-project.com/deploy | PREFIX=shipyard-test bash <span class="_">-s</span></div></pre></td></tr></table></figure>
+<hr>
+<h2 id="参数使用"><a href="#参数使用" class="headerlink" title="参数使用"></a>参数使用</h2><p>这里增加一些 shipyard 运行参数，你可以像这样进行调整：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="_">-s</span>SL https://shipyard-project.com/deploy | SHIPYARD_ARGS=<span class="string">"--ldap-server=ldap.example.com --ldap-autocreate-users"</span> bash <span class="_">-s</span></div></pre></td></tr></table></figure>
+<hr>
+<h2 id="TLS-证书使用"><a href="#TLS-证书使用" class="headerlink" title="TLS 证书使用"></a>TLS 证书使用</h2><p>1. 启用 TLS 对组建进行部署，包括代理（proxy）、swarm 集群系统、shipyard 管理平台的配置，这是一个配置规范。证书必须采用以下命名规范：</p>
+<pre><code>- ca.pem: 安全认证证书
+- server.pem: 服务器证书
+- server-key.pem: 服务器私有证书
+- cert.pem: 客户端证书
+- key.pem: 客户端证书的 key
+</code></pre><p>2. 注意：证书将被放置在一个 docker 容器中，并在各个组成部分之间共享。如果需要调试，可以将此容器连接到调试容器。数据容器名称为前缀的证书。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ docker run --rm \</div><div class="line">    -v $(<span class="built_in">pwd</span>)/certs:/certs \</div><div class="line">    ehazlett/certm \</div><div class="line">    <span class="_">-d</span> /certs \</div><div class="line">    bundle \</div><div class="line">    generate \</div><div class="line">    -o shipyard \</div><div class="line">    --host proxy \</div><div class="line">    --host 127.0.0.1</div></pre></td></tr></table></figure>
+<p>3. 你也可以按如下指令来部署 shipyard   </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="_">-s</span>SL https://shipyard-project.com/deploy | TLS_CERT_PATH=$(<span class="built_in">pwd</span>)/certs bash <span class="_">-s</span></div></pre></td></tr></table></figure>
+<hr>
+<h2 id="增加一个部署节点"><a href="#增加一个部署节点" class="headerlink" title="增加一个部署节点"></a>增加一个部署节点</h2><p>shipyard 节点部署脚本将自动的安装 key/value 存储系统（etcd 系统）。增加一个节点到 swarm 集群，你可以使用以下的节点部署脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="_">-s</span>SL https://shipyard-project.com/deploy | ACTION=node  DISCOVERY=etcd://10.0.1.10:4001 bash <span class="_">-s</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>10.0.1.10 这个 ip 地址你需要修改为你的首次初始化 shipyard 系统的主机地址</p>
+</blockquote>
+<hr>
+<h2 id="删除-shipyard-系统"><a href="#删除-shipyard-系统" class="headerlink" title="删除 shipyard 系统"></a>删除 shipyard 系统</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="_">-s</span>SL https://shipyard-project.com/deploy | ACTION=remove bash <span class="_">-s</span></div></pre></td></tr></table></figure>
+<hr>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>1. 在 manager0 节点上执行部署脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="_">-s</span>SL https://shipyard-project.com/deploy | bash <span class="_">-s</span></div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ docker ps    </div><div class="line">CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS                                            NAMES</div><div class="line">5636aef7bec1        shipyard/shipyard:latest       <span class="string">"/bin/controller --de"</span>   4 minutes ago       Up 4 minutes        0.0.0.0:8080-&gt;8080/tcp                           shipyard-controller</div><div class="line">8a0f609b05f1        swarm:latest                   <span class="string">"/swarm j --addr 192."</span>   4 minutes ago       Up 4 minutes        2375/tcp                                         shipyard-swarm-agent</div><div class="line">916aaa6a59ba        swarm:latest                   <span class="string">"/swarm m --replicati"</span>   4 minutes ago       Up 4 minutes        2375/tcp                                         shipyard-swarm-manager</div><div class="line">20619c435f9f        shipyard/docker-proxy:latest   <span class="string">"/usr/local/bin/run"</span>     4 minutes ago       Up 4 minutes        0.0.0.0:2375-&gt;2375/tcp                           shipyard-proxy</div><div class="line">98e7f61e436f        alpine                         <span class="string">"sh"</span>                     4 minutes ago       Up 4 minutes                                                         shipyard-certs</div><div class="line">b09af2<span class="built_in">fc</span>0b92        microbox/etcd:latest           <span class="string">"/bin/etcd -addr 192."</span>   5 minutes ago       Up 4 minutes        0.0.0.0:4001-&gt;4001/tcp, 0.0.0.0:7001-&gt;7001/tcp   shipyard-discovery</div><div class="line">3d294a262ea0        rethinkdb                      <span class="string">"rethinkdb --bind all"</span>   5 minutes ago       Up 4 minutes        8080/tcp, 28015/tcp, 29015/tcp                   shipyard-rethinkdb</div></pre></td></tr></table></figure>
+<p>2. 部署节点 node3</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="_">-s</span>SL https://shipyard-project.com/deploy | ACTION=node PREFIX=shipyard-node3  DISCOVERY=etcd://192.168.93.145:4001 bash –s</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ docker ps</div><div class="line">CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS                    NAMES</div><div class="line">195acdbe1818        swarm:latest                   <span class="string">"/swarm j --addr 192."</span>   2 minutes ago       Up 2 minutes        2375/tcp                 shipyard-node3-swarm-agent</div><div class="line">3e43f1c85af0        swarm:latest                   <span class="string">"/swarm m --replicati"</span>   2 minutes ago       Up 2 minutes        2375/tcp                 shipyard-node3-swarm-manager</div><div class="line">5a38d292f81e        shipyard/docker-proxy:latest   <span class="string">"/usr/local/bin/run"</span>     3 minutes ago       Up 3 minutes        0.0.0.0:2375-&gt;2375/tcp   shipyard-node3-proxy</div><div class="line">f8d80de583e6        alpine                         <span class="string">"sh"</span>                     3 minutes ago       Up 3 minutes                                 shipyard-node3-certs</div></pre></td></tr></table></figure>
+<p>3. 部署节点 node4</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="_">-s</span>SL https://shipyard-project.com/deploy | ACTION=node PREFIX=shipyard-node4  DISCOVERY=etcd://192.168.93.145:4001 bash –s</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ docker ps</div><div class="line">CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS                    NAMES</div><div class="line">b9a4f9f6d4c5        swarm:latest                   <span class="string">"/swarm j --addr 192."</span>   3 minutes ago       Up 3 minutes        2375/tcp                 shipyard-node4-swarm-agent</div><div class="line">765f3898c925        swarm:latest                   <span class="string">"/swarm m --replicati"</span>   3 minutes ago       Up 3 minutes        2375/tcp                 shipyard-node4-swarm-manager</div><div class="line">16e000eae193        shipyard/docker-proxy:latest   <span class="string">"/usr/local/bin/run"</span>     3 minutes ago       Up 3 minutes        0.0.0.0:2375-&gt;2375/tcp   shipyard-node4-proxy</div><div class="line">ae224eafce6a        alpine                         <span class="string">"sh"</span>                     3 minutes ago       Up 3 minutes                                 shipyard-node4-certs</div></pre></td></tr></table></figure>
+<p>4. 启动界面（ip:8080）</p>
+<p> <img src="/images/shipyard_1.png" alt="shipyard_1"></p>
+<p>5. 容器详细情况</p>
+<p><img src="/images/shipyard_2.png" alt="shipyard_2"></p>
+<p>6. 镜像</p>
+<p><img src="/images/shipyard_3.png" alt="shipyard_3"></p>
+<p>7. 节点</p>
+<p><img src="/images/shipyard_4.png" alt="shipyard_4"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Shipyard/" rel="tag"># Shipyard</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/24/docker-network-containers/" rel="next" title="高级网络配置">
+                <i class="fa fa-chevron-left"></i> 高级网络配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/26/kubernetes-install-kubernetes/" rel="prev" title="在 Linux 上安装 kubernetes">
+                在 Linux 上安装 kubernetes <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/10/25/shipyard-index/"
+     data-title="Docker 集中化 Web 界面管理平台 shipyard"
+     data-content=""
+     data-url="https://tangpengcsu.github.io/2016/10/25/shipyard-index/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/25/shipyard-index/"
+           data-title="Docker 集中化 Web 界面管理平台 shipyard" data-url="https://tangpengcsu.github.io/2016/10/25/shipyard-index/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="IAN" />
+          <p class="site-author-name" itemprop="name">IAN</p>
+           
+              <p class="site-description motion-element" itemprop="description">啊~ 五环</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangpengcsu" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/tangpcn" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tpeang" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#首次部署脚本"><span class="nav-number">2.</span> <span class="nav-text">首次部署脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#脚本可选项"><span class="nav-number">3.</span> <span class="nav-text">脚本可选项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#镜像使用"><span class="nav-number">4.</span> <span class="nav-text">镜像使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前缀使用"><span class="nav-number">5.</span> <span class="nav-text">前缀使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参数使用"><span class="nav-number">6.</span> <span class="nav-text">参数使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TLS-证书使用"><span class="nav-number">7.</span> <span class="nav-text">TLS 证书使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#增加一个部署节点"><span class="nav-number">8.</span> <span class="nav-text">增加一个部署节点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除-shipyard-系统"><span class="nav-number">9.</span> <span class="nav-text">删除 shipyard 系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例"><span class="nav-number">10.</span> <span class="nav-text">实例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">IAN</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访问数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tangpeng"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="local-search-pop-overlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

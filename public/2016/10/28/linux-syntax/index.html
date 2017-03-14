@@ -1,0 +1,1063 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本文开始正式介绍 shell 脚本的编写方法以及 bash 的语法。
+定义元字符 用来分隔词 (token) 的单个字符，包括：
+1| &amp;amp; ; () &amp;lt;&amp;gt; space tab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 基础之语法">
+<meta property="og:url" content="https://tangpengcsu.github.io/2016/10/28/linux-syntax/index.html">
+<meta property="og:site_name" content="北冥有鱼">
+<meta property="og:description" content="本文开始正式介绍 shell 脚本的编写方法以及 bash 的语法。
+定义元字符 用来分隔词 (token) 的单个字符，包括：
+1| &amp;amp; ; () &amp;lt;&amp;gt; space tab">
+<meta property="og:updated_time" content="2017-03-13T05:07:19.023Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux 基础之语法">
+<meta name="twitter:description" content="本文开始正式介绍 shell 脚本的编写方法以及 bash 的语法。
+定义元字符 用来分隔词 (token) 的单个字符，包括：
+1| &amp;amp; ; () &amp;lt;&amp;gt; space tab">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tangpengcsu.github.io/2016/10/28/linux-syntax/"/>
+
+
+
+
+
+  <title> Linux 基础之语法 | 北冥有鱼 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dda06c0f41d225c14b70c9d51326cc61";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">北冥有鱼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-syntax/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Linux 基础之语法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-28T18:39:04+08:00">
+                2016-10-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/10/28/linux-syntax/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-syntax/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文开始正式介绍 shell 脚本的编写方法以及 bash 的语法。</p>
+<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p><code>元字符</code> 用来分隔词 (token) 的单个字符，包括：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">| &amp; ; () &lt;&gt; space tab</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p><code>token</code> 是指被 shell 看成一个单一单元的字符序列</p>
+<p>bash 中包含三种基本的 token：<code>保留关键字</code>，<code>操作符</code>，<code>单词</code>。</p>
+<p><code>保留关键字</code>是指在 shell 中有明确含义的词语，通常用来表达程序控制结构。包括：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">! case coproc do done elif else esac fi for function if in select then until while &#123;&#125; time [[]]</div></pre></td></tr></table></figure>
+<p><code>操作符</code>由一个或多个<code>元字符</code>组成，其中<code>控制操作符</code>包括：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">|| &amp; &amp;&amp; ; ;; () | |&amp; &lt;newline&gt;</div></pre></td></tr></table></figure>
+<p>余下的 shell 输入都可以视为普通的<code>单词</code>(word)。</p>
+<p>shell 脚本是指包含若干 shell 命令的文本文件，标准的 bash 脚本的第一行形如 <code>#!/bin/bash</code>，其中顶格写的字符 #! 向操作系统申明此文件是一个脚本，紧随其后的 <code>/bin/bash</code> 是此脚本程序的解释器，解释器可以带一个选项 (选项一般是为了对一些情况做特殊处理，比如 <code>-x</code> 表示开启 bash 的调试模式)。</p>
+<p>除首行外，其余行中以符号 <code>#</code> 开头的单词及本行中此单词之后的字符将作为注释，被解析器所忽略。</p>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><p>相比于其他更正式的语言，bash 的语法较为简单。大多数使用 bash 的人员，一般都先拥有其他语言的语法基础，在接触 bash 的语法之后，会自然的将原有语法习惯套用到 bash 中来。事实上，bash 的语法灵活多变，许多看起来像是固定格式的地方，实际上并不是。这让一些初学者觉得 bash 语法混乱不堪，复杂难记。这和 bash 的目的和使用者使用 bash 的目的有很大的关系，bash 本身是为了提供一个接口，来支持用户通过命令与操作系统进行交互。用户使用 bash，一般是为了完成某种系统管理的任务，而不是为了做一款独立的软件。这些，都使人难以像学习其他编程语言那样对 bash 认真对待。其实，只要系统学习一遍 bash 语法以及一条命令的执行流程，就可以说掌握了 bash 脚本编程的绝大多数内容。</p>
+<p>bash 语法只包括六种：<code>简单命令</code>、<code>管道命令</code>、<code>序列命令</code>、<code>复合命令</code>、<code>协进程命令</code> (bash 版本 4.0 及以上) 和<code>函数定义</code>。</p>
+<h3 id="简单命令"><a href="#简单命令" class="headerlink" title="简单命令"></a>简单命令</h3><p>shell 简单命令 (<code>Simple Commands</code>) 包括命令名称，可选数目的参数和重定向(<code>redirection</code>)。我们在 Linux 基础命令介绍系列里所使用的绝大多数命令都是简单命令。另外，在命令名称前也可以有若干个变量赋值语句(如上一篇所述，这些变量赋值将作为命令的临时环境变量被使用，后面有例子)。简单命令以上述<code>控制操作符</code>为结尾。</p>
+<p>shell 命令执行后均有<code>返回值</code> (会赋给特殊变量 <code>$?</code>)，是范围为 0-255 的数字。返回值为 0，表示命令执行成功；非 0，表示命令执行失败。(可以使用命令 <code>echo $?</code> 来查看前一条命令是否执行成功)</p>
+<h3 id="管道命令"><a href="#管道命令" class="headerlink" title="管道命令"></a>管道命令</h3><p>管道命令 (<code>pipeline</code>) 是指被 <code>|</code> 或 <code>|&amp;</code> 分隔的一到多个命令。格式为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[time [-p]] [ ! ] command1 [ | command2 ... ]</div></pre></td></tr></table></figure>
+<p>其中保留关键字 <code>time</code> 作用于管道命令表示当命令执行完成后输出消耗时间 (包括用户态和内核态占用时间)，选项 <code>-p</code> 可以指定时间格式。</p>
+<p>默认情况下，管道命令的返回值是最后一个命令的返回值，为 0，表示 <code>true</code>，非 0，则表示 <code>false</code>；当保留关键字 <code>!</code> 作用于管道命令时，会对管道命令的返回值进行取反。</p>
+<p>之前我们介绍过管道的基本用法，表示将 <code>command1</code> 的标准输出通过管道连接至 <code>command2</code> 的标准输入，这个连接要先于命令的其他重定向操作 (试对比 <code>&gt;/dev/null 2&gt;&amp;1</code> 和 <code>2&gt;&amp;1 &gt;/dev/null</code> 的区别)。如果使用 <code>|&amp;</code>，则表示将 <code>command1</code> 的标准输出和标准错误都连接至管道。</p>
+<p>管道两侧的命令均在子 shell(<code>subshell</code>) 中执行，这里需要注意：在子 shell 中对变量进行赋值时，父 shell 是不可见的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">#例如</div><div class="line">[root@centos7 ~]# echo 12345|read NUM</div><div class="line">[root@centos7 ~]# echo $NUM</div><div class="line">                    #由于 echo 和 read 命令均在子 shell 中执行，所以当执行完毕时，在父 shell 中输出变量的值为空</div><div class="line">[root@centos7 ~]#</div></pre></td></tr></table></figure>
+<h3 id="序列命令"><a href="#序列命令" class="headerlink" title="序列命令"></a>序列命令</h3><p>序列命令 (<code>list</code>) 是指被控制操作符<code>;,&amp;,&amp;&amp;</code> 或 <code>||</code> 分隔的一到多个管道命令，以<code>;</code>、<code>&amp;</code> 或 <code>&lt;newline&gt;</code> 为结束。</p>
+<p>在这些控制操作符中，<code>&amp;&amp;</code> 和 <code>||</code> 有相同的优先级，然后是 <code>;</code> 和 <code>&amp;</code>(也是相同的优先级)。</p>
+<p>如果命令以 <code>&amp;</code> 为结尾，此命令会在一个子 shell 中后台执行，当前 shell 不会等待此命令执行结束，并且不论它是否执行成功，其返回值均为 0。</p>
+<p>以符号 <code>;</code> 分隔的命令按顺序执行 (和换行符的作用几乎相同)，shell 等待每个命令执行完成，它们的返回值是最后一个命令的返回值。</p>
+<p>以符号 <code>&amp;&amp;</code> 和 <code>||</code> 连接的两个命令存在逻辑关系。</p>
+<p><code>command1 &amp;&amp; command2</code>：先执行 command1，当且仅当 command1 的返回值为 0，才执行 command2。</p>
+<p><code>command1 || command2</code>：先执行 command1，当且仅当 command1 的返回值非 0，才执行 command2。</p>
+<p>脚本举例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#简单命令</div><div class="line">echo $PATH &gt; file</div><div class="line">#管道命令</div><div class="line">cat file|tr &apos;:&apos; &apos; &apos;</div><div class="line">#序列命令</div><div class="line">IFS=&apos;:&apos; read -a ARRAY &lt;file &amp;&amp; echo $&#123;ARRAY[4]&#125; || echo &quot;赋值失败&quot;</div><div class="line">echo &quot;命令返回值为：$?。&quot;</div><div class="line">#验证变量的临时作用域</div><div class="line">echo &quot;$IFS&quot;|sed &apos;N;s/[\t\n]/-/g&apos;</div></pre></td></tr></table></figure>
+<p>执行结果 (在脚本所在目录直接执行./test.sh)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@centos7 ~]# ./test.sh   </div><div class="line">/usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /root/bin</div><div class="line">/root/bin</div><div class="line">命令返回值为：0。</div></pre></td></tr></table></figure>
+<p>注意例子中序列命令的写法，其中 IFS=’:’只临时对内置命令 read 起作用 (作为单词分隔符来分隔 read 的输入)，read 命令结束后，IFS 又恢复到原来的值：$’\d\n’。<br>&amp;&amp; 和 || 在这里类似于分支语句，read 命令执行成功则执行输出数组的第五个元素，否则执行输出 “赋值失败”。</p>
+<h3 id="复合命令"><a href="#复合命令" class="headerlink" title="复合命令"></a>复合命令</h3><h4 id="1、-list"><a href="#1、-list" class="headerlink" title="1、(list)"></a>1、(list)</h4><p>list 将在 subshell 中执行 (注意赋值语句和内置命令修改 shell 状态不能影响当父 shell)，返回值是 list 的返回值。</p>
+<p>此复合命令前如果使用扩展符 $，shell 称之为命令替换 (另一种写法为 \list`)。shell 会把命令的输出作为命令替换 ` 扩展之后的结果使用。</p>
+<p>命令替换可以嵌套。</p>
+<h3 id="2、-list"><a href="#2、-list" class="headerlink" title="2、{list;}"></a>2、{list;}</h3><p>list 将在当前 shell 环境中执行，必须以换行或分号为结尾 (即使只有一个命令)。注意不同于 shell 元字符：(和)，{和} 是 shell 的保留关键字，因为保留关键字不能分隔单词，所以它们和 list 之间必须有空白字符或其他 shell 元字符。</p>
+<h3 id="3、-expression"><a href="#3、-expression" class="headerlink" title="3、((expression))"></a>3、((expression))</h3><p>expression 是数学表达式 (类似 C 语言的数学表达式)，如果表达式的值非 0，则此复合命令的返回值为 0；如果表达式的值为 0，则此复合命令的返回值为 1。</p>
+<p>此种复合命令和使用内置命令 let “expression” 是一样的。</p>
+<p>数学表达式中支持如下操作符，操作符的优先级，结合性，计算方法都和 C 语言一致 (按优先级从上到下递减排列)：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">id++ id--      <span class="comment"># 变量后自加 后自减</span></div><div class="line">++id --id       <span class="comment"># 变量前自加 前自减</span></div><div class="line">- +             <span class="comment"># 一元减 一元加</span></div><div class="line">! ~             <span class="comment"># 逻辑否定 位否定</span></div><div class="line">**              <span class="comment"># 乘方</span></div><div class="line">* / %           <span class="comment"># 乘 除 取余</span></div><div class="line">+ -             <span class="comment"># 加 减</span></div><div class="line">&lt;&lt;&gt;&gt;           <span class="comment"># 左位移 右位移</span></div><div class="line">&lt;=&gt;= &lt; &gt;       <span class="comment"># 比较大小</span></div><div class="line">== !=           <span class="comment"># 等于 不等于</span></div><div class="line">&amp;               <span class="comment"># 按位与</span></div><div class="line">^               <span class="comment"># 按位异或</span></div><div class="line">|               <span class="comment"># 按位或</span></div><div class="line">&amp;&amp;              <span class="comment"># 逻辑与</span></div><div class="line">||              <span class="comment"># 逻辑或</span></div><div class="line">expr?expr:expr  <span class="comment"># 条件表达式</span></div><div class="line">= *= /= %= += -= &lt;&lt;=&gt;&gt;= &amp;= ^= |=   <span class="comment"># 赋值表达式</span></div><div class="line">expr1 , expr2   <span class="comment"># 逗号表达式</span></div></pre></td></tr></table></figure>
+<p>在数学表达式中，可以使用变量作为操作数，变量扩展要先于表达式的求值。变量还可以省略扩展符号 $，如果变量的值为空或非数字和运算符的其他字符串，将使用 0 代替它的值做数学运算。</p>
+<p>以 0 开头的数字将被解释为八进制数，以 0x 或 0X 开头的数字将被解释为十六进制数。其他情况下，数字的格式可以是 [base#]n。可选的 base# 表示后面的数字 n 是以 base(范围是 2-64) 为基的数字，如 2#11011 表示 11011 是一个二进制数字，命令 ((2#11011)) 的作用会使二进制数转化为十进制数。如果 base# 省略，则表示数字以 10 为基。</p>
+<p>复合命令 ((expression)) 并不会输出表达式的结果，如果需要得到结果，需使用扩展符 $ 表示数学扩展(另一种写法为 $[expression])。数学扩展也可以嵌套。</p>
+<p>括号 () 可以改变表达式的优先级。</p>
+<p>脚本举例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="comment"># (list)</span></div><div class="line">(ls|wc <span class="_">-l</span>)</div><div class="line"><span class="comment">#命令替换并赋值给数组 注意区分数组赋值 array=(...) 和命令替换 $(...)</span></div><div class="line">array=($(seq 10 10 $(ls|wc <span class="_">-l</span>) | sed -z <span class="string">'s/\n/ /g'</span>))</div><div class="line"><span class="comment">#数组取值</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$&#123;array[*]&#125;</span>"</span></div><div class="line"><span class="comment"># &#123;list;&#125;</span></div><div class="line"><span class="comment">#将文件 file1 中的第一行写入 file2，&#123;list;&#125; 是一个整体。</span></div><div class="line">&#123;<span class="built_in">read</span> line;<span class="built_in">echo</span> <span class="variable">$line</span>;&#125; &gt;file2 &lt;file1</div><div class="line"><span class="comment">#数学扩展</span></div><div class="line">A=$(wc -c file2 |cut -b1)</div><div class="line"><span class="comment">#此时变量 A 的值为 5</span></div><div class="line">B=4</div><div class="line"><span class="built_in">echo</span> $((A+B))</div><div class="line"><span class="built_in">echo</span> $(((A*B)**2))</div><div class="line"><span class="comment">#赋值并输出</span></div><div class="line"><span class="built_in">echo</span> $((A|=<span class="variable">$B</span>))</div><div class="line"><span class="comment">#条件运算符 此命令意为：判断表达式 A&gt;=7 是否为真，如果为真则计算 A-1，否则计算 (B&lt;&lt;1)+3。然后将返回结果与 A 作异或运算并赋值给 A。</span></div><div class="line">((A^=A&gt;=7?A-1:(B&lt;&lt;1)+3))</div><div class="line"><span class="built_in">echo</span> <span class="variable">$A</span></div></pre></td></tr></table></figure>
+<p>执行结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># ./test.sh</span></div><div class="line">43</div><div class="line">10 20 30 40</div><div class="line">9</div><div class="line">400</div><div class="line">5</div><div class="line">14</div></pre></td></tr></table></figure>
+<h3 id="4、-expression"><a href="#4、-expression" class="headerlink" title="4、[[expression]]"></a>4、[[expression]]</h3><p>此处的 expression 是条件表达式 (并非数学扩展中的条件表达式)。此种命令的返回值取决于条件表达式的结果，结果为 true，则返回值为 0，结果为 false，则返回值为 1。</p>
+<p>条件表达式除可以用在复合命令中外，还可以用于内置命令 test 和 [，由于 test、[[、]]、[和] 是内置命令或保留关键字，所以同保留关键字 {和} 一样，它们与表达式之间都要有空格或其他 shell 元字符。</p>
+<p>条件表达式的格式包括：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">-b file             <span class="comment">#判断文件是否为块设备文件</span></div><div class="line">-c file             <span class="comment">#判断文件是否为字符设备文件</span></div><div class="line"><span class="_">-d</span> file             <span class="comment">#判断文件是否为目录</span></div><div class="line"><span class="_">-e</span> file             <span class="comment">#判断文件是否存在</span></div><div class="line"><span class="_">-f</span> file             <span class="comment">#判断文件是否为普通文件</span></div><div class="line">-g file             <span class="comment">#判断文件是否设置了 SGID</span></div><div class="line">-h file             <span class="comment">#判断文件是否为符号链接</span></div><div class="line">-p file             <span class="comment">#判断文件是否为命名管道文件</span></div><div class="line">-r file             <span class="comment">#判断文件是否可读</span></div><div class="line"><span class="_">-s</span> file             <span class="comment">#判断文件是否存在且内容不为空 (也可以是目录)</span></div><div class="line">-t fd               <span class="comment">#判断文件描述符 fd 是否开启且指向终端</span></div><div class="line">-u file             <span class="comment">#判断文件是否设置 SUID</span></div><div class="line">-w file             <span class="comment">#判断文件是否可写</span></div><div class="line">-x file             <span class="comment">#判断文件是否可执行</span></div><div class="line">-S file             <span class="comment">#判断文件是否为 socket 文件</span></div><div class="line">file1 -nt file2     <span class="comment">#判断文件 file1 是否比 file2 更新 (根据 mtime)，或者判断 file1 存在但 file2 不存在</span></div><div class="line">file1 -ot file2     <span class="comment">#判断文件 file1 是否比 file2 更旧，或者判断 file2 存在但 file1 不存在</span></div><div class="line">file1 -ef file2     <span class="comment">#判断文件 file1 和 file2 是否互为硬链接</span></div><div class="line">-v name             <span class="comment">#判断变量状态是否为 set(见上一篇)</span></div><div class="line">-z string           <span class="comment">#判断字符串是否为空</span></div><div class="line">-n string           <span class="comment">#判断字符串是否非空</span></div><div class="line">string1 == string2  <span class="comment">#判断字符串是否相等</span></div><div class="line">string1 = string2   <span class="comment">#判断字符串是否相等</span></div><div class="line">string1 != string2  <span class="comment">#判断字符串是否不相等</span></div><div class="line">string1 &lt;string2   <span class="comment">#判断字符串 string1 是否小于字符串 string2(字典排序)，用于内置命令 test 中时，小于号需要转义：\&lt;</span></div><div class="line">string1 &gt; string2   <span class="comment">#判断字符串 string1 是否大于字符串 string2(字典排序)，用于内置命令 test 中时，大于号需要转义：\&gt;</span></div><div class="line">NUM1 <span class="_">-eq</span> NUM2       <span class="comment">#判断数字是否相等</span></div><div class="line">NUM1 <span class="_">-ne</span> NUM2       <span class="comment">#判断数字是否不相等</span></div><div class="line">NUM1 <span class="_">-lt</span> NUM2       <span class="comment">#判断数字 NUM1 是否小于数字 NUM2</span></div><div class="line">NUM1 -le NUM2       <span class="comment">#判断数字 NUM1 是否小于等于数字 NUM2</span></div><div class="line">NUM1 <span class="_">-gt</span> NUM2       <span class="comment">#判断数字 NUM1 是否大于数字 NUM2</span></div><div class="line">NUM1 -ge NUM2       <span class="comment">#判断数字 NUM1 是否大于等于数字 NUM2</span></div><div class="line">[[expr]]和 [ expr ](<span class="built_in">test</span> expr 是[ expr ] 的另一种写法，效果相同)还接受如下操作符(从上到下优先级递减)：</div><div class="line"></div><div class="line">! expr    <span class="comment">#表示对表达式 expr 取反</span></div><div class="line">(expr)  <span class="comment">#表示提高 expr 的优先级</span></div><div class="line">expr1 <span class="_">-a</span> expr2  <span class="comment">#表示对两个表达式进行逻辑与操作，只能用于 [expr] 和 test expr 中</span></div><div class="line">expr1 &amp;&amp; expr2  <span class="comment">#表示对两个表达式进行逻辑与操作，只能用于 [[expr]] 中</span></div><div class="line">expr1 -o expr2  <span class="comment">#表示对两个表达式进行逻辑或操作，只能用于 [expr] 和 test expr 中</span></div><div class="line">expr1 || expr2  <span class="comment">#表示对两个表达式进行逻辑或操作，只能用于 [[expr]] 中</span></div><div class="line">在使用操作符 == 和!= 判断字符串是否相等时，在 [[expr]] 中等号右边的 string2 可以被视为模式匹配 string1，规则和通配符匹配一致。([ expr ]不支持)</div></pre></td></tr></table></figure>
+<p>[[expr]] 中比较两个字符串时还可以用操作符 =~，符号右边的 string2 可以被视为是正则表达式匹配 string1，如果匹配，返回真，否则返回假。</p>
+<h3 id="5、if-list-then-list-elif-list-then-list-…-else-list-fi"><a href="#5、if-list-then-list-elif-list-then-list-…-else-list-fi" class="headerlink" title="5、if list; then list; [elif list; then list;] … [ else list; ] fi"></a>5、if list; then list; [elif list; then list;] … [ else list; ] fi</h3><p>条件分支命令。首先判断 if 后面的 list 的返回值，如果为 0，则执行 then 后面的 list；如果非 0，则继续判断 elif 后面的 list 的返回值，如果为 0，则……，若返回值均非 0，则最终执行 else 后的 list。fi 是条件分支的结束词。</p>
+<p>注意这里的 list 均是命令，由于要判断返回值，通常使用上述条件表达式来进行判断</p>
+<p>形如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> [expr]</div><div class="line"><span class="keyword">then</span></div><div class="line">    list</div><div class="line"><span class="keyword">elif</span> [expr]</div><div class="line"><span class="keyword">then</span></div><div class="line">    list</div><div class="line">...</div><div class="line"><span class="keyword">else</span></div><div class="line">    list</div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure>
+<p>甚至，许多人认为这样就是 if 语句的固定格式，其实 if 后面可以是任何 shell 命令，只要能够判断此命令的返回值。如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[root@centos7 ~]<span class="comment"># if bash;then echo true;else echo false;fi</span></div><div class="line">[root@centos7 ~]<span class="comment">#   #执行后没有任何输出</span></div><div class="line">[root@centos7 ~]<span class="comment"># exit</span></div><div class="line"><span class="built_in">exit</span></div><div class="line"><span class="literal">true</span>                <span class="comment">#由于执行了 bash 命令开启了一个新的 shell，所以执行 exit 之后 if 语句才获得返回值，并做了判断和输出</span></div><div class="line">[root@centos7 ~]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>脚本举例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="comment">#条件表达式</span></div><div class="line"><span class="built_in">declare</span> A</div><div class="line"><span class="comment">#判断变量 A 是否 set</span></div><div class="line">[[-v A]] &amp;&amp; <span class="built_in">echo</span> <span class="string">"var A is set"</span> || <span class="built_in">echo</span> <span class="string">"var A is unset"</span></div><div class="line"><span class="comment">#判断变量 A 的值是否为空</span></div><div class="line">[! <span class="variable">$A</span>] &amp;&amp; <span class="built_in">echo</span> <span class="literal">false</span> || <span class="built_in">echo</span> <span class="literal">true</span></div><div class="line"><span class="built_in">test</span> -z <span class="variable">$A</span> &amp;&amp; <span class="built_in">echo</span> <span class="string">"var A is empty"</span></div><div class="line"><span class="comment">#通配与正则</span></div><div class="line">A=<span class="string">"1234567890abcdeABCDE"</span></div><div class="line">B=<span class="string">'[0-9]*'</span></div><div class="line">C=<span class="string">'[0-9]&#123;10&#125;\w+'</span></div><div class="line">[[<span class="variable">$A</span> = <span class="variable">$B</span>]] &amp;&amp; <span class="built_in">echo</span> <span class="string">'变量 A 匹配通配符 [0-9]*'</span> || <span class="built_in">echo</span> <span class="string">'变量 A 不匹配通配符 [0-9]*'</span></div><div class="line">[<span class="variable">$A</span> == <span class="variable">$B</span>] &amp;&amp; <span class="built_in">echo</span> <span class="string">'[ expr ] 中能够使用通配符'</span> || <span class="built_in">echo</span> <span class="string">'[ expr ] 中不能使用通配符'</span></div><div class="line">[[<span class="variable">$A</span> =~ <span class="variable">$C</span>]] &amp;&amp; <span class="built_in">echo</span> <span class="string">'变量 A 匹配正则 [0-9]&#123;10&#125;\w+'</span> || <span class="built_in">echo</span> <span class="string">'变量 A 不匹配正则 [0-9]&#123;10&#125;\w+'</span></div><div class="line"><span class="comment">#if 语句</span></div><div class="line"><span class="comment"># 此例并没有什么特殊的意义，只为说明几点需要注意的地方：</span></div><div class="line"><span class="comment"># 1、if 后面可以是任何能够判断返回值的命令</span></div><div class="line"><span class="comment"># 2、直接执行复合命令 ((...)) 没有输出，要取得表达式的值必须通过数学扩展 $((...))</span></div><div class="line"><span class="comment"># 3、复合命令 ((...)) 中表达式的值非 0，返回值才是 0</span></div><div class="line">number=1</div><div class="line"><span class="keyword">if</span>  <span class="keyword">if</span> <span class="built_in">test</span> -n <span class="variable">$A</span></div><div class="line">    <span class="keyword">then</span></div><div class="line">        ((number+1))</div><div class="line">    <span class="keyword">else</span></div><div class="line">        ((number-1))</div><div class="line">    <span class="keyword">fi</span></div><div class="line"><span class="keyword">then</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"数学表达式值非 0，返回值为 0"</span></div><div class="line"><span class="keyword">else</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"数学表达式值为 0，返回值非 0"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"><span class="comment"># if 语句和控制操作符 &amp;&amp; || 连接的命令非常相似，但要注意它们之间细微的差别：</span></div><div class="line"><span class="comment"># if 语句中 then 后面的命令不会影响 else 后的命令的执行</span></div><div class="line"><span class="comment"># 但 &amp;&amp; 后的命令会影响 || 后的命令的执行</span></div><div class="line"><span class="built_in">echo</span> <span class="string">'---------------'</span></div><div class="line"><span class="keyword">if</span> [[-r file &amp;&amp; ! <span class="_">-d</span> file]];<span class="keyword">then</span></div><div class="line">    grep -q hello file</div><div class="line"><span class="keyword">else</span></div><div class="line">    awk <span class="string">'/world/'</span> file</div><div class="line"><span class="keyword">fi</span></div><div class="line"><span class="built_in">echo</span> <span class="string">'---------------'</span></div><div class="line"><span class="comment"># 上面的 if 语句无输出，但下面的命令有输出</span></div><div class="line">[-r file <span class="_">-a</span> ! <span class="_">-d</span> file] &amp;&amp; grep -q hello file || awk <span class="string">'/world/'</span> file</div><div class="line"><span class="comment"># 可以将控制操作符连接的命令写成这样来忽略 &amp;&amp; 后命令的影响 (使用了内置命令 true 来返回真):</span></div><div class="line"><span class="built_in">echo</span> <span class="string">'---------------'</span></div><div class="line">[-r file <span class="_">-a</span> ! <span class="_">-d</span> file] &amp;&amp; (grep -q hello file;<span class="literal">true</span>) || awk <span class="string">'/world/'</span> file</div></pre></td></tr></table></figure>
+<h3 id="6、for-name-in-word-…-do-list-done"><a href="#6、for-name-in-word-…-do-list-done" class="headerlink" title="6、for name [[in [ word …] ];]do list;done"></a>6、for name [[in [ word …] ];]do list;done</h3><h3 id="7、for-expr1-expr2-expr3-do-list-done"><a href="#7、for-expr1-expr2-expr3-do-list-done" class="headerlink" title="7、for ((expr1;expr2;expr3));do list;done"></a>7、for ((expr1;expr2;expr3));do list;done</h3><p>bash 中的 for 循环语句支持如上两种格式，在第一种格式中，先将 in 后面的 word 进行扩展，然后将得到的单词列表逐一赋值给变量 name，每一次赋值都执行一次 do 后面的 list，直到列表为空。如果 in word 被省略，则将位置变量逐一赋值给 name 并执行 list。第二种格式中，双圆括号内都是数学表达式，先计算 expr1，然后反复计算 expr2，直到其值为 0。每一次计算 expr2 得到非 0 值，执行 do 后面的 list 和第三个表达式 expr3。如果任何一个表达式省略，则表示其值为 1。for 语句的返回值是执行最后一个 list 的返回值。</p>
+<p>脚本举例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="comment"># word 举例</span></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="variable">$&#123;a:=3&#125;</span> $(head -1 /etc/passwd) $((a+=2))</div><div class="line"><span class="keyword">do</span></div><div class="line">    <span class="built_in">echo</span> -n <span class="string">"<span class="variable">$i</span>"</span></div><div class="line"><span class="keyword">done</span></div><div class="line"><span class="built_in">echo</span> <span class="variable">$a</span></div><div class="line"><span class="comment"># 省略 in word</span></div><div class="line"><span class="built_in">declare</span> <span class="_">-a</span> array</div><div class="line"><span class="keyword">for</span> number</div><div class="line"><span class="keyword">do</span></div><div class="line">    array+=(<span class="variable">$number</span>)</div><div class="line"><span class="keyword">done</span></div><div class="line"><span class="built_in">echo</span> <span class="variable">$&#123;array[@]&#125;</span></div><div class="line"><span class="comment"># 数学表达式格式</span></div><div class="line"><span class="keyword">for</span>((i=0;i&lt;<span class="variable">$&#123;#array[*]&#125;</span>;i++))</div><div class="line"><span class="keyword">do</span></div><div class="line">    <span class="built_in">echo</span> -n <span class="string">"<span class="variable">$&#123;array[$i]&#125;</span>"</span>|sed <span class="string">'y/1234567890/abcdefghij/'</span></div><div class="line"><span class="keyword">done</span>;<span class="built_in">echo</span></div></pre></td></tr></table></figure>
+<p>执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># ./test.sh "$(seq 10)"   # 注意此处 "$(seq 10)" 将作为一个整体赋值给 $1，如果去掉双引号将会扩展成 10 个值并赋给 $1 $2 ... $&#123;10&#125;</span></div><div class="line">3 root:x:0:0:root:/root:/bin/bash 5 5        <span class="comment"># 是否带双引号并不影响执行结果，只影响第二个 for 语句的循环次数。</span></div><div class="line">1 2 3 4 5 6 7 8 9 10</div><div class="line">a b c d e f g h i aj</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<h3 id="8、while-list-1-do-list-2-done"><a href="#8、while-list-1-do-list-2-done" class="headerlink" title="8、while list-1; do list-2; done"></a>8、while list-1; do list-2; done</h3><h3 id="9、until-list-1-do-list-2-done"><a href="#9、until-list-1-do-list-2-done" class="headerlink" title="9、until list-1; do list-2; done"></a>9、until list-1; do list-2; done</h3><p>while 命令会重复执行 list-2，只要 list-1 的返回值为 0；until 命令会重复执行 list-2，只要 list-1 的返回值为非 0。while 和 until 命令的返回值是最后一次执行 list-2 的返回值。</p>
+<p>break 和 continue 两个内置命令可以用于 for、while、until 循环中，分别表示跳出循环和停止本次循环开始下一次循环。</p>
+<h3 id="10、case-word-in-pattern-pattern-…-list-…-esac"><a href="#10、case-word-in-pattern-pattern-…-list-…-esac" class="headerlink" title="10、case word in [[(] pattern [ | pattern]…) list ;;] … esac"></a>10、case word in [[(] pattern [ | pattern]…) list ;;] … esac</h3><p>case 命令会将 word 扩展后的值和 in 后面的多个不同的 pattern 进行匹配 (通配符匹配)，如果匹配成功则执行相应的 list。</p>
+<p>list 后使用操作符;; 时，表示如果执行了本次的 list，那么将不再进行下一次的匹配，case 命令结束；</p>
+<p>使用操作符;&amp;，则表示执行完本次 list 后，再执行紧随其后的下一个 list(不判断是否匹配)；</p>
+<p>使用操作符;;&amp;，则表示继续下一次的匹配，如果匹配成功，那么执行相应的 list。</p>
+<p>case 命令的返回值是执行最后一个命令的返回值，当匹配均没有成功时，返回值为 0。</p>
+<p>脚本举例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="comment"># while</span></div><div class="line"><span class="built_in">unset</span> i j</div><div class="line"><span class="keyword">while</span> ((i++&lt;$(grep -c <span class="string">'^processor'</span> /proc/cpuinfo)))</div><div class="line"><span class="keyword">do</span></div><div class="line">    <span class="comment">#每个后台运行的 yes 命令将占满一核 CPU</span></div><div class="line">    yes &gt;/dev/null &amp;</div><div class="line"><span class="keyword">done</span></div><div class="line"><span class="comment"># -------------------------------------------------</span></div><div class="line"><span class="comment"># until</span></div><div class="line"><span class="comment"># 获取 yes 进程 PID 数组</span></div><div class="line">PIDS=($(ps -eo pid,comm|grep -oP <span class="string">'\d+(?= yes$)'</span>))</div><div class="line"><span class="comment"># 逐个杀掉 yes 进程</span></div><div class="line">until ! ((<span class="variable">$&#123;#PIDS[*]&#125;</span>-j++))</div><div class="line"><span class="keyword">do</span></div><div class="line">    <span class="built_in">kill</span> <span class="variable">$&#123;PIDS[$j-1]&#125;</span></div><div class="line"><span class="keyword">done</span></div><div class="line"><span class="comment"># -------------------------------------------------</span></div><div class="line"><span class="comment"># case</span></div><div class="line">user_define_command &amp;&gt;/dev/null</div><div class="line"><span class="keyword">case</span> $? <span class="keyword">in</span></div><div class="line">0) <span class="built_in">echo</span> <span class="string">"执行成功"</span> ;;</div><div class="line">1) <span class="built_in">echo</span> <span class="string">"未知错误"</span> ;;</div><div class="line">2) <span class="built_in">echo</span> <span class="string">"误用 shell 命令"</span> ;;</div><div class="line">126) <span class="built_in">echo</span> <span class="string">"权限不够"</span> ;;</div><div class="line">127) <span class="built_in">echo</span> <span class="string">"未找到命令"</span> ;;</div><div class="line">130) <span class="built_in">echo</span> <span class="string">"CTRL+C 终止"</span> ;;</div><div class="line">*) <span class="built_in">echo</span> <span class="string">"其他错误"</span> ;;</div><div class="line"><span class="keyword">esac</span></div><div class="line"><span class="comment"># -------------------------------------------------</span></div><div class="line"><span class="comment">#定义数组</span></div><div class="line">c=(1 2 3 4 5)</div><div class="line"><span class="comment">#关于各种复合命令结合使用的例子：</span></div><div class="line"><span class="built_in">echo</span> <span class="_">-e</span> <span class="string">"<span class="variable">$(</span></span></div><div class="line">for i in $&#123;c[@]&#125;</div><div class="line">do</div><div class="line">    case $i in</div><div class="line">    (1|2|3)</div><div class="line">        printf "%d\n<span class="string">" <span class="variable">$((i+1)</span>)</span></div><div class="line">        ;;</div><div class="line">    (4|5)</div><div class="line">        printf "%d\n<span class="string">" <span class="variable">$((i-1)</span>)</span></div><div class="line">        ;;</div><div class="line">    esac</div><div class="line">done</div><div class="line">)" | <span class="keyword">while</span> <span class="built_in">read</span> NUM</div><div class="line"><span class="keyword">do</span></div><div class="line">    <span class="keyword">if</span> [[<span class="variable">$NUM</span> -ge 4]];<span class="keyword">then</span></div><div class="line">        <span class="built_in">printf</span> <span class="string">"%s\n"</span> <span class="string">"数字 <span class="variable">$&#123;NUM&#125;</span> 大于等于 4"</span></div><div class="line">    <span class="keyword">else</span></div><div class="line">        <span class="built_in">printf</span> <span class="string">"%s\n"</span> <span class="string">"数字 <span class="variable">$&#123;NUM&#125;</span> 小于 4"</span></div><div class="line">    <span class="keyword">fi</span></div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
+<p>执行结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># ./test.sh</span></div><div class="line">./test.sh: 行 18: 18671 已终止               yes &gt; /dev/null</div><div class="line">./test.sh: 行 18: 18673 已终止               yes &gt; /dev/null</div><div class="line">./test.sh: 行 18: 18675 已终止               yes &gt; /dev/null</div><div class="line">./test.sh: 行 18: 18677 已终止               yes &gt; /dev/null</div><div class="line">./test.sh: 行 18: 18679 已终止               yes &gt; /dev/null</div><div class="line">./test.sh: 行 18: 18681 已终止               yes &gt; /dev/null</div><div class="line">./test.sh: 行 20: 18683 已终止               yes &gt; /dev/null</div><div class="line">./test.sh: 行 20: 18685 已终止               yes &gt; /dev/null</div><div class="line">未找到命令</div><div class="line">数字 2 小于 4</div><div class="line">数字 3 小于 4</div><div class="line">数字 4 大于等于 4</div><div class="line">数字 3 小于 4</div><div class="line">数字 4 大于等于 4</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<h3 id="11、select-name-in-word-do-list-done"><a href="#11、select-name-in-word-do-list-done" class="headerlink" title="11、select name [in word] ; do list ; done"></a>11、select name [in word] ; do list ; done</h3><p>select 命令适用于交互式菜单选择场景。word 的扩展结果组成一系列可选项供用户选择，用户通过键入提示字符中可选项前的数字来选择特定项目，然后执行 list，完成后继续下一轮选择，需要使用内置命令 break 来跳出循环。</p>
+<p>脚本举例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"系统信息："</span></div><div class="line">select item <span class="keyword">in</span> <span class="string">"host_name"</span> <span class="string">"user_name"</span> <span class="string">"shell_name"</span> <span class="string">"quit"</span></div><div class="line"><span class="keyword">do</span></div><div class="line">    <span class="keyword">case</span> <span class="variable">$item</span> <span class="keyword">in</span></div><div class="line">     host*) hostname;;</div><div class="line">     user*) <span class="built_in">echo</span> <span class="variable">$USER</span>;;</div><div class="line">     shell*) <span class="built_in">echo</span> <span class="variable">$SHELL</span>;;</div><div class="line">     quit) <span class="built_in">break</span>;;</div><div class="line">    <span class="keyword">esac</span></div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
+<p>执行结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">[root@centos7 ~]<span class="comment"># ./test.sh</span></div><div class="line">系统信息：</div><div class="line">1) host_name</div><div class="line">2) user_name</div><div class="line">3) shell_name</div><div class="line">4) quit</div><div class="line"><span class="comment">#? 1</span></div><div class="line">centos7</div><div class="line"><span class="comment">#? 2</span></div><div class="line">root</div><div class="line"><span class="comment">#? 3</span></div><div class="line">/bin/bash</div><div class="line"><span class="comment">#? 4</span></div><div class="line">[root@centos7 ~]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<h2 id="协进程命令"><a href="#协进程命令" class="headerlink" title="协进程命令"></a>协进程命令</h2><p>协进程命令是指由保留关键字 coproc 执行的命令 (bash4.0 版本以上)，其命令格式为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">coproc [NAME] <span class="built_in">command</span> [redirections]</div></pre></td></tr></table></figure>
+<p>命令 command 在子 shell 中异步执行，就像被控制操作符 &amp; 作用而放到了后台执行，同时建立起一个双向管道，连接该命令和当前 shell。</p>
+<p>执行此命令，即创建了一个协进程，如果 NAME 省略 (command 为简单命令时必须省略，此时使用默认名 COPROC)，则称为匿名协进程，否则称为命名协进程。</p>
+<p>此命令执行时，command 的标准输出和标准输入通过双向管道分别连接到当前 shell 的两个文件描述符，然后文件描述符又分别赋值给了数组元素 NAME[0] 和 NAME[1]。此双向管道的建立要早于命令 command 的其他重定向操作。被连接的文件描述符可以当成变量来使用。子 shell 的 pid 可以通过变量 NAME_PID 来获得。</p>
+<p>关于协进程的例子，我们在下一篇给出。</p>
+<h2 id="函数定义"><a href="#函数定义" class="headerlink" title="函数定义"></a>函数定义</h2><p>bash 函数定义的格式有两种：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">name () compound-command [redirection]</div><div class="line"><span class="keyword">function</span> name [()] compound-command [redirection]</div></pre></td></tr></table></figure>
+<p>这样定义了名为 name 的函数，使用保留关键字 function 定义函数时，括号可以省略。函数的代码块可以是任意一个上述的复合命令 (compound-command)。</p>
+<p>脚本举例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="comment">#常用定义方法：</span></div><div class="line"><span class="function"><span class="title">func_1</span></span>() &#123;</div><div class="line">    <span class="comment">#局部变量</span></div><div class="line">    <span class="built_in">local</span> num=6</div><div class="line">    <span class="comment">#嵌套执行函数</span></div><div class="line">    func_2</div><div class="line">    <span class="comment">#函数的 return 值保存在特殊变量? 中</span></div><div class="line">    <span class="keyword">if</span> [$? <span class="_">-gt</span> 10];<span class="keyword">then</span></div><div class="line">        <span class="built_in">echo</span> <span class="string">"大于 10"</span></div><div class="line">    <span class="keyword">else</span></div><div class="line">        <span class="built_in">echo</span> <span class="string">"小于等于 10"</span></div><div class="line">    <span class="keyword">fi</span></div><div class="line">&#125;</div><div class="line"><span class="comment">################</span></div><div class="line"><span class="function"><span class="title">func_2</span></span>()</div><div class="line">&#123;</div><div class="line">    <span class="comment"># 内置命令 return 使函数退出，并使其的返回值为命令后的数字</span></div><div class="line">    <span class="comment"># 如果 return 后没有参数，则返回函数中最后一个命令的返回值</span></div><div class="line">    <span class="built_in">return</span> $((num+5))</div><div class="line">&#125;</div><div class="line"><span class="comment">#执行。就如同执行一个简单命令。函数必须先定义后执行 (包括嵌套执行的函数)</span></div><div class="line">func_1</div><div class="line"><span class="comment">###############</span></div><div class="line"><span class="comment">#一般定义方法</span></div><div class="line"><span class="comment">#函数名后面可以是任何复合命令：</span></div><div class="line">func_3() <span class="keyword">for</span> NUM</div><div class="line"><span class="keyword">do</span></div><div class="line">    <span class="comment"># 内置命令 shift 将会调整位置变量，每次执行都把前 n 个参数撤销，后面的参数前移。</span></div><div class="line">    <span class="comment"># 如果 shift 后的数字省略，则表示撤销第一个参数 $1，其后参数前移 ($2 变为 $1....)</span></div><div class="line">    <span class="built_in">shift</span></div><div class="line">    <span class="built_in">echo</span> -n <span class="string">"<span class="variable">$((NUM+$#)</span>)"</span></div><div class="line"><span class="keyword">done</span></div><div class="line"><span class="comment">#函数内部位置变量被重置为函数的参数</span></div><div class="line">func_3 `seq 10`;<span class="built_in">echo</span></div></pre></td></tr></table></figure>
+<p>执行结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># ./test.sh   </span></div><div class="line">大于 10</div><div class="line">10 10 10 10 10 10 10 10 10 10</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>这些就是bash的所有命令语法。bash中任何复杂难懂的语句都是这些命令的变化组合。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/28/linux-ssh-authentication/" rel="next" title="Redhat 7/CentOS 7 SSH 免密登录">
+                <i class="fa fa-chevron-left"></i> Redhat 7/CentOS 7 SSH 免密登录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/28/linux-variable/" rel="prev" title="Linux 基础之变量">
+                Linux 基础之变量 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/10/28/linux-syntax/"
+     data-title="Linux 基础之语法"
+     data-content=""
+     data-url="https://tangpengcsu.github.io/2016/10/28/linux-syntax/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/28/linux-syntax/"
+           data-title="Linux 基础之语法" data-url="https://tangpengcsu.github.io/2016/10/28/linux-syntax/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="IAN" />
+          <p class="site-author-name" itemprop="name">IAN</p>
+           
+              <p class="site-description motion-element" itemprop="description">啊~ 五环</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangpengcsu" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/tangpcn" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tpeang" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#语法"><span class="nav-number">2.</span> <span class="nav-text">语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简单命令"><span class="nav-number">2.1.</span> <span class="nav-text">简单命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#管道命令"><span class="nav-number">2.2.</span> <span class="nav-text">管道命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#序列命令"><span class="nav-number">2.3.</span> <span class="nav-text">序列命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复合命令"><span class="nav-number">2.4.</span> <span class="nav-text">复合命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、-list"><span class="nav-number">2.4.1.</span> <span class="nav-text">1、(list)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、-list"><span class="nav-number">2.5.</span> <span class="nav-text">2、{list;}</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、-expression"><span class="nav-number">2.6.</span> <span class="nav-text">3、((expression))</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、-expression"><span class="nav-number">2.7.</span> <span class="nav-text">4、[[expression]]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、if-list-then-list-elif-list-then-list-…-else-list-fi"><span class="nav-number">2.8.</span> <span class="nav-text">5、if list; then list; [elif list; then list;] … [ else list; ] fi</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、for-name-in-word-…-do-list-done"><span class="nav-number">2.9.</span> <span class="nav-text">6、for name [[in [ word …] ];]do list;done</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7、for-expr1-expr2-expr3-do-list-done"><span class="nav-number">2.10.</span> <span class="nav-text">7、for ((expr1;expr2;expr3));do list;done</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8、while-list-1-do-list-2-done"><span class="nav-number">2.11.</span> <span class="nav-text">8、while list-1; do list-2; done</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9、until-list-1-do-list-2-done"><span class="nav-number">2.12.</span> <span class="nav-text">9、until list-1; do list-2; done</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10、case-word-in-pattern-pattern-…-list-…-esac"><span class="nav-number">2.13.</span> <span class="nav-text">10、case word in [[(] pattern [ | pattern]…) list ;;] … esac</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11、select-name-in-word-do-list-done"><span class="nav-number">2.14.</span> <span class="nav-text">11、select name [in word] ; do list ; done</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#协进程命令"><span class="nav-number">3.</span> <span class="nav-text">协进程命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数定义"><span class="nav-number">4.</span> <span class="nav-text">函数定义</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">IAN</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访问数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tangpeng"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="local-search-pop-overlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

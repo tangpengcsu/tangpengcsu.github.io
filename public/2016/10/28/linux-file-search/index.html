@@ -1,0 +1,1116 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1、linux 中包含大量的文件，对于文件查找，linux 提供了 find 命令。find 是一个非常有效的工具，它可以遍历目标目录甚至整个文件系统来查找某些文件或目录：
+1find [path...] [expression]
+其中 expression 包括三种：options、tests 和 actions。多个表达式之间被操作符分隔，当操作符被省略时，表示使用了默认操作符 -and。
+当">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 基础之文件搜索及其它">
+<meta property="og:url" content="https://tangpengcsu.github.io/2016/10/28/linux-file-search/index.html">
+<meta property="og:site_name" content="北冥有鱼">
+<meta property="og:description" content="1、linux 中包含大量的文件，对于文件查找，linux 提供了 find 命令。find 是一个非常有效的工具，它可以遍历目标目录甚至整个文件系统来查找某些文件或目录：
+1find [path...] [expression]
+其中 expression 包括三种：options、tests 和 actions。多个表达式之间被操作符分隔，当操作符被省略时，表示使用了默认操作符 -and。
+当">
+<meta property="og:updated_time" content="2017-03-14T05:18:47.736Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux 基础之文件搜索及其它">
+<meta name="twitter:description" content="1、linux 中包含大量的文件，对于文件查找，linux 提供了 find 命令。find 是一个非常有效的工具，它可以遍历目标目录甚至整个文件系统来查找某些文件或目录：
+1find [path...] [expression]
+其中 expression 包括三种：options、tests 和 actions。多个表达式之间被操作符分隔，当操作符被省略时，表示使用了默认操作符 -and。
+当">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tangpengcsu.github.io/2016/10/28/linux-file-search/"/>
+
+
+
+
+
+  <title> Linux 基础之文件搜索及其它 | 北冥有鱼 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dda06c0f41d225c14b70c9d51326cc61";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">北冥有鱼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-file-search/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Linux 基础之文件搜索及其它
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-28T18:39:04+08:00">
+                2016-10-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/10/28/linux-file-search/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-file-search/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1、linux-中包含大量的文件，对于文件查找，linux-提供了-find-命令。"><a href="#1、linux-中包含大量的文件，对于文件查找，linux-提供了-find-命令。" class="headerlink" title="1、linux 中包含大量的文件，对于文件查找，linux 提供了 find 命令。"></a>1、linux 中包含大量的文件，对于文件查找，linux 提供了 find 命令。</h2><p>find 是一个非常有效的工具，它可以遍历目标目录甚至整个文件系统来查找某些文件或目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find [path...] [expression]</div></pre></td></tr></table></figure>
+<p>其中 expression 包括三种：options、tests 和 actions。多个表达式之间被操作符分隔，当操作符被省略时，表示使用了默认操作符 -and。</p>
+<p>当表达式中不包含任何 actions 时，默认使用 -print，也就是打印出搜索到的所有文件，用换行分隔。</p>
+<p>其实可以将三种表达式均视为选项，表示对搜索的某种限制 (如 -maxdepth 表示搜索路径的最大深度)、或对找到的目标文件的某种测试 (如 -readable 判断是否可读)、或对结果采取的某种动作 (如 -print)。</p>
+<a id="more"></a>
+<p><strong>选项 -name pattern 搜索文件名：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># find /root/* -name "file?"      </span></div><div class="line">/root/file1</div><div class="line">/root/temp/file1</div><div class="line">/root/temp/file2</div><div class="line">/root/temp/file3</div><div class="line">/root/temp/file4</div><div class="line">/root/temp/file5</div><div class="line">/root/temp/file6</div><div class="line">/root/temp/file7</div><div class="line">/root/temp/file8</div><div class="line">/root/temp/file9</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>此例中搜索目录 /root 下所有文件，找出匹配 file? 的文件名，同时由于没有指定 action，所以使用默认的 -print 将结果打印出来。find 命令中，搜索路径和某些文件名的表示可以使用 shell 通配符 (见上一篇)，但为了避免混淆，处于选项后的通配符需要被引号引起来。</p>
+<p><strong>选项 -maxdepth n 指定搜索路径的最大深度：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 ~]<span class="comment"># find /root -maxdepth 1 -name "file?"  #注意表达式之间的隐含操作符 -and</span></div><div class="line">/root/file1</div><div class="line">[root@centos7 ~]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>本例中指定最大深度为 1，表示只搜索 /root 目录，而不进入任何它的子目录去搜索。<br>和此选项相对应，-mindepth 表示指定搜索路径的最小深度。</p>
+<p><strong>选项 -user name 按照文件属主来查找文件：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@centos7 ~]<span class="comment"># find /root/temp -name "file?" -user learner</span></div><div class="line">/root/temp/file1</div><div class="line">/root/temp/file2</div><div class="line">[root@centos7 ~]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>或者类似选项 -uid n 表示按文件属主的 uid，-gid n 表示按文件所属组的 gid，-group name 表示按文件所属组。</p>
+<p><strong>选项 -mtime n 文件上次内容被修改距离现在 n*24 小时：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># ls -lt file1?</span></div><div class="line">-rw-r--r-- 1 root root  64 10 月 27 15:06 file11</div><div class="line">-rw-r--r-- 1 root root 132 10 月 27 13:28 file10</div><div class="line">-rw-r--r-- 1 root root  22 10 月 26 21:31 file12</div><div class="line">-rw-r--r-- 1 root root 137 10 月 12 16:42 file13</div><div class="line">[root@centos7 temp]<span class="comment"># find . -name "file1?" -mtime +5 #五天前</span></div><div class="line">./file13</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div><div class="line">[root@centos7 temp]<span class="comment"># find . -name "file1?" -mtime -5 #五天内</span></div><div class="line">./file10</div><div class="line">./file11</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div><div class="line">[root@centos7 temp]<span class="comment"># find . -name "file1?" -mtime 5 #刚好五天</span></div><div class="line">./file12</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>本例中使用了命令 ls 的选项 -t 对文件的时间进行排序，最近被修改的文件在前。选项 -mtime n 中 n 可以表示成：</p>
+<ul>
+<li>+n 表示大于 n</li>
+<li>-n 表示小于 n</li>
+<li>n  表示等于 n</li>
+</ul>
+<p>还有其他时间 (如 atime,ctime) 的比较，用法相同。</p>
+<p><strong>选项 -newer file 表示搜索到的文件比指定的 file 要‘新’(上次内容被修改离现在时间更短)：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># find . -name "file1?" -newer file12</span></div><div class="line">./file10</div><div class="line">./file11</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p><strong>选项 -path pattern 文件名匹配 pattern(通配符):</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># find . -name "file1?" -path "./file1[13]"</span></div><div class="line">./file11</div><div class="line">./file13</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>注意 pattern 匹配时不会对 / 和. 进行特殊处理。</p>
+<p><strong>通常 -path 会配合选项 -prune 使用，表示对某目录的排除：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># find . -name "file*"</span></div><div class="line">./file10</div><div class="line">./file12</div><div class="line">./file11</div><div class="line">./tmp/file</div><div class="line">./file13</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div><div class="line">[root@centos7 temp]<span class="comment"># find . -path "./tmp" -prune -o -name "file*" -print</span></div><div class="line">./file10</div><div class="line">./file12</div><div class="line">./file11</div><div class="line">./file13</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>这里的 -o 表示或者，它和之前所说的 -and 都是操作符。表示表达式之间的逻辑关系。本例中可以理解为：如果目录匹配./tmp 则执行 -prune 跳过该目录，否则匹配 -name 指定的文件并执行 -print。</p>
+<p>除这两个操作符外，操作符! 或 -not 表示逻辑非，操作符 (…) 和数学运算中的括号类似，表示提高优先级：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># find . ! -path "./tmp*" -name "file*"      </span></div><div class="line">./file10</div><div class="line">./file12</div><div class="line">./file11</div><div class="line">./file13</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div><div class="line"><span class="comment">#排除多个目录：</span></div><div class="line">[root@centos7 temp]<span class="comment"># find . \( -path "./tmp" -o -path "./abcd" \) -prune -o -name "file*" -print</span></div><div class="line">./file10</div><div class="line">./file12</div><div class="line">./file11</div><div class="line">./file13</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>注意这里的 (…) 操作符需要被转义(为避免被 shell 解释为其他含义)，在符号前加上反斜线’\’。(关于 shell 中的转义或引用我们会在讲 bash 编程时详述)</p>
+<p><strong>选项 -type x 表示搜索类型为 x 的文件，其中 x 的可能值包括 b、c、d、p、f、l、s。它们和命令 ls 显示的文件类型一致 (见基础命令介绍一)，f 代表普通文件。</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># ln -s file13 file14</span></div><div class="line">[root@centos7 temp]<span class="comment"># ls -l file14</span></div><div class="line">lrwxrwxrwx 1 root root 6 11 月  1 12:29 file14 -&gt; file13</div><div class="line">[root@centos7 temp]<span class="comment"># find . -type l</span></div><div class="line">./file14</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p><strong>选项 -perm mode 表示搜索特定权限的文件：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># chmod 777 file14</span></div><div class="line">[root@centos7 temp]<span class="comment"># ls -l file1[3-4]</span></div><div class="line">-rwxrwxrwx 1 root root 137 10 月 12 16:42 file13</div><div class="line">lrwxrwxrwx 1 root root   6 11 月  1 12:29 file14 -&gt; file13</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div><div class="line">[root@centos7 temp]<span class="comment"># find . -perm 777</span></div><div class="line">./file13</div><div class="line">./file14</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>或表示成：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># find . -perm -g=rwx #表示文件所属组的权限是可读、可写、可执行。</span></div><div class="line">./file13</div><div class="line">./file14</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p><strong>选项 -size n 表示搜索文件大小</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># find . -path "./*" -size +100c</span></div><div class="line">./file10</div><div class="line">./file13</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>此例中 + 100c 表示当前目录下大于 100 bytes 的文件，n 和前面表示时间的方式类似 (+n,-n,n)，n 后面的字符还包括：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">b 单位为 512 bytes 的块 (n 后面没有后缀时的默认单位)</div><div class="line">k 1024 bytes</div><div class="line">M 1048576 bytes</div><div class="line">G 1073741824 bytes</div></pre></td></tr></table></figure>
+<p>选项 -print0 类似 -print 输出文件名，但不用任何字符分隔它们。当文件名中包含特殊字符时使用。可以配合带选项 -0 的命令 xargs 一起使用 (后述)。</p>
+<p><strong>选项 -exec command ; 表示要执行的命令</strong></p>
+<p>-exec 后可以跟任意 shell 命令来对搜索到的文件做进一步的处理，在 command 和分号之间都被视为 command 的参数，其中用 {} 代表被搜索到的文件。分号需要被转义。<br>如对搜索到的文件执行命令 ls -l：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># find . -name "file*" -exec ls -l &#123;&#125; \;</span></div><div class="line">-rw-r--r-- 1 root root 132 10 月 27 13:28 ./file10</div><div class="line">-rw-r--r-- 1 root root 22 10 月 26 21:31 ./file12</div><div class="line">-rw-r--r-- 1 root root 64 10 月 27 15:06 ./file11</div><div class="line">-rw-r--r-- 1 root root 67 10 月 31 17:50 ./tmp/file</div><div class="line">-rw-r--r-- 1 root root 0 11 月  1 12:05 ./abcd/file15</div><div class="line">-rwxrwxrwx 1 root root 137 10 月 12 16:42 ./file13</div><div class="line">lrwxrwxrwx 1 root root 6 11 月  1 12:29 ./file14 -&gt; file13</div></pre></td></tr></table></figure>
+<p>-exec 选项后的命令是在启动 find 所在的目录内执行的，并且对于每个搜索到的文件，该命令都执行一次，而不是把所有文件列在命令后面只执行一次。<br>举例说明下其中的区别：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#命令 echo 只执行一次</span></div><div class="line">[root@centos7 temp]<span class="comment"># echo ./file11 ./file12 ./file13</span></div><div class="line">./file11 ./file12 ./file13</div><div class="line"></div><div class="line"><span class="comment">#命令 echo 执行了三次</span></div><div class="line">[root@centos7 temp]<span class="comment"># find . -name "file1[1-3]" -exec echo &#123;&#125; \;</span></div><div class="line">./file12</div><div class="line">./file11</div><div class="line">./file13</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>当使用格式 -exec command {} + 时表示每个文件都被追加到命令后面，这样，命令就只被执行一次了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># find . -name "file1[1-3]" -exec echo &#123;&#125; +</span></div><div class="line">./file12 ./file11 ./file13</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>但有时会出现问题：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># find . -name "file1[1-3]" -exec mv &#123;&#125; abcd/ +</span></div><div class="line">find: 遗漏 “-exec” 的参数</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>因为这里文件被追加于目录 abcd / 的后面，导致报错。</p>
+<p>同时，使用格式 -exec command {} + 还可能会造成被追加的文件数过多，超出了操作系统对命令行长度的限制。</p>
+<p>使用 -exec 可能会有安全漏洞，通常使用管道和另一个命令 xargs 来代替 -exec 执行命令。</p>
+<h2 id="2、xargs-从标准输入中获得命令的参数并执行"><a href="#2、xargs-从标准输入中获得命令的参数并执行" class="headerlink" title="2、xargs 从标准输入中获得命令的参数并执行"></a>2、xargs 从标准输入中获得命令的参数并执行</h2><p>xargs 从标准输入中获得由空格分隔的项目，并执行命令 (默认为 /bin/echo)</p>
+<p>选项 -0 将忽略项目的分隔符，配合 find 的选项 -print0，处理带特殊符号的文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># find . -name "file*" -print0 | xargs -0 ls -l</span></div><div class="line">-rw-r--r-- 1 root root 132 10 月 27 13:28 ./file10</div><div class="line">-rw-r--r-- 1 root root  64 10 月 27 15:06 ./file11</div><div class="line">-rw-r--r-- 1 root root  22 10 月 26 21:31 ./file12</div><div class="line">-rwxrwxrwx 1 root root 137 10 月 12 16:42 ./file13</div><div class="line">-rw-r--r-- 1 root root   0 11 月  1 14:45 ./file 14  <span class="comment">#注意此文件名中包含空格</span></div></pre></td></tr></table></figure>
+<p>当不用时：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># find . -name "file*" | xargs ls</span></div><div class="line">ls: 无法访问./file: 没有那个文件或目录</div><div class="line">ls: 无法访问 14: 没有那个文件或目录</div><div class="line">./file10  ./file11  ./file12  ./file13</div></pre></td></tr></table></figure>
+<p>选项 -I string 为输入项目指定替代字符串：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># ls abcd/</span></div><div class="line">[root@centos7 temp]<span class="comment"># find . -name "file*" | xargs -I&#123;&#125; mv &#123;&#125; abcd/</span></div><div class="line">[root@centos7 temp]<span class="comment"># ls abcd/</span></div><div class="line">file10  file11  file12  file13</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>这里的意思是说使用 -I 后面的字符串去代替输入项目，这样就可以把它们作为整体放到命令的任意位置来执行了。也避免了 -exec command {} + 的错误。</p>
+<p>选项 -d 指定输入项目的分隔符：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># head -n1 /etc/passwd</span></div><div class="line">root:x:0:0:root:/root:/bin/bash</div><div class="line">[root@centos7 temp]<span class="comment"># head -n1 /etc/passwd|xargs -d ":" echo -n</span></div><div class="line">root x 0 0 root /root /bin/bash</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>选项 -P 指定最大进程数，默认进程数为 1，多个进程并发执行。</p>
+<h2 id="3、date-打印或设置系统时间"><a href="#3、date-打印或设置系统时间" class="headerlink" title="3、date 打印或设置系统时间"></a>3、date 打印或设置系统时间</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">date [OPTION]... [+FORMAT]</div></pre></td></tr></table></figure>
+<p>当没有任何参数时表示显示当前时间：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># date</span></div><div class="line">2016 年 11 月 01 日 星期二 15:30:46 CST</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>选项 -d string 按描述字符串显示时间 (例子中字符串表示距离 1970-01-01 零点的秒数)：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># date --date='@2147483647'</span></div><div class="line">2038 年 01 月 19 日 星期二 11:14:07 CST</div></pre></td></tr></table></figure>
+<p>或者：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># date -d@2147483647</span></div><div class="line">2038 年 01 月 19 日 星期二 11:14:07 CST</div></pre></td></tr></table></figure>
+<p>-d 后面的字符串还可以是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># date -d "-1 day"</span></div><div class="line">2016 年 10 月 31 日 星期一 16:11:27 CST</div></pre></td></tr></table></figure>
+<p>表示昨天</p>
+<p>又如明年表示为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># date -d "1 year"</span></div><div class="line">2017 年 11 月 01 日 星期三 16:12:27 CST</div></pre></td></tr></table></figure>
+<p>选项 -s 设置系统时间：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># date -s "2016-11-01 15:49"</span></div><div class="line">2016 年 11 月 01 日 星期二 15:49:00 CST</div><div class="line">[root@centos7 temp]<span class="comment"># date</span></div><div class="line">2016 年 11 月 01 日 星期二 15:49:03 CST</div></pre></td></tr></table></figure>
+<p>由于 linux 系统启动时将读取 CMOS 来获得时间，系统会每隔一段时间将系统时间写入 CMOS，为避免更改时间后系统的立即重启造成时间没有被写入 CMOS，通常设置完时间后会使用命令 clock -w 将系统时间写入到 CMOS 中。</p>
+<p>date 命令中由 FORMAT 来控制输出格式，加号 + 在格式之前表示格式开始：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># date "+%Y-%m-%d %H:%M:%S"</span></div><div class="line">2016-11-01 16:00:45</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>本例中格式被双引号引起来以避免被 shell 误解，其中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">%Y 表示年</div><div class="line">%m 表示月</div><div class="line">%d 表示天</div><div class="line">%H 表示小时</div><div class="line">%M 表示分钟</div><div class="line">%S 表示秒</div></pre></td></tr></table></figure>
+<p>还可以指定很多其他格式如只输出当前时间：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># date "+%T"</span></div><div class="line">16:03:50</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>如输出距离 1970-01-01 零点到现在时间的秒数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># date +%s</span></div><div class="line">1477987540</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>如输出今天星期几：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># date +%A</span></div><div class="line">星期二</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>其他格式请自行 man</p>
+<h2 id="4、gzip-压缩或解压文件"><a href="#4、gzip-压缩或解压文件" class="headerlink" title="4、gzip 压缩或解压文件"></a>4、gzip 压缩或解压文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gzip [OPTION]... [FILE]...</div></pre></td></tr></table></figure>
+<p>当命令后直接跟文件时，表示压缩该文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># ls -l file1*</span></div><div class="line">-rw-r--r-- 1 root root 132 10 月 27 13:28 file10</div><div class="line">-rw-r--r-- 1 root root  64 10 月 27 15:06 file11</div><div class="line">-rw-r--r-- 1 root root  22 10 月 26 21:31 file12</div><div class="line">-rw-r--r-- 1 root root 137 10 月 12 16:42 file13</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div><div class="line">[root@centos7 temp]<span class="comment"># gzip file10 file11 file12 file13</span></div><div class="line">[root@centos7 temp]<span class="comment"># ls -l file1*                     </span></div><div class="line">-rw-r--r-- 1 root root  75 10 月 27 13:28 file10.gz</div><div class="line">-rw-r--r-- 1 root root  49 10 月 27 15:06 file11.gz</div><div class="line">-rw-r--r-- 1 root root  44 10 月 26 21:31 file12.gz</div><div class="line">-rw-r--r-- 1 root root 109 10 月 12 16:42 file13.gz</div></pre></td></tr></table></figure>
+<p>压缩后的文件以. gz 结尾，gzip 是不保留源文件的</p>
+<p>选项 -d 表示解压缩</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># gzip -d *.gz</span></div><div class="line">[root@centos7 temp]<span class="comment"># ls -l file1*</span></div><div class="line">-rw-r--r-- 1 root root 132 10 月 27 13:28 file10</div><div class="line">-rw-r--r-- 1 root root  64 10 月 27 15:06 file11</div><div class="line">-rw-r--r-- 1 root root  22 10 月 26 21:31 file12</div><div class="line">-rw-r--r-- 1 root root 137 10 月 12 16:42 file13</div></pre></td></tr></table></figure>
+<p>选项 -r 可以递归地进入目录并压缩里面的文件</p>
+<p>选项 -n 指定压缩级别，n 为从 1-9 的数字。1 为最快压缩，但压缩比最小; 9 的压缩速度最慢，但压缩比最大。默认时 n 为 6。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># gzip -r9 ./tmp</span></div></pre></td></tr></table></figure>
+<p>当 gzip 后没有文件或文件为 - 时，将从标准输入读取并压缩：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># echo "hello world" | gzip &gt;hello.gz</span></div><div class="line">[root@centos7 temp]<span class="comment"># ls -l *.gz</span></div><div class="line">-rw-r--r-- 1 root root 32 11 月  1 16:40 hello.gz</div></pre></td></tr></table></figure>
+<p>注意例子中 gzip 的输出被重定向到文件 hello.gz 中，如果对此文件进行解压，将会生成文件 hello。如果被重定向的文件后缀不是. gz，文件名在被改成. gz 后缀之前将不能被解压。</p>
+<h2 id="5、zcat-将压缩的文件内容输出到标准输出"><a href="#5、zcat-将压缩的文件内容输出到标准输出" class="headerlink" title="5、zcat 将压缩的文件内容输出到标准输出"></a>5、zcat 将压缩的文件内容输出到标准输出</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># zcat hello.gz</span></div><div class="line">hello world</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>zcat 读取被 gzip 压缩的文件，只需文件格式正确，不需要文件名具有. gz 的后缀。</p>
+<h2 id="6、bzip2-压缩解压文件"><a href="#6、bzip2-压缩解压文件" class="headerlink" title="6、bzip2 压缩解压文件"></a>6、bzip2 压缩解压文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bzip2 [OPTION]... [FILE]...</div></pre></td></tr></table></figure>
+<p>命令 bzip2 和 gzip 类似都是压缩命令，只是使用的压缩算法不一样，通常 bzip2 的压缩比较高。本命令默认同样不保留源文件，默认文件名后缀为. bz2：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># bzip2 file11</span></div><div class="line">[root@centos7 temp]<span class="comment"># ls -l file11.bz2</span></div><div class="line">-rw-r--r-- 1 root root 61 10 月 27 15:06 file11.bz2</div></pre></td></tr></table></figure>
+<p>选项 -k 可使源文件保留：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># bzip2 -k file10</span></div><div class="line">[root@centos7 temp]<span class="comment"># ls -l file10*</span></div><div class="line">-rw-r--r-- 1 root root 132 10 月 27 13:28 file10</div><div class="line">-rw-r--r-- 1 root root  96 10 月 27 13:28 file10.bz2</div></pre></td></tr></table></figure>
+<p>选项 -d 表示解压 (若存在源文件则报错)：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># bzip2 -d file10.bz2</span></div><div class="line">bzip2: Output file file10 already exists.</div><div class="line">[root@centos7 temp]<span class="comment"># bzip2 -d file11.bz2</span></div><div class="line">[root@centos7 temp]<span class="comment"># ls -l file11</span></div><div class="line">-rw-r--r-- 1 root root 64 10 月 27 15:06 file11</div></pre></td></tr></table></figure>
+<p>选项 -f 表示强制覆盖源文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># bzip2 -d -f file10.bz2</span></div><div class="line">[root@centos7 temp]<span class="comment"># ls -l file10*</span></div><div class="line">-rw-r--r-- 1 root root 132 10 月 27 13:28 file10</div></pre></td></tr></table></figure>
+<p>选项 -n 和 gzip 用法一致，表示压缩比。</p>
+<h2 id="7、tar-打包压缩文件"><a href="#7、tar-打包压缩文件" class="headerlink" title="7、tar 打包压缩文件"></a>7、tar 打包压缩文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar [OPTION...] [FILE]...</div></pre></td></tr></table></figure>
+<p>命令 gzip 和 bzip2 均不支持压缩目录 (虽然 gzip 可以用选项 -r 到目录内去压缩，但仍无法压缩目录)，用 tar 命令可以将目录归档，然后利用压缩命令进行压缩：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># tar -cf tmp.tar tmp/</span></div><div class="line">[root@centos7 temp]<span class="comment"># ls -l</span></div><div class="line">总用量 18256</div><div class="line">drwxr-xr-x 2 root root        6 11 月  1 16:23 abcd</div><div class="line">-rwxr-xr-x 1 root root       12 10 月 28 17:24 test.sh</div><div class="line">drwxr-xr-x 2 root root   425984 11 月  1 17:08 tmp</div><div class="line">-rw-r--r-- 1 root root 18001920 11 月  1 17:17 tmp.tar</div></pre></td></tr></table></figure>
+<p>例子中选项 -c 表示创建打包文件，-f tmp.tar 表示指定打包文件名为 tmp.tar，后面跟被打包目录名 tmp/。</p>
+<p>选项 -t 列出归档内容</p>
+<p>选项 -v 详细地列出处理的文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># ls -l abcd.tar</span></div><div class="line">-rw-r--r-- 1 root root 10240 11 月  2 08:58 abcd.tar</div><div class="line">[root@centos7 temp]<span class="comment"># tar -tvf abcd.tar</span></div><div class="line">drwxr-xr-x root/root         0 2016-11-02 08:57 abcd/</div><div class="line">-rw-r--r-- root/root         6 2016-11-02 08:57 abcd/file10</div><div class="line">-rw-r--r-- root/root         6 2016-11-02 08:57 abcd/file11</div><div class="line">-rw-r--r-- root/root         6 2016-11-02 08:57 abcd/file12</div><div class="line">-rw-r--r-- root/root         6 2016-11-02 08:57 abcd/file13</div></pre></td></tr></table></figure>
+<p>选项 -u 更新归档文件 (update)。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># touch abcd/file15</span></div><div class="line">[root@centos7 temp]<span class="comment"># tar uvf abcd.tar abcd</span></div><div class="line">abcd/file15</div><div class="line">[root@centos7 temp]<span class="comment"># tar tvf abcd.tar</span></div><div class="line">drwxr-xr-x root/root         0 2016-11-02 08:57 abcd/</div><div class="line">-rw-r--r-- root/root         6 2016-11-02 08:57 abcd/file10</div><div class="line">-rw-r--r-- root/root         6 2016-11-02 08:57 abcd/file11</div><div class="line">-rw-r--r-- root/root         6 2016-11-02 08:57 abcd/file12</div><div class="line">-rw-r--r-- root/root         6 2016-11-02 08:57 abcd/file13</div><div class="line">-rw-r--r-- root/root         0 2016-11-02 09:07 abcd/file15</div></pre></td></tr></table></figure>
+<p>选项 -x 对归档文件进行提取操作。(解包)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># rm -rf abcd/</span></div><div class="line">[root@centos7 temp]<span class="comment"># tar -xvf abcd.tar</span></div><div class="line">abcd/</div><div class="line">abcd/file10</div><div class="line">abcd/file11</div><div class="line">abcd/file12</div><div class="line">abcd/file13</div><div class="line">abcd/file15</div><div class="line">[root@centos7 temp]<span class="comment"># ls abcd   #这里是按两次 tab 键的补全结果</span></div><div class="line">abcd/     abcd.tar  </div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>选项 -O 解压文件至标准输出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># tar -xf abcd.tar -O</span></div><div class="line">hello</div><div class="line">hello</div><div class="line">hello</div><div class="line">hello</div><div class="line">[root@centos7 temp]<span class="comment">#  #注意这里输出了每个归档文件的内容</span></div><div class="line">[root@centos7 temp]<span class="comment"># tar -xf abcd.tar -O | xargs echo</span></div><div class="line">hello hello hello hello</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>选项 -p 保留文件权限 (用于解包时)。</p>
+<p>选项 -j、-J、-z 用于压缩。</p>
+<p>其中 -j 使用命令 bzip2，-J 使用命令 xz，-z 使用命令 gzip 分别将归档文件进行压缩解压处理 (命令 tar 后的选项可以省略 -)：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># tar zcf tmp.tar.gz tmp</span></div><div class="line">[root@centos7 temp]<span class="comment"># tar jcf tmp.tar.bz2 tmp</span></div><div class="line">[root@centos7 temp]<span class="comment"># tar Jcf tmp.tar.xz tmp</span></div><div class="line">[root@centos7 temp]<span class="comment"># du -sh tmp*</span></div><div class="line">70M     tmp</div><div class="line">28K     tmp.tar.bz2</div><div class="line">180K    tmp.tar.gz</div><div class="line">40K     tmp.tar.xz</div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>本例中分别使用三种压缩格式进行压缩，可以看到使用命令 bzip2 的压缩比最高，命令 gzip 的压缩比最低。在执行压缩文件时，压缩时间也是我们考量的一个重要因素。默认时，使用 gzip 最快，xz 最慢。</p>
+<p>对于这三种格式的压缩文件进行解压，只需将选项中 -c 换成 -x 即可。</p>
+<p>选项 -X FILE 排除匹配文件 FILE 中所列模式的文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[root@centos7 abcd]<span class="comment"># cat file</span></div><div class="line">file10</div><div class="line">file13</div><div class="line">[root@centos7 abcd]<span class="comment"># tar -X file -cf file.tar file*</span></div><div class="line">[root@centos7 abcd]<span class="comment"># tar -tvf file.tar</span></div><div class="line">-rw-r--r-- root/root        14 2016-11-02 10:10 file</div><div class="line">-rw-r--r-- root/root         6 2016-11-02 10:02 file11</div><div class="line">-rw-r--r-- root/root         6 2016-11-02 10:02 file12</div><div class="line">-rw-r--r-- root/root         0 2016-11-02 09:07 file15</div></pre></td></tr></table></figure>
+<p>注意文件 FILE 中支持通配符匹配：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[root@centos7 abcd]<span class="comment"># cat file</span></div><div class="line">file1[2-3]</div><div class="line">[root@centos7 abcd]<span class="comment"># tar -X file -cf file.tar file*</span></div><div class="line">[root@centos7 abcd]<span class="comment"># tar -tvf file.tar</span></div><div class="line">-rw-r--r-- root/root        11 2016-11-02 10:20 file</div><div class="line">-rw-r--r-- root/root         6 2016-11-02 10:02 file10</div><div class="line">-rw-r--r-- root/root         6 2016-11-02 10:02 file11</div><div class="line">-rw-r--r-- root/root         0 2016-11-02 09:07 file15</div></pre></td></tr></table></figure>
+<p>选项 -C DIR 改变至目录 DIR(用于解包时)：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># tar zxf tmp.tar.gz -C abcd</span></div><div class="line">[root@centos7 temp]<span class="comment"># ls -l abcd/</span></div><div class="line">总用量 688</div><div class="line">-rw-r--r-- 1 root root     11 11 月  2 10:20 file</div><div class="line">-rw-r--r-- 1 root root      6 11 月  2 10:02 file10</div><div class="line">-rw-r--r-- 1 root root      6 11 月  2 10:02 file11</div><div class="line">-rw-r--r-- 1 root root      6 11 月  2 10:02 file12</div><div class="line">-rw-r--r-- 1 root root      6 11 月  2 10:02 file13</div><div class="line">-rw-r--r-- 1 root root      0 11 月  2 09:07 file15</div><div class="line">drwxr-xr-x 2 root root 425984 11 月  1 17:08 tmp</div></pre></td></tr></table></figure>
+<p>只解压指定文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># tar zxvf tmp.tar.gz -C abcd/ file1[23]</span></div><div class="line">file12</div><div class="line">file13</div><div class="line">[root@centos7 temp]<span class="comment"># ls -l abcd</span></div><div class="line">总用量 12</div><div class="line">-rw-r--r-- 1 root root 6 11 月 16 15:26 file12</div><div class="line">-rw-r--r-- 1 root root 6 11 月 16 15:26 file13</div></pre></td></tr></table></figure>
+<p>注意这里解压时，指定文件不能在选项 -C 之前</p>
+<p>如不想解压压缩包，但想查看压缩包中某个文件的内容时，可以使用如下技巧：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># tar zxf tmp.tar.gz file -O</span></div><div class="line">BLOG ADDRESS IS <span class="string">"https://segmentfault.com/learnning"</span></div><div class="line">[root@centos7 temp]<span class="comment">#</span></div></pre></td></tr></table></figure>
+<p>本文讲述了linux中关于文件搜索和归档压缩等相关的命令及部分选项用法，都是在系统管理过程中经常要使用的。需熟练使用。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/28/linux-firewall/" rel="next" title="Firewalld 防火墙">
+                <i class="fa fa-chevron-left"></i> Firewalld 防火墙
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/28/linux-disk-and-fs/" rel="prev" title="Linux 基础之磁盘与文件系统">
+                Linux 基础之磁盘与文件系统 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/10/28/linux-file-search/"
+     data-title="Linux 基础之文件搜索及其它"
+     data-content=""
+     data-url="https://tangpengcsu.github.io/2016/10/28/linux-file-search/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/28/linux-file-search/"
+           data-title="Linux 基础之文件搜索及其它" data-url="https://tangpengcsu.github.io/2016/10/28/linux-file-search/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="IAN" />
+          <p class="site-author-name" itemprop="name">IAN</p>
+           
+              <p class="site-description motion-element" itemprop="description">啊~ 五环</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangpengcsu" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/tangpcn" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tpeang" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、linux-中包含大量的文件，对于文件查找，linux-提供了-find-命令。"><span class="nav-number">1.</span> <span class="nav-text">1、linux 中包含大量的文件，对于文件查找，linux 提供了 find 命令。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、xargs-从标准输入中获得命令的参数并执行"><span class="nav-number">2.</span> <span class="nav-text">2、xargs 从标准输入中获得命令的参数并执行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、date-打印或设置系统时间"><span class="nav-number">3.</span> <span class="nav-text">3、date 打印或设置系统时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、gzip-压缩或解压文件"><span class="nav-number">4.</span> <span class="nav-text">4、gzip 压缩或解压文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、zcat-将压缩的文件内容输出到标准输出"><span class="nav-number">5.</span> <span class="nav-text">5、zcat 将压缩的文件内容输出到标准输出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6、bzip2-压缩解压文件"><span class="nav-number">6.</span> <span class="nav-text">6、bzip2 压缩解压文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7、tar-打包压缩文件"><span class="nav-number">7.</span> <span class="nav-text">7、tar 打包压缩文件</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">IAN</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访问数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tangpeng"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="local-search-pop-overlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
