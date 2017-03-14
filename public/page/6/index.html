@@ -302,7 +302,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-tuning/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-streaming-programming-guide/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -324,8 +324,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/12/24/spark-tuning/" itemprop="url">
-                  Spark 优化指南
+                <a class="post-title-link" href="/2016/12/24/spark-streaming-programming-guide/" itemprop="url">
+                  Spark Streaming
                 </a>
               
             
@@ -382,8 +382,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/12/24/spark-tuning/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-tuning/" itemprop="commentCount"></span>
+                <a href="/2016/12/24/spark-streaming-programming-guide/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-streaming-programming-guide/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -410,10 +410,10 @@
 
       
         
-          <p>大多数 Saprk 计算本质是内存，Spark 程序可以碰到集群中的 CPU、网络带宽或存储 资源上的瓶颈。大多数情况下，如果数据加载到内存中，网络带宽就是瓶颈。但有时候，还需要做一些调整，比如 <a href="/2016/12/24/spark-programming-guides/#rdd--2" title="/2016/12/24/spark-programming-guides/#rdd--2">序列化形式存储 RDD</a> （storing RDDs in serialized），以减少内存使用情况。还涉及两个主要方面：原始数据的系列化，良好的网络性能，以减少内存使用情况。下面做几个主要的讨论。</p>
+          <h2 id="Spark-Streaming-概述"><a href="#Spark-Streaming-概述" class="headerlink" title="Spark Streaming 概述"></a>Spark Streaming 概述</h2><p>Spark Streaming 是 Spark 核心 API 的扩展，它支持弹性的，高吞吐的，容错的实时数据流的处理。数据可以通过多种数据源获取，例如 Kafka，Flume，Kinesis 以及 TCP sockets，也可以通过高阶函数例如 map，reduce，join，window 等组成的复杂算法处理。最终，处理后的数据可以输出到文件系统，数据库以及实时仪表盘中。事实上，你还可以在数据流上使用 Spark <a href="http://spark.apache.org/docs/latest/ml-guide.html" title="http://spark.apache.org/docs/latest/ml-guide.html">机器学习</a> 以及 <a href="http://spark.apache.org/docs/latest/graphx-programming-guide.html" title="http://spark.apache.org/docs/latest/graphx-programming-guide.html">图形处理</a> 算法 。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/12/24/spark-tuning/#more" rel="contents">
+            <a class="btn" href="/2016/12/24/spark-streaming-programming-guide/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

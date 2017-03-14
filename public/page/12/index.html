@@ -302,7 +302,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-service/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kuberntes-ha/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -324,8 +324,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/26/kubernetes-service/" itemprop="url">
-                  Service
+                <a class="post-title-link" href="/2016/10/26/kuberntes-ha/" itemprop="url">
+                  构建 High-Availability 集群
                 </a>
               
             
@@ -382,8 +382,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/26/kubernetes-service/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-service/" itemprop="commentCount"></span>
+                <a href="/2016/10/26/kuberntes-ha/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kuberntes-ha/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -410,14 +410,13 @@
 
       
         
-          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Kubernetes　Pod 是平凡的，它门会被创建，也会死掉（生老病死），并且他们是不可复活的。 ReplicationControllers 动态的创建和销毁 Pods(比如规模扩大或者缩小，或者执行动态更新)。每个 pod 都由自己的 ip，这些 IP 也随着时间的变化也不能持续依赖。这样就引发了一个问题：如果一些 Pods（让我们叫它作后台，后端）提供了一些功能供其它的 Pod 使用（让我们叫作前台），在 kubernete 集群中是如何实现让这些前台能够持续的追踪到这些后台的？</p>
-<p><strong>答案是：Service</strong></p>
-<p>Kubernete Service 是一个定义了一组 Pod 的策略的抽象，我们也有时候叫做宏观服务。这些被服务标记的 Pod 都是（一般）通过 label Selector 决定的（下面我们会讲到我们为什么需要一个没有 label selector 的服务）</p>
-<p>举个例子，我们假设后台是一个图形处理的后台，并且由 3 个副本。这些副本是可以相互替代的，并且前台并需要关心使用的哪一个后台 Pod，当这个承载前台请求的 pod 发生变化时，前台并不需要直到这些变化，或者追踪后台的这些副本，服务是这些去耦</p>
-<p>对于 Kubernete 原生的应用，Kubernete 提供了一个简单的 Endpoints API，这个 Endpoints api 的作用就是当一个服务中的 pod 发生变化时，Endpoints API 随之变化，对于哪些不是原生的程序，Kubernetes 提供了一个基于虚拟 IP 的网桥的服务，这个服务会将请求转发到对应的后台 pod</p>
+          <p>这篇文章主要介绍怎样部署一个 <code>高可用(HA)</code> 的 Kubernetes 集群。这是一个相当高阶的主题。</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>建立一个真正可靠、高可用性的分布式系统需要若干步骤，它就像是穿着内衣、裤子、皮带、吊带，另外一对内裤和另一条裤子。下面，我们对这些步骤进行详细的探究，但在这里进行了一些总结，以帮助指导用户。</p>
+<p>所涉及的步骤如下：</p>
+<p>-<br>-<br>-<br>-</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kubernetes-service/#more" rel="contents">
+            <a class="btn" href="/2016/10/26/kuberntes-ha/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -614,7 +613,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kuberntes-ha/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-service/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -636,8 +635,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/26/kuberntes-ha/" itemprop="url">
-                  构建 High-Availability 集群
+                <a class="post-title-link" href="/2016/10/26/kubernetes-service/" itemprop="url">
+                  Service
                 </a>
               
             
@@ -694,8 +693,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/26/kuberntes-ha/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kuberntes-ha/" itemprop="commentCount"></span>
+                <a href="/2016/10/26/kubernetes-service/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-service/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -722,13 +721,14 @@
 
       
         
-          <p>这篇文章主要介绍怎样部署一个 <code>高可用(HA)</code> 的 Kubernetes 集群。这是一个相当高阶的主题。</p>
-<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>建立一个真正可靠、高可用性的分布式系统需要若干步骤，它就像是穿着内衣、裤子、皮带、吊带，另外一对内裤和另一条裤子。下面，我们对这些步骤进行详细的探究，但在这里进行了一些总结，以帮助指导用户。</p>
-<p>所涉及的步骤如下：</p>
-<p>-<br>-<br>-<br>-</p>
+          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Kubernetes　Pod 是平凡的，它门会被创建，也会死掉（生老病死），并且他们是不可复活的。 ReplicationControllers 动态的创建和销毁 Pods(比如规模扩大或者缩小，或者执行动态更新)。每个 pod 都由自己的 ip，这些 IP 也随着时间的变化也不能持续依赖。这样就引发了一个问题：如果一些 Pods（让我们叫它作后台，后端）提供了一些功能供其它的 Pod 使用（让我们叫作前台），在 kubernete 集群中是如何实现让这些前台能够持续的追踪到这些后台的？</p>
+<p><strong>答案是：Service</strong></p>
+<p>Kubernete Service 是一个定义了一组 Pod 的策略的抽象，我们也有时候叫做宏观服务。这些被服务标记的 Pod 都是（一般）通过 label Selector 决定的（下面我们会讲到我们为什么需要一个没有 label selector 的服务）</p>
+<p>举个例子，我们假设后台是一个图形处理的后台，并且由 3 个副本。这些副本是可以相互替代的，并且前台并需要关心使用的哪一个后台 Pod，当这个承载前台请求的 pod 发生变化时，前台并不需要直到这些变化，或者追踪后台的这些副本，服务是这些去耦</p>
+<p>对于 Kubernete 原生的应用，Kubernete 提供了一个简单的 Endpoints API，这个 Endpoints api 的作用就是当一个服务中的 pod 发生变化时，Endpoints API 随之变化，对于哪些不是原生的程序，Kubernetes 提供了一个基于虚拟 IP 的网桥的服务，这个服务会将请求转发到对应的后台 pod</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kuberntes-ha/#more" rel="contents">
+            <a class="btn" href="/2016/10/26/kubernetes-service/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -771,7 +771,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-replication_controller/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-labels/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -793,8 +793,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/26/kubernetes-replication_controller/" itemprop="url">
-                  Replication Controller
+                <a class="post-title-link" href="/2016/10/26/kubernetes-labels/" itemprop="url">
+                  Labels
                 </a>
               
             
@@ -851,8 +851,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/26/kubernetes-replication_controller/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-replication_controller/" itemprop="commentCount"></span>
+                <a href="/2016/10/26/kubernetes-labels/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-labels/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -879,18 +879,12 @@
 
       
         
-          <blockquote>
-<p>已被 RS 取代</p>
-</blockquote>
-<h2 id="RC-伸缩-Resizing-a-Replication-Controller"><a href="#RC-伸缩-Resizing-a-Replication-Controller" class="headerlink" title="RC 伸缩 - Resizing a Replication Controller"></a>RC 伸缩 - Resizing a Replication Controller</h2><h3 id="语法："><a href="#语法：" class="headerlink" title="语法："></a>语法：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ kubectl scale rc NAME --replicas=COUNT \</div><div class="line">    [--current-replicas=COUNT] \</div><div class="line">    [--resource-version=VERSION]</div></pre></td></tr></table></figure>
-<ul>
-<li>NAME: 待更新的 RC 名称，必选。</li>
-<li>replicas: 期望伸缩的副本数，必选。</li>
-<li>current-replicas: 当前 RC 副本数，可选。</li>
-<li><p>resource-version: 匹配 RC labels[].version 的值，可选。</p>
+          <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>标签其实就一对 key/value，被关联到对象上，比如 Pod，标签的使用我们倾向于能够标示对象的特殊特点，并且对用户而言是有意义的（就是一眼就看出了这个 Pod 是尼玛数据库），但是标签对内核系统是没有直接意义的。标签可以用来划分特定组的对象（比如，所有女的），标签可以在创建一个对象的时候直接给与，也可以在后期随时修改，每一个对象可以拥有多个标签，但是，key 值必须是唯一的</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">"labels": &#123;</div><div class="line"> "key1" : "value1",</div><div class="line"> "key2" : "value2"</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>我们最终会索引并且反向索引（ reverse-index ）labels，以获得更高效的查询和监视，把他们用到 UI 或者 CLI 中用来排序或者分组等等。我们不想用那些不具有指认效果的 label 来污染 label，特别是那些体积较大和结构型的的数据。不具有指认效果的信息应该使用 annotation 来记录。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kubernetes-replication_controller/#more" rel="contents">
+            <a class="btn" href="/2016/10/26/kubernetes-labels/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -933,7 +927,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-heapster/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-install-kubernetes/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -955,8 +949,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/26/kubernetes-heapster/" itemprop="url">
-                  Heapster 在 Kubernetes 集群中的部署--包含 InfluxDB 后台 和 Grafana UI
+                <a class="post-title-link" href="/2016/10/26/kubernetes-install-kubernetes/" itemprop="url">
+                  在 Linux 上安装 kubernetes
                 </a>
               
             
@@ -1013,8 +1007,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/26/kubernetes-heapster/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-heapster/" itemprop="commentCount"></span>
+                <a href="/2016/10/26/kubernetes-install-kubernetes/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-install-kubernetes/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1041,14 +1035,18 @@
 
       
         
-          <blockquote>
-<p>原文引用：<a href="https://github.com/kubernetes/heapster/blob/master/docs/influxdb.md" title="https://github.com/kubernetes/heapster/blob/master/docs/influxdb.md">https://github.com/kubernetes/heapster/blob/master/docs/influxdb.md</a></p>
-</blockquote>
-<h2 id="启动-k8s-集群"><a href="#启动-k8s-集群" class="headerlink" title="启动 k8s 集群"></a>启动 k8s 集群</h2><h2 id="启动所有的-pods-和-services"><a href="#启动所有的-pods-和-services" class="headerlink" title="启动所有的 pods 和 services"></a>启动所有的 pods 和 services</h2><p>为部署 Heapster 和 InfluxDB，你需要通过 <a href="https://github.com/kubernetes/heapster/tree/master/deploy/kube-config/influxdb" title="https://github.com/kubernetes/heapster/tree/master/deploy/kube-config/influxdb">deploy/kube-config/influxdb</a> 创建 kubernetes 资源。确保你已经在 <code>root</code>目录下 <code>checkout</code> 有效的 <code>Heapster</code> 资源。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/kubernetes/heapster.git</div></pre></td></tr></table></figure>
+          <h2 id="先决条件"><a href="#先决条件" class="headerlink" title="先决条件"></a>先决条件</h2><ol>
+<li>操作系统： Ubuntu 16.04, CentOS 7 or HypriotOS v1.0.1+</li>
+<li>至少 1GB RAM</li>
+<li>确保集群内所有计算机之间的网络连接（公共或专用网络都行）</li>
+</ol>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><ul>
+<li>在你的机器上安装一个安全的 Kubernetes 集群</li>
+<li>在集群上安装一个 pod 网络，一遍应用组件（pods）之间可以正常通信。</li>
+</ul>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kubernetes-heapster/#more" rel="contents">
+            <a class="btn" href="/2016/10/26/kubernetes-install-kubernetes/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

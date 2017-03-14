@@ -302,7 +302,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-overview/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-heapster/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -324,8 +324,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/26/kubernetes-overview/" itemprop="url">
-                  kubernetes 概述
+                <a class="post-title-link" href="/2016/10/26/kubernetes-heapster/" itemprop="url">
+                  Heapster 在 Kubernetes 集群中的部署--包含 InfluxDB 后台 和 Grafana UI
                 </a>
               
             
@@ -382,8 +382,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/26/kubernetes-overview/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-overview/" itemprop="commentCount"></span>
+                <a href="/2016/10/26/kubernetes-heapster/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-heapster/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -410,11 +410,14 @@
 
       
         
-          <p>Kubernetes 是一个开源的，用于管理云平台中多个主机上的容器化的应用，Kubernetes 的目标是让部署容器化的应用简单并且高效（powerful）,Kubernetes 提供了应用部署，规划，更新，维护的一种机制。</p>
-<p>Kubernetes 一个核心的特点就是能够自主的管理容器来保证云平台中的容器按照用户的期望状态运行着（比如用户想让 apache 一直运行，用户不需要关心怎么去做，Kubernetes 会自动去监控，然后去重启，新建，总之，让 apache 一直提供服务），管理员可以加载一个微型服务，让规划器来找到合适的位置，同时，Kubernetes 也系统提升工具以及人性化方面，让用户能够方便的部署自己的应用（就像 canary deployments）。</p>
+          <blockquote>
+<p>原文引用：<a href="https://github.com/kubernetes/heapster/blob/master/docs/influxdb.md" title="https://github.com/kubernetes/heapster/blob/master/docs/influxdb.md">https://github.com/kubernetes/heapster/blob/master/docs/influxdb.md</a></p>
+</blockquote>
+<h2 id="启动-k8s-集群"><a href="#启动-k8s-集群" class="headerlink" title="启动 k8s 集群"></a>启动 k8s 集群</h2><h2 id="启动所有的-pods-和-services"><a href="#启动所有的-pods-和-services" class="headerlink" title="启动所有的 pods 和 services"></a>启动所有的 pods 和 services</h2><p>为部署 Heapster 和 InfluxDB，你需要通过 <a href="https://github.com/kubernetes/heapster/tree/master/deploy/kube-config/influxdb" title="https://github.com/kubernetes/heapster/tree/master/deploy/kube-config/influxdb">deploy/kube-config/influxdb</a> 创建 kubernetes 资源。确保你已经在 <code>root</code>目录下 <code>checkout</code> 有效的 <code>Heapster</code> 资源。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/kubernetes/heapster.git</div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kubernetes-overview/#more" rel="contents">
+            <a class="btn" href="/2016/10/26/kubernetes-heapster/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -457,7 +460,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-install-kubernetes/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-replication_controller/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -479,8 +482,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/26/kubernetes-install-kubernetes/" itemprop="url">
-                  在 Linux 上安装 kubernetes
+                <a class="post-title-link" href="/2016/10/26/kubernetes-replication_controller/" itemprop="url">
+                  Replication Controller
                 </a>
               
             
@@ -537,8 +540,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/26/kubernetes-install-kubernetes/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-install-kubernetes/" itemprop="commentCount"></span>
+                <a href="/2016/10/26/kubernetes-replication_controller/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-replication_controller/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -565,174 +568,181 @@
 
       
         
-          <h2 id="先决条件"><a href="#先决条件" class="headerlink" title="先决条件"></a>先决条件</h2><ol>
-<li>操作系统： Ubuntu 16.04, CentOS 7 or HypriotOS v1.0.1+</li>
-<li>至少 1GB RAM</li>
-<li>确保集群内所有计算机之间的网络连接（公共或专用网络都行）</li>
-</ol>
-<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><ul>
-<li>在你的机器上安装一个安全的 Kubernetes 集群</li>
-<li>在集群上安装一个 pod 网络，一遍应用组件（pods）之间可以正常通信。</li>
+          <blockquote>
+<p>已被 RS 取代</p>
+</blockquote>
+<h2 id="RC-伸缩-Resizing-a-Replication-Controller"><a href="#RC-伸缩-Resizing-a-Replication-Controller" class="headerlink" title="RC 伸缩 - Resizing a Replication Controller"></a>RC 伸缩 - Resizing a Replication Controller</h2><h3 id="语法："><a href="#语法：" class="headerlink" title="语法："></a>语法：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ kubectl scale rc NAME --replicas=COUNT \</div><div class="line">    [--current-replicas=COUNT] \</div><div class="line">    [--resource-version=VERSION]</div></pre></td></tr></table></figure>
+<ul>
+<li>NAME: 待更新的 RC 名称，必选。</li>
+<li>replicas: 期望伸缩的副本数，必选。</li>
+<li>current-replicas: 当前 RC 副本数，可选。</li>
+<li><p>resource-version: 匹配 RC labels[].version 的值，可选。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/10/26/kubernetes-replication_controller/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-pods/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/10/26/kubernetes-pods/" itemprop="url">
+                  Pods
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-26T12:39:04+08:00">
+                2016-10-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">Kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/10/26/kubernetes-pods/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-pods/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>在 Kubernetes 中，最小的管理元素不是一个个独立的容器，而是 Pod 是最小的，管理，创建，计划的最小单元。</p>
+<p><img src="/images/pods_1.jpg" alt="pods"></p>
+<h2 id="什么是-Pod"><a href="#什么是-Pod" class="headerlink" title="什么是 Pod"></a>什么是 Pod</h2><p>一个 Pod（就像一群鲸鱼，或者一个豌豆夹）相当于一个共享 context 的配置组，在同一个 context 下，应用可能还会有独立的 cgroup 隔离机制，一个 Pod 是一个容器环境下的 “逻辑主机”，它可能包含一个或者多个紧密相连的应用，这些应用可能是在同一个物理主机或虚拟机上。</p>
+<p>Pod 的 context 可以理解成多个 linux 命名空间的联合</p>
+<ul>
+<li>PID 命名空间（同一个 Pod 中应用可以看到其它进程）</li>
+<li>网络 命名空间（同一个 Pod 的中的应用对相同的 IP 地址和端口有权限）</li>
+<li>IPC 命名空间（同一个 Pod 中的应用可以通过 VPC 或者 POSIX 进行通信）</li>
+<li>UTS 命名空间（同一个 Pod 中的应用共享一个主机名称）</li>
 </ul>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kubernetes-install-kubernetes/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-labels/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="IAN">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="北冥有鱼">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/26/kubernetes-labels/" itemprop="url">
-                  Labels
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-26T12:39:04+08:00">
-                2016-10-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Kubernetes/" itemprop="url" rel="index">
-                    <span itemprop="name">Kubernetes</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2016/10/26/kubernetes-labels/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-labels/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>标签其实就一对 key/value，被关联到对象上，比如 Pod，标签的使用我们倾向于能够标示对象的特殊特点，并且对用户而言是有意义的（就是一眼就看出了这个 Pod 是尼玛数据库），但是标签对内核系统是没有直接意义的。标签可以用来划分特定组的对象（比如，所有女的），标签可以在创建一个对象的时候直接给与，也可以在后期随时修改，每一个对象可以拥有多个标签，但是，key 值必须是唯一的</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">"labels": &#123;</div><div class="line"> "key1" : "value1",</div><div class="line"> "key2" : "value2"</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<p>我们最终会索引并且反向索引（ reverse-index ）labels，以获得更高效的查询和监视，把他们用到 UI 或者 CLI 中用来排序或者分组等等。我们不想用那些不具有指认效果的 label 来污染 label，特别是那些体积较大和结构型的的数据。不具有指认效果的信息应该使用 annotation 来记录。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kubernetes-labels/#more" rel="contents">
+            <a class="btn" href="/2016/10/26/kubernetes-pods/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -929,7 +939,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/24/docker-swarm-mode/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/24/docker-network-containers/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -951,8 +961,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/24/docker-swarm-mode/" itemprop="url">
-                  Docker Swarm Mode
+                <a class="post-title-link" href="/2016/10/24/docker-network-containers/" itemprop="url">
+                  高级网络配置
                 </a>
               
             
@@ -1009,8 +1019,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/24/docker-swarm-mode/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/24/docker-swarm-mode/" itemprop="commentCount"></span>
+                <a href="/2016/10/24/docker-network-containers/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/24/docker-network-containers/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1037,21 +1047,10 @@
 
       
         
-          <h2 id="Docker-Swarm-Mode特性"><a href="#Docker-Swarm-Mode特性" class="headerlink" title="Docker Swarm Mode特性"></a>Docker Swarm Mode特性</h2><ol>
-<li>集群管理与 Docker 引擎相结合：使用 Docker 引擎 CLI 便可创建一个 Docker 引擎的 Swarm，在这个集群中进行应用服务的部署。对于Swarm 集群的创建和管理，无需其他额外的编排软件。</li>
-<li>分散设计：Docker 引擎不是在部署时处理节点角色之间的差异化内容，而是在运行时处理特殊化内容。通过使用 Docker 引擎可以部署管理节点和工作节点。这就意味着你可从一个单一的磁盘映像上创建一个完整的 Swarm 集群。</li>
-<li>支持面向服务的组件模型：Docker 引擎运用描述性方式，让用户在应用堆栈上定义各种服务的理想状态。例如，可以这样描述一个应用：包含一个配有信息排队服务的 Web 前端服务和一个数据库后端。</li>
-<li>弹性放缩：对于每项服务，你都可以明确想要运行的任务数。当你增加或减少任务数时，Swarm 管理器可自动增加或删除任务，以保持理想状态。</li>
-<li>理想状态的调整：Swarm 管理节点持续对集群状态进行监控，并对实际状态和你明确的理想状态之间的差异进行调整。例如，当你创建一个服务来运行一个容器的10个副本，托管其中两个副本的工作机崩溃时，管理器将创建两个新的副本，代替之前崩溃的两个。Swarm管理器会将新的副本分配给正在运行且可用的工作机。</li>
-<li>多主机网络：你可以针对你的服务指定一个的 Overlay 网络。Swarm管理器初始化或更新应用时，它会自动将地址分配给 Overlay 网上的容器。</li>
-<li>服务发现：Swarm管理节点给Swarm集群上的每项服务分配一个唯一的 DNS 名称以及负载均衡的运行容器。可通过嵌入 Swarm 的 DNS 服务器对集群上运行的各个容器进行查询。</li>
-<li>负载均衡：可以把服务端口暴露给外部负载均衡器。Swarm 内部允许你明确如何分配节点间的服务容器。</li>
-<li>默认安全：Swarm 上的各个节点强制 TLS 互相授权和加密，从而确保自身与其他所有节点之间的通讯安全。可选择使用自签的根证书或自定义根 CA 证书。</li>
-<li>滚动升级：升级时，可以逐增地将服务更新应用到节点上。Swarm 管理器允许你对部署服务到不同节点集而产生的时滞进行控制。如果出错，可以回退任务到服务的前一个版本。</li>
-</ol>
+          <p>使用 Docker 网络功能可以帮助我们在建设 web 应用时保证一致和安全性。网络的定义就是为容器之间提供完全的独立性。因此对应用运行的网络控制是非常重要的。Docker 容器网络功能正好给我们提供了这样的控制。下面主要会介绍 Docker Engine 原生发布的默认网络的特性，描述默认的网络类型以及如何自定义我们自己的网络，并且提供了关于如何在单机或者集群创建网络所需要的资源。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/24/docker-swarm-mode/#more" rel="contents">
+            <a class="btn" href="/2016/10/24/docker-network-containers/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
