@@ -80,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
 
 
 
@@ -302,7 +302,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-networking/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-disk-and-fs/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -324,8 +324,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-networking/" itemprop="url">
-                  Linux 基础之网络
+                <a class="post-title-link" href="/2016/10/28/linux-disk-and-fs/" itemprop="url">
+                  Linux 基础之磁盘与文件系统
                 </a>
               
             
@@ -382,8 +382,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-networking/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-networking/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-disk-and-fs/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-disk-and-fs/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -410,11 +410,11 @@
 
       
         
-          <p>本文将讲述网络相关命令，作者假定读者具备 TCP/IP 协议栈的基础知识。对于相关命令及其输出只介绍它的基本的使用方法和大概的描述，具体协议将不作详细解释。</p>
-<p>如今网络无疑是很重要的，linux 系统中提供了丰富的网络测试与管理命令。我们来一起看看它们。</p>
+          <p>本篇讲述磁盘管理相关的命令。计算机中需要持久化存储的数据一般是保存在硬盘等辅助存储器中。硬盘一般容量较大，为了便于管理和使用，可以将硬盘分成一到多个逻辑磁盘，称为分区；为使分区中的文件组织成操作系统能够处理的形式，需要对分区进行格式化 (创建文件系统)；在 linux 中，对于格式化后的分区，还必须经过挂载(可简单理解为将分区关联至 linux 目录树中某个已知目录) 之后才能使用。</p>
+<h2 id="1、df-显示文件系统磁盘空间使用量"><a href="#1、df-显示文件系统磁盘空间使用量" class="headerlink" title="1、df 显示文件系统磁盘空间使用量"></a>1、df 显示文件系统磁盘空间使用量</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># df -h</span></div><div class="line">文件系统                 容量  已用  可用 已用 % 挂载点</div><div class="line">/dev/mapper/centos-root   49G   18G   31G   36% /</div><div class="line">devtmpfs                 3.9G     0  3.9G    0% /dev</div><div class="line">tmpfs                    3.9G     0  3.9G    0% /dev/shm</div><div class="line">tmpfs                    3.9G  367M  3.5G   10% /run</div><div class="line">tmpfs                    3.9G     0  3.9G    0% /sys/fs/cgroup</div><div class="line">/dev/sda1                497M  125M  373M   26% /boot</div><div class="line">/dev/mapper/centos-home   24G  4.0G   20G   17% /home</div><div class="line">tmpfs                    783M     0  783M    0% /run/user/0</div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-networking/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-disk-and-fs/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -457,7 +457,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-new/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-file-search/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -479,8 +479,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-new/" itemprop="url">
-                  Linux 基础之推陈出新
+                <a class="post-title-link" href="/2016/10/28/linux-file-search/" itemprop="url">
+                  Linux 基础之文件搜索及其它
                 </a>
               
             
@@ -537,8 +537,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-new/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-new/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-file-search/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-file-search/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -565,12 +565,14 @@
 
       
         
-          <p>本文介绍ip、ss、journalctl和firewall-cmd，它们旨在代替linux中原有的一些命令或服务。</p>
-<p>1、ip<br>ip [OPTIONS] OBJECT COMMAND<br>ip是iproute2软件包里面的一个强大的网络配置工具，它能够替代一些传统的网络管理工具，例如ifconfig、route等，使用权限为超级用户。<br>OPTIONS是修改ip行为或改变其输出的选项。<br>OBJECT是要获取信息的对象。包括：</p>
-<p>address   表示设备的协议(IPv4或IPv6)地址<br>link      表示网络设备<br>monitor   表示监控网络连接信息<br>neighbour 表示管理ARP缓存表<br>netns     表示管理网络命名空间<br>route     表示路由表接口<br>tunnel    表示IP隧道<br>….<br>对象名可以是全称或简写格式，比如address可以简写为addr或a。<br>COMMAND设置针对指定对象执行的操作，它和对象的类型有关。</p>
+          <h2 id="1、linux-中包含大量的文件，对于文件查找，linux-提供了-find-命令。"><a href="#1、linux-中包含大量的文件，对于文件查找，linux-提供了-find-命令。" class="headerlink" title="1、linux 中包含大量的文件，对于文件查找，linux 提供了 find 命令。"></a>1、linux 中包含大量的文件，对于文件查找，linux 提供了 find 命令。</h2><p>find 是一个非常有效的工具，它可以遍历目标目录甚至整个文件系统来查找某些文件或目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find [path...] [expression]</div></pre></td></tr></table></figure>
+<p>其中 expression 包括三种：options、tests 和 actions。多个表达式之间被操作符分隔，当操作符被省略时，表示使用了默认操作符 -and。</p>
+<p>当表达式中不包含任何 actions 时，默认使用 -print，也就是打印出搜索到的所有文件，用换行分隔。</p>
+<p>其实可以将三种表达式均视为选项，表示对搜索的某种限制 (如 -maxdepth 表示搜索路径的最大深度)、或对找到的目标文件的某种测试 (如 -readable 判断是否可读)、或对结果采取的某种动作 (如 -print)。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-new/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-file-search/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -613,7 +615,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-process-and-memory/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-firewall/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -635,8 +637,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-process-and-memory/" itemprop="url">
-                  Linux 基础之进程与内存
+                <a class="post-title-link" href="/2016/10/28/linux-firewall/" itemprop="url">
+                  Firewalld 防火墙
                 </a>
               
             
@@ -693,8 +695,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-process-and-memory/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-process-and-memory/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-firewall/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-firewall/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -721,11 +723,10 @@
 
       
         
-          <p>计算机存在的目的就是为了运行各种各样的程序，迄今我们介绍的绝大多数命令，都是为了完成某种计算而用编程语言编写的程序，它们以文件的形式保存在操作系统之中 (比如 /bin 下的各种命令)；但静态的程序并不能“自发的” 产生结果，只有在操作系统中为其指定输入数据并运行起来，才能得到输出结果。而操作系统中程序运行的最主要表现形式便是进程。</p>
-<p>静态程序可以长久的存在，动态的进程具有有限的生命周期。每次程序运行的开始 (如键入一条命令后按下回车键)，操作系统都要为程序的运行准备各种资源，这些资源绝大多数都处于内存之中。为了限制多用户进程的权限，linux 还定义了两种进程运行时态：内核态和用户态；当进程想要请求系统服务时(比如操作一个物理设备)，必须通过系统调用(操作系统提供给用户空间的接口函数) 来实现，此时系统切换到内核态，代表程序执行该系统调用，执行完毕后系统切换回用户态，继续执行程序代码。<br>本文介绍 linux 中关于进程与内存的管理命令 (更多的是查看命令)</p>
+          <p>Firewalld 服务是红帽 RHEL7 系统中默认的防火墙管理工具，特点是拥有运行时配置与永久配置选项且能够支持动态更新以及 “zone” 的区域功能概念，使用图形化工具 firewall-config 或文本管理工具 firewall-cmd，下面实验中会讲到~</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-process-and-memory/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-firewall/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -768,7 +769,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-rpm/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-grep/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -790,8 +791,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-rpm/" itemprop="url">
-                  Linux 基础之软件包管理
+                <a class="post-title-link" href="/2016/10/28/linux-grep/" itemprop="url">
+                  Linux 基础之文本过滤 grep
                 </a>
               
             
@@ -848,8 +849,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-rpm/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-rpm/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-grep/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-grep/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -876,12 +877,12 @@
 
       
         
-          <p>linux 中软件包的管理随着系统发行版本的不同而不同，RPM 和 DPKG 为最常见的两类软件包管理工具，分别应用于基于 rpm 软件包的 linux 发行版和基于 deb 软件包的 linux 发行版。本文只描述 RPM 的使用方法，另一种命令不同，但用法类似，就不做介绍了。</p>
-<h2 id="1、RPM-包管理器"><a href="#1、RPM-包管理器" class="headerlink" title="1、RPM 包管理器"></a>1、RPM 包管理器</h2><p>选项 -q 表示查询系统安装的软件包</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@centos7 ~]<span class="comment"># rpm -q sudo</span></div><div class="line">sudo-1.8.6p7-16.el7.x86_64</div><div class="line">[root@centos7 ~]<span class="comment"># rpm -q nginx</span></div><div class="line">未安装软件包 nginx</div><div class="line">[root@centos7 ~]<span class="comment">#</span></div></pre></td></tr></table></figure>
+          <p>在 linux 中经常需要对文本或输出内容进行过滤，最常用的过滤命令是 <code>grep</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">grep [OPTIONS] PATTERN [FILE...]</div></pre></td></tr></table></figure>
+<p><code>grep</code> 按行检索输入的每一行，如果输入行包含模式 <code>PATTERN</code>，则输出这一行。这里的 <code>PATTERN</code> 是正则表达式 (参考前一篇，本文将结合 grep 一同举例)。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-rpm/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-grep/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -924,7 +925,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-sed/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-network-transmission-and-security/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -946,8 +947,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-sed/" itemprop="url">
-                  Linux 基础之文本流编辑 sed
+                <a class="post-title-link" href="/2016/10/28/linux-network-transmission-and-security/" itemprop="url">
+                  Linux 基础之网络传输与安全
                 </a>
               
             
@@ -1004,8 +1005,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-sed/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-sed/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-network-transmission-and-security/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-network-transmission-and-security/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1032,12 +1033,12 @@
 
       
         
-          <p>与 vim 不同，sed 是一种非交互式的文本编辑器，同时它又是面向字符流的，每行数据经过 sed 处理后输出。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sed [OPTION]... [script] [file]...</div></pre></td></tr></table></figure>
-<p>sed 的工作过程是这样的：首先，初始化两个数据缓冲区模式空间和保持空间；sed 读取一行输入 (来自标准输入或文件)，去掉结尾的换行符(\n) 后置于模式空间中，然后针对模式空间中的字符串开始执行‘sed 命令’，每个命令都可以有地址与之相关联，地址可以看成是条件，只有在条件成立时，相关的命令才被执行；所有可执行命令都处理完毕后，仍处于模式空间中的字符串会被追加一个换行符后打印输出；之后读取下一行输入做同样的处理，直到主动退出 (q) 或输入结束。</p>
+          <p>本篇接着介绍网络相关命令</p>
+<h2 id="1、wget-文件下载工具"><a href="#1、wget-文件下载工具" class="headerlink" title="1、wget 文件下载工具"></a>1、wget 文件下载工具</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget [option]... [URL]...</div></pre></td></tr></table></figure>
+<p>wget 是一个非交互的下载器，支持 HTTP, HTTPS 和 FTP 协议，也可以使用代理。所谓’非交互’意思是说，可以在一个系统中启动一个 wget 下载任务，然后退出系统，wget 会在完成下载 (或出现异常) 之后才退出，不需要用户参与。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-sed/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-network-transmission-and-security/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

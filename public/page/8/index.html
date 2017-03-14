@@ -80,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
 
 
 
@@ -617,7 +617,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-boot-sequence/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-variable/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -639,8 +639,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-boot-sequence/" itemprop="url">
-                  Linux 基础之启动流程
+                <a class="post-title-link" href="/2016/10/28/linux-variable/" itemprop="url">
+                  Linux 基础之变量
                 </a>
               
             
@@ -697,8 +697,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-boot-sequence/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-boot-sequence/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-variable/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-variable/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -725,12 +725,12 @@
 
       
         
-          <p>固件 (firmware) 是指设备最底层的，让设备得以运行的程序代码。简单理解就是：固定在硬件上的软件。计算机中的许多设备都拥有固件(如硬盘、鼠标、光驱、U 盘等)，在计算机启动过程中，最先读取的就是位于主板上的固件，这个固件当前有两种类型：传统的 BIOS 和新的通用性更强的 UEFI。</p>
-<p>在上一篇中，我们提到另一种磁盘分区格式 GTP 也是 UEFI 标准的一部分。于是，当前计算机启动中，出现了两种不同的方式：BIOS/MBR 和 UEFI/GTP。</p>
-<p>在 linux 操作系统的世界中，同样在经历着变革，系统初始化软件 sysvinit 正逐渐被 systemd 取代。<br>本文将主要讲述传统的 BIOS/MBR–&gt;sysvinit 启动方式，同时，作为补充，也将简述 UEFI/GTP–&gt;systemd 的启动方式。</p>
+          <p>本篇开始，介绍 shell 脚本编程，更确切的说是 bash 脚本编程 (版本：4.2.46(1)-release)。我们从变量开始。</p>
+<p>和所有的编程语言一样，bash 也提供变量，变量是一些用来指代数据并支持数据操作的名称。</p>
+<h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><h3 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h3><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>当我们通过 ssh 等工具登录系统时，便获得一个 shell(一个 bash 进程)，bash 在启动过程中会加载一系列的配置文件，这些配置文件的作用就是为用户准备好 bash 环境，大部分 <code>环境变量</code> 都是在这些文件中被设置的。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-boot-sequence/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-variable/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -773,7 +773,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-cgroup/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-syntax/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -795,8 +795,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-cgroup/" itemprop="url">
-                  CGroup 介绍、应用实例及原理描述
+                <a class="post-title-link" href="/2016/10/28/linux-syntax/" itemprop="url">
+                  Linux 基础之语法
                 </a>
               
             
@@ -853,8 +853,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-cgroup/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-cgroup/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-syntax/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-syntax/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -881,10 +881,12 @@
 
       
         
-          <p>CGroup 技术被广泛用于 Linux 操作系统环境下的物理分割，是 Linux Container 技术的底层基础技术，是虚拟化技术的基础。本文首先介绍了 Cgroup 技术，然后通过在 CentOS 操作系统上部署、配置、运行一个实际多线程示例的方式让读者对物理限制 CPU 核的使用有一个大概的了解，接着通过讲解 CGroup 内部的设计原理来让读者有进一步的深入了解 CGroup 技术。</p>
+          <p>本文开始正式介绍 shell 脚本的编写方法以及 bash 的语法。</p>
+<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p><code>元字符</code> 用来分隔词 (token) 的单个字符，包括：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">| &amp; ; () &lt;&gt; space tab</div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-cgroup/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-syntax/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -927,7 +929,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-cron/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-ssh-authentication/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -949,8 +951,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-cron/" itemprop="url">
-                  Linux 基础之定时任务
+                <a class="post-title-link" href="/2016/10/28/linux-ssh-authentication/" itemprop="url">
+                  Redhat 7/CentOS 7 SSH 免密登录
                 </a>
               
             
@@ -1007,8 +1009,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-cron/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-cron/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-ssh-authentication/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-ssh-authentication/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1035,12 +1037,36 @@
 
       
         
-          <p>在计算机的使用过程中，经常会有一些计划中的任务需要在将来的某个时间执行，linux 中提供了一些方法来设定定时任务。</p>
-<h2 id="1、at"><a href="#1、at" class="headerlink" title="1、at"></a>1、at</h2><p>命令 at 从文件或标准输入中读取命令并在将来的一个时间执行，只执行一次。at 的正常执行需要有守护进程 atd(关于 systemctl 请看这一篇)：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#安装 at</span></div><div class="line">yum install -y at 或 apt-get install at -y</div><div class="line"><span class="comment">#启动守护进程</span></div><div class="line">service atd start 或 systemctl start atd</div><div class="line"><span class="comment">#查看是否开机启动</span></div><div class="line">chkconfig --list|grep atd 或 systemctl list-unit-files|grep atd</div><div class="line"><span class="comment">#设置开机启动</span></div><div class="line">chkconfig --level 235 atd on 或 systemctl <span class="built_in">enable</span> atd</div></pre></td></tr></table></figure>
+          <h2 id="先决条件"><a href="#先决条件" class="headerlink" title="先决条件"></a>先决条件</h2><p><strong>3 台 CentOS 7</strong></p>
+<table>
+<thead>
+<tr>
+<th>HOSTNAME</th>
+<th>IP</th>
+<th>ROLE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>server1</td>
+<td>10.8.26.197</td>
+<td>Master</td>
+</tr>
+<tr>
+<td>server2</td>
+<td>10.8.26.196</td>
+<td>Slave1</td>
+</tr>
+<tr>
+<td>server3</td>
+<td>10.8.26.195</td>
+<td>Slave2</td>
+</tr>
+</tbody>
+</table>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-cron/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-ssh-authentication/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

@@ -80,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
 
 
 
@@ -302,7 +302,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-heapster/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-pods/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -324,8 +324,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/26/kubernetes-heapster/" itemprop="url">
-                  Heapster 在 Kubernetes 集群中的部署--包含 InfluxDB 后台 和 Grafana UI
+                <a class="post-title-link" href="/2016/10/26/kubernetes-pods/" itemprop="url">
+                  Pods
                 </a>
               
             
@@ -382,8 +382,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/26/kubernetes-heapster/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-heapster/" itemprop="commentCount"></span>
+                <a href="/2016/10/26/kubernetes-pods/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-pods/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -410,14 +410,19 @@
 
       
         
-          <blockquote>
-<p>原文引用：<a href="https://github.com/kubernetes/heapster/blob/master/docs/influxdb.md" title="https://github.com/kubernetes/heapster/blob/master/docs/influxdb.md">https://github.com/kubernetes/heapster/blob/master/docs/influxdb.md</a></p>
-</blockquote>
-<h2 id="启动-k8s-集群"><a href="#启动-k8s-集群" class="headerlink" title="启动 k8s 集群"></a>启动 k8s 集群</h2><h2 id="启动所有的-pods-和-services"><a href="#启动所有的-pods-和-services" class="headerlink" title="启动所有的 pods 和 services"></a>启动所有的 pods 和 services</h2><p>为部署 Heapster 和 InfluxDB，你需要通过 <a href="https://github.com/kubernetes/heapster/tree/master/deploy/kube-config/influxdb" title="https://github.com/kubernetes/heapster/tree/master/deploy/kube-config/influxdb">deploy/kube-config/influxdb</a> 创建 kubernetes 资源。确保你已经在 <code>root</code>目录下 <code>checkout</code> 有效的 <code>Heapster</code> 资源。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/kubernetes/heapster.git</div></pre></td></tr></table></figure>
+          <p>在 Kubernetes 中，最小的管理元素不是一个个独立的容器，而是 Pod 是最小的，管理，创建，计划的最小单元。</p>
+<p><img src="/images/pods_1.jpg" alt="pods"></p>
+<h2 id="什么是-Pod"><a href="#什么是-Pod" class="headerlink" title="什么是 Pod"></a>什么是 Pod</h2><p>一个 Pod（就像一群鲸鱼，或者一个豌豆夹）相当于一个共享 context 的配置组，在同一个 context 下，应用可能还会有独立的 cgroup 隔离机制，一个 Pod 是一个容器环境下的 “逻辑主机”，它可能包含一个或者多个紧密相连的应用，这些应用可能是在同一个物理主机或虚拟机上。</p>
+<p>Pod 的 context 可以理解成多个 linux 命名空间的联合</p>
+<ul>
+<li>PID 命名空间（同一个 Pod 中应用可以看到其它进程）</li>
+<li>网络 命名空间（同一个 Pod 的中的应用对相同的 IP 地址和端口有权限）</li>
+<li>IPC 命名空间（同一个 Pod 中的应用可以通过 VPC 或者 POSIX 进行通信）</li>
+<li>UTS 命名空间（同一个 Pod 中的应用共享一个主机名称）</li>
+</ul>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kubernetes-heapster/#more" rel="contents">
+            <a class="btn" href="/2016/10/26/kubernetes-pods/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -622,7 +627,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-pods/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-install-kubernetes/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -644,8 +649,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/26/kubernetes-pods/" itemprop="url">
-                  Pods
+                <a class="post-title-link" href="/2016/10/26/kubernetes-install-kubernetes/" itemprop="url">
+                  在 Linux 上安装 kubernetes
                 </a>
               
             
@@ -702,8 +707,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/26/kubernetes-pods/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-pods/" itemprop="commentCount"></span>
+                <a href="/2016/10/26/kubernetes-install-kubernetes/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-install-kubernetes/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -730,19 +735,18 @@
 
       
         
-          <p>在 Kubernetes 中，最小的管理元素不是一个个独立的容器，而是 Pod 是最小的，管理，创建，计划的最小单元。</p>
-<p><img src="/images/pods_1.jpg" alt="pods"></p>
-<h2 id="什么是-Pod"><a href="#什么是-Pod" class="headerlink" title="什么是 Pod"></a>什么是 Pod</h2><p>一个 Pod（就像一群鲸鱼，或者一个豌豆夹）相当于一个共享 context 的配置组，在同一个 context 下，应用可能还会有独立的 cgroup 隔离机制，一个 Pod 是一个容器环境下的 “逻辑主机”，它可能包含一个或者多个紧密相连的应用，这些应用可能是在同一个物理主机或虚拟机上。</p>
-<p>Pod 的 context 可以理解成多个 linux 命名空间的联合</p>
-<ul>
-<li>PID 命名空间（同一个 Pod 中应用可以看到其它进程）</li>
-<li>网络 命名空间（同一个 Pod 的中的应用对相同的 IP 地址和端口有权限）</li>
-<li>IPC 命名空间（同一个 Pod 中的应用可以通过 VPC 或者 POSIX 进行通信）</li>
-<li>UTS 命名空间（同一个 Pod 中的应用共享一个主机名称）</li>
+          <h2 id="先决条件"><a href="#先决条件" class="headerlink" title="先决条件"></a>先决条件</h2><ol>
+<li>操作系统： Ubuntu 16.04, CentOS 7 or HypriotOS v1.0.1+</li>
+<li>至少 1GB RAM</li>
+<li>确保集群内所有计算机之间的网络连接（公共或专用网络都行）</li>
+</ol>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><ul>
+<li>在你的机器上安装一个安全的 Kubernetes 集群</li>
+<li>在集群上安装一个 pod 网络，一遍应用组件（pods）之间可以正常通信。</li>
 </ul>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kubernetes-pods/#more" rel="contents">
+            <a class="btn" href="/2016/10/26/kubernetes-install-kubernetes/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

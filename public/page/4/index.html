@@ -80,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
 
 
 
@@ -928,7 +928,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-configuration/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-job-scheduling/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -950,8 +950,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/12/24/spark-configuration/" itemprop="url">
-                  Spark 配置
+                <a class="post-title-link" href="/2016/12/24/spark-job-scheduling/" itemprop="url">
+                  Spark 作业调度
                 </a>
               
             
@@ -1008,8 +1008,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/12/24/spark-configuration/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-configuration/" itemprop="commentCount"></span>
+                <a href="/2016/12/24/spark-job-scheduling/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-job-scheduling/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1036,15 +1036,10 @@
 
       
         
-          <p>Spark 提供了三个位置对系统进行配置：</p>
-<ul>
-<li><a href="/2016/12/24/spark-configuration/#spark-">Spark 属性</a>：通过 <a href="http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.SparkConf">SparkConf</a> 对象或者通过 Java 系统参数来控制大多数的参数，</li>
-<li><a href="/2016/12/24/spark-configuration/#section-5">环境变量</a>：用于对每个节点进行设置， 例如通过 conf/spark-env.sh 脚本配置 IP 等。</li>
-<li><a href="/2016/12/24/spark-configuration/#logging">日志</a>：通过 log4j.properties 配置。</li>
-</ul>
+          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Spark 有好几种计算资源调度的方式。首先，回忆一下 <a href="/2016/12/24/spark-cluster-overview/" title="/2016/12/24/spark-cluster-overview/">集群模式概述</a> 中每个 Spark 应用（包含一个 SparkContext 实例）中运行了一些其独占的执行器（executor）进程。集群管理器提供了 Spark 应用之间的资源调度（scheduling across applications）。其次，在各个Spark 应用内部，各个线程可能并发地通过 action 算子提交多个 Spark 作业（job）。如果你的应用服务于网络请求，那这种情况是很常见的。在 Spark 应用内部（对应同一个 SparkContext）各个作业之间，Spark 默认 FIFO 调度，同时也可以支持公平调度（fair scheduler）。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/12/24/spark-configuration/#more" rel="contents">
+            <a class="btn" href="/2016/12/24/spark-job-scheduling/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

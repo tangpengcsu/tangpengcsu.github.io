@@ -80,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
 
 
 
@@ -472,6 +472,196 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-running-on-yarn-example/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/24/spark-running-on-yarn-example/" itemprop="url">
+                  Spark on YARN 部署案例
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-24T12:39:04+08:00">
+                2016-12-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spark/Examples/" itemprop="url" rel="index">
+                    <span itemprop="name">Examples</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/12/24/spark-running-on-yarn-example/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-running-on-yarn-example/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><h3 id="1-服务器角色分配"><a href="#1-服务器角色分配" class="headerlink" title="1. 服务器角色分配"></a>1. 服务器角色分配</h3><table>
+<thead>
+<tr>
+<th>ip</th>
+<th>hostname</th>
+<th>role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10.8.26.197</td>
+<td>server1</td>
+<td>主名字节点 (NodeManager)</td>
+</tr>
+<tr>
+<td>10.8.26.196</td>
+<td>server2</td>
+<td>备名字节点 (SecondaryNameNode)</td>
+</tr>
+<tr>
+<td>10.8.26.196</td>
+<td>server2</td>
+<td>数据字节点 (DataNode)</td>
+</tr>
+</tbody>
+</table>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/12/24/spark-running-on-yarn-example/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/hadoop-single-cluster/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -788,7 +978,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-running-on-yarn-example/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-users-and-files/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -810,198 +1000,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/12/24/spark-running-on-yarn-example/" itemprop="url">
-                  Spark on YARN 部署案例
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-24T12:39:04+08:00">
-                2016-12-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spark/" itemprop="url" rel="index">
-                    <span itemprop="name">Spark</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spark/Examples/" itemprop="url" rel="index">
-                    <span itemprop="name">Examples</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2016/12/24/spark-running-on-yarn-example/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-running-on-yarn-example/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><h3 id="1-服务器角色分配"><a href="#1-服务器角色分配" class="headerlink" title="1. 服务器角色分配"></a>1. 服务器角色分配</h3><table>
-<thead>
-<tr>
-<th>ip</th>
-<th>hostname</th>
-<th>role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>10.8.26.197</td>
-<td>server1</td>
-<td>主名字节点 (NodeManager)</td>
-</tr>
-<tr>
-<td>10.8.26.196</td>
-<td>server2</td>
-<td>备名字节点 (SecondaryNameNode)</td>
-</tr>
-<tr>
-<td>10.8.26.196</td>
-<td>server2</td>
-<td>数据字节点 (DataNode)</td>
-</tr>
-</tbody>
-</table>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/12/24/spark-running-on-yarn-example/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-firewall/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="IAN">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="北冥有鱼">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/28/linux-firewall/" itemprop="url">
-                  Firewalld 防火墙
+                <a class="post-title-link" href="/2016/10/28/linux-users-and-files/" itemprop="url">
+                  Linux 基础之用户与文件
                 </a>
               
             
@@ -1058,8 +1058,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-firewall/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-firewall/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-users-and-files/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-users-and-files/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1086,10 +1086,14 @@
 
       
         
-          <p>Firewalld 服务是红帽 RHEL7 系统中默认的防火墙管理工具，特点是拥有运行时配置与永久配置选项且能够支持动态更新以及 “zone” 的区域功能概念，使用图形化工具 firewall-config 或文本管理工具 firewall-cmd，下面实验中会讲到~</p>
+          <p>linux 系统是一个多用户多任务的分时操作系统，但系统并不能识别人，它通过账号来区别每个用户。每个 linux 系统在安装的过程中都要为 root 账号设置密码，这个 root 即为系统的第一个账号。每一个用这个账号登录系统的用户都是超级管理员，他们对此系统有绝对的控制权。通过向系统管理员进行申请，还可以为系统创建普通账号。每个用普通账号登录系统的用户，对系统都只有部分控制权。</p>
+<p>我们知道计算机中的数据是以二进制 0、1 的形式存储在硬件之上的。在 linux 中，为了管理的方便，系统将这些数据组织成目录和文件，并以一个树形的结构呈现给用户。如下图所示：</p>
+<p><img src="/images/linux/directory-tree.png" alt="Linux 目录树结构"></p>
+<p>其中处于顶端的 / 是根目录，linux 下所有的文件均起始于根目录。另外很重要的一点，linux 中不仅普通文档是文件，目录是文件，甚至设备、进程等等都被抽象成文件。这样做的目的是为了简化操作和方便管理。</p>
+<p>于是，本文开始所说的控制权，即为用户对系统中文件的控制权。通常所说的某某文件的权限，是针对特定用户而言的。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-firewall/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-users-and-files/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

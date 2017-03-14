@@ -80,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
 
 
 
@@ -458,7 +458,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/24/docker-swarm-mode/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/24/harbor-configure-https-v0.4.5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -480,8 +480,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/24/docker-swarm-mode/" itemprop="url">
-                  Docker Swarm Mode
+                <a class="post-title-link" href="/2016/10/24/harbor-configure-https-v0.4.5/" itemprop="url">
+                  配置 HTTPS 访问的 Harbor:v0.45
                 </a>
               
             
@@ -520,8 +520,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Docker/" itemprop="url" rel="index">
-                    <span itemprop="name">Docker</span>
+                  <a href="/categories/Harbor/" itemprop="url" rel="index">
+                    <span itemprop="name">Harbor</span>
                   </a>
                 </span>
 
@@ -538,8 +538,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/24/docker-swarm-mode/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/24/docker-swarm-mode/" itemprop="commentCount"></span>
+                <a href="/2016/10/24/harbor-configure-https-v0.4.5/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/24/harbor-configure-https-v0.4.5/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -566,21 +566,12 @@
 
       
         
-          <h2 id="Docker-Swarm-Mode特性"><a href="#Docker-Swarm-Mode特性" class="headerlink" title="Docker Swarm Mode特性"></a>Docker Swarm Mode特性</h2><ol>
-<li>集群管理与 Docker 引擎相结合：使用 Docker 引擎 CLI 便可创建一个 Docker 引擎的 Swarm，在这个集群中进行应用服务的部署。对于Swarm 集群的创建和管理，无需其他额外的编排软件。</li>
-<li>分散设计：Docker 引擎不是在部署时处理节点角色之间的差异化内容，而是在运行时处理特殊化内容。通过使用 Docker 引擎可以部署管理节点和工作节点。这就意味着你可从一个单一的磁盘映像上创建一个完整的 Swarm 集群。</li>
-<li>支持面向服务的组件模型：Docker 引擎运用描述性方式，让用户在应用堆栈上定义各种服务的理想状态。例如，可以这样描述一个应用：包含一个配有信息排队服务的 Web 前端服务和一个数据库后端。</li>
-<li>弹性放缩：对于每项服务，你都可以明确想要运行的任务数。当你增加或减少任务数时，Swarm 管理器可自动增加或删除任务，以保持理想状态。</li>
-<li>理想状态的调整：Swarm 管理节点持续对集群状态进行监控，并对实际状态和你明确的理想状态之间的差异进行调整。例如，当你创建一个服务来运行一个容器的10个副本，托管其中两个副本的工作机崩溃时，管理器将创建两个新的副本，代替之前崩溃的两个。Swarm管理器会将新的副本分配给正在运行且可用的工作机。</li>
-<li>多主机网络：你可以针对你的服务指定一个的 Overlay 网络。Swarm管理器初始化或更新应用时，它会自动将地址分配给 Overlay 网上的容器。</li>
-<li>服务发现：Swarm管理节点给Swarm集群上的每项服务分配一个唯一的 DNS 名称以及负载均衡的运行容器。可通过嵌入 Swarm 的 DNS 服务器对集群上运行的各个容器进行查询。</li>
-<li>负载均衡：可以把服务端口暴露给外部负载均衡器。Swarm 内部允许你明确如何分配节点间的服务容器。</li>
-<li>默认安全：Swarm 上的各个节点强制 TLS 互相授权和加密，从而确保自身与其他所有节点之间的通讯安全。可选择使用自签的根证书或自定义根 CA 证书。</li>
-<li>滚动升级：升级时，可以逐增地将服务更新应用到节点上。Swarm 管理器允许你对部署服务到不同节点集而产生的时滞进行控制。如果出错，可以回退任务到服务的前一个版本。</li>
-</ol>
+          <p>Harbor 默认 HTTP 请求注册服务器，并不分发任何证书。使得其配置相对简单。然而，强烈建议在生产环境中增强安全性。Harbor 有一个 Nginx 实例为所有服务提供反向代理，你可以在 Nginx 配置中启用 HTTPS 。</p>
+<h2 id="获取证书"><a href="#获取证书" class="headerlink" title="获取证书"></a>获取证书</h2><p>假定你的仓库的 <strong>hostname</strong> 是 <strong>reg.yourdomain.com</strong>，并且其 DNS 记录指向主机正在运行的 Harbor。首先，你需要获取一个 CA 证书。证书通常包含一个 .crt 文件和 .key 文件，例如， <strong>yourdomain.com.crt</strong> 和 <strong>yourdomain.com.key</strong>。</p>
+<p>在测试或开发环境中，你可能会选择使用自签名证书，而不是购买 CA 证书。下面的命令会生成自签名证书：</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/24/docker-swarm-mode/#more" rel="contents">
+            <a class="btn" href="/2016/10/24/harbor-configure-https-v0.4.5/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

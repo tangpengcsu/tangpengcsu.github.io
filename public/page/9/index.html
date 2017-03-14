@@ -80,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
 
 
 
@@ -302,7 +302,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-disk-and-fs/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-sed/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -324,8 +324,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-disk-and-fs/" itemprop="url">
-                  Linux 基础之磁盘与文件系统
+                <a class="post-title-link" href="/2016/10/28/linux-sed/" itemprop="url">
+                  Linux 基础之文本流编辑 sed
                 </a>
               
             
@@ -382,8 +382,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-disk-and-fs/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-disk-and-fs/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-sed/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-sed/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -410,11 +410,12 @@
 
       
         
-          <p>本篇讲述磁盘管理相关的命令。计算机中需要持久化存储的数据一般是保存在硬盘等辅助存储器中。硬盘一般容量较大，为了便于管理和使用，可以将硬盘分成一到多个逻辑磁盘，称为分区；为使分区中的文件组织成操作系统能够处理的形式，需要对分区进行格式化 (创建文件系统)；在 linux 中，对于格式化后的分区，还必须经过挂载(可简单理解为将分区关联至 linux 目录树中某个已知目录) 之后才能使用。</p>
-<h2 id="1、df-显示文件系统磁盘空间使用量"><a href="#1、df-显示文件系统磁盘空间使用量" class="headerlink" title="1、df 显示文件系统磁盘空间使用量"></a>1、df 显示文件系统磁盘空间使用量</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># df -h</span></div><div class="line">文件系统                 容量  已用  可用 已用 % 挂载点</div><div class="line">/dev/mapper/centos-root   49G   18G   31G   36% /</div><div class="line">devtmpfs                 3.9G     0  3.9G    0% /dev</div><div class="line">tmpfs                    3.9G     0  3.9G    0% /dev/shm</div><div class="line">tmpfs                    3.9G  367M  3.5G   10% /run</div><div class="line">tmpfs                    3.9G     0  3.9G    0% /sys/fs/cgroup</div><div class="line">/dev/sda1                497M  125M  373M   26% /boot</div><div class="line">/dev/mapper/centos-home   24G  4.0G   20G   17% /home</div><div class="line">tmpfs                    783M     0  783M    0% /run/user/0</div></pre></td></tr></table></figure>
+          <p>与 vim 不同，sed 是一种非交互式的文本编辑器，同时它又是面向字符流的，每行数据经过 sed 处理后输出。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sed [OPTION]... [script] [file]...</div></pre></td></tr></table></figure>
+<p>sed 的工作过程是这样的：首先，初始化两个数据缓冲区模式空间和保持空间；sed 读取一行输入 (来自标准输入或文件)，去掉结尾的换行符(\n) 后置于模式空间中，然后针对模式空间中的字符串开始执行‘sed 命令’，每个命令都可以有地址与之相关联，地址可以看成是条件，只有在条件成立时，相关的命令才被执行；所有可执行命令都处理完毕后，仍处于模式空间中的字符串会被追加一个换行符后打印输出；之后读取下一行输入做同样的处理，直到主动退出 (q) 或输入结束。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-disk-and-fs/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-sed/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -457,7 +458,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-file-search/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-rpm/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -479,8 +480,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-file-search/" itemprop="url">
-                  Linux 基础之文件搜索及其它
+                <a class="post-title-link" href="/2016/10/28/linux-rpm/" itemprop="url">
+                  Linux 基础之软件包管理
                 </a>
               
             
@@ -537,8 +538,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-file-search/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-file-search/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-rpm/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-rpm/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -565,14 +566,12 @@
 
       
         
-          <h2 id="1、linux-中包含大量的文件，对于文件查找，linux-提供了-find-命令。"><a href="#1、linux-中包含大量的文件，对于文件查找，linux-提供了-find-命令。" class="headerlink" title="1、linux 中包含大量的文件，对于文件查找，linux 提供了 find 命令。"></a>1、linux 中包含大量的文件，对于文件查找，linux 提供了 find 命令。</h2><p>find 是一个非常有效的工具，它可以遍历目标目录甚至整个文件系统来查找某些文件或目录：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find [path...] [expression]</div></pre></td></tr></table></figure>
-<p>其中 expression 包括三种：options、tests 和 actions。多个表达式之间被操作符分隔，当操作符被省略时，表示使用了默认操作符 -and。</p>
-<p>当表达式中不包含任何 actions 时，默认使用 -print，也就是打印出搜索到的所有文件，用换行分隔。</p>
-<p>其实可以将三种表达式均视为选项，表示对搜索的某种限制 (如 -maxdepth 表示搜索路径的最大深度)、或对找到的目标文件的某种测试 (如 -readable 判断是否可读)、或对结果采取的某种动作 (如 -print)。</p>
+          <p>linux 中软件包的管理随着系统发行版本的不同而不同，RPM 和 DPKG 为最常见的两类软件包管理工具，分别应用于基于 rpm 软件包的 linux 发行版和基于 deb 软件包的 linux 发行版。本文只描述 RPM 的使用方法，另一种命令不同，但用法类似，就不做介绍了。</p>
+<h2 id="1、RPM-包管理器"><a href="#1、RPM-包管理器" class="headerlink" title="1、RPM 包管理器"></a>1、RPM 包管理器</h2><p>选项 -q 表示查询系统安装的软件包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@centos7 ~]<span class="comment"># rpm -q sudo</span></div><div class="line">sudo-1.8.6p7-16.el7.x86_64</div><div class="line">[root@centos7 ~]<span class="comment"># rpm -q nginx</span></div><div class="line">未安装软件包 nginx</div><div class="line">[root@centos7 ~]<span class="comment">#</span></div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-file-search/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-rpm/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -615,7 +614,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-users-and-files/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-boot-sequence/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -637,8 +636,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-users-and-files/" itemprop="url">
-                  Linux 基础之用户与文件
+                <a class="post-title-link" href="/2016/10/28/linux-boot-sequence/" itemprop="url">
+                  Linux 基础之启动流程
                 </a>
               
             
@@ -695,8 +694,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-users-and-files/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-users-and-files/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-boot-sequence/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-boot-sequence/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -723,14 +722,12 @@
 
       
         
-          <p>linux 系统是一个多用户多任务的分时操作系统，但系统并不能识别人，它通过账号来区别每个用户。每个 linux 系统在安装的过程中都要为 root 账号设置密码，这个 root 即为系统的第一个账号。每一个用这个账号登录系统的用户都是超级管理员，他们对此系统有绝对的控制权。通过向系统管理员进行申请，还可以为系统创建普通账号。每个用普通账号登录系统的用户，对系统都只有部分控制权。</p>
-<p>我们知道计算机中的数据是以二进制 0、1 的形式存储在硬件之上的。在 linux 中，为了管理的方便，系统将这些数据组织成目录和文件，并以一个树形的结构呈现给用户。如下图所示：</p>
-<p><img src="/images/linux/directory-tree.png" alt="Linux 目录树结构"></p>
-<p>其中处于顶端的 / 是根目录，linux 下所有的文件均起始于根目录。另外很重要的一点，linux 中不仅普通文档是文件，目录是文件，甚至设备、进程等等都被抽象成文件。这样做的目的是为了简化操作和方便管理。</p>
-<p>于是，本文开始所说的控制权，即为用户对系统中文件的控制权。通常所说的某某文件的权限，是针对特定用户而言的。</p>
+          <p>固件 (firmware) 是指设备最底层的，让设备得以运行的程序代码。简单理解就是：固定在硬件上的软件。计算机中的许多设备都拥有固件(如硬盘、鼠标、光驱、U 盘等)，在计算机启动过程中，最先读取的就是位于主板上的固件，这个固件当前有两种类型：传统的 BIOS 和新的通用性更强的 UEFI。</p>
+<p>在上一篇中，我们提到另一种磁盘分区格式 GTP 也是 UEFI 标准的一部分。于是，当前计算机启动中，出现了两种不同的方式：BIOS/MBR 和 UEFI/GTP。</p>
+<p>在 linux 操作系统的世界中，同样在经历着变革，系统初始化软件 sysvinit 正逐渐被 systemd 取代。<br>本文将主要讲述传统的 BIOS/MBR–&gt;sysvinit 启动方式，同时，作为补充，也将简述 UEFI/GTP–&gt;systemd 的启动方式。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-users-and-files/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-boot-sequence/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -773,7 +770,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-grep/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-cgroup/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -795,8 +792,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-grep/" itemprop="url">
-                  Linux 基础之文本过滤 grep
+                <a class="post-title-link" href="/2016/10/28/linux-cgroup/" itemprop="url">
+                  CGroup 介绍、应用实例及原理描述
                 </a>
               
             
@@ -853,8 +850,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-grep/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-grep/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-cgroup/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-cgroup/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -881,12 +878,10 @@
 
       
         
-          <p>在 linux 中经常需要对文本或输出内容进行过滤，最常用的过滤命令是 <code>grep</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">grep [OPTIONS] PATTERN [FILE...]</div></pre></td></tr></table></figure>
-<p><code>grep</code> 按行检索输入的每一行，如果输入行包含模式 <code>PATTERN</code>，则输出这一行。这里的 <code>PATTERN</code> 是正则表达式 (参考前一篇，本文将结合 grep 一同举例)。</p>
+          <p>CGroup 技术被广泛用于 Linux 操作系统环境下的物理分割，是 Linux Container 技术的底层基础技术，是虚拟化技术的基础。本文首先介绍了 Cgroup 技术，然后通过在 CentOS 操作系统上部署、配置、运行一个实际多线程示例的方式让读者对物理限制 CPU 核的使用有一个大概的了解，接着通过讲解 CGroup 内部的设计原理来让读者有进一步的深入了解 CGroup 技术。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-grep/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-cgroup/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -929,7 +924,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-network-transmission-and-security/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-cron/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -951,8 +946,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-network-transmission-and-security/" itemprop="url">
-                  Linux 基础之网络传输与安全
+                <a class="post-title-link" href="/2016/10/28/linux-cron/" itemprop="url">
+                  Linux 基础之定时任务
                 </a>
               
             
@@ -1009,8 +1004,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-network-transmission-and-security/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-network-transmission-and-security/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-cron/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-cron/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1037,12 +1032,12 @@
 
       
         
-          <p>本篇接着介绍网络相关命令</p>
-<h2 id="1、wget-文件下载工具"><a href="#1、wget-文件下载工具" class="headerlink" title="1、wget 文件下载工具"></a>1、wget 文件下载工具</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget [option]... [URL]...</div></pre></td></tr></table></figure>
-<p>wget 是一个非交互的下载器，支持 HTTP, HTTPS 和 FTP 协议，也可以使用代理。所谓’非交互’意思是说，可以在一个系统中启动一个 wget 下载任务，然后退出系统，wget 会在完成下载 (或出现异常) 之后才退出，不需要用户参与。</p>
+          <p>在计算机的使用过程中，经常会有一些计划中的任务需要在将来的某个时间执行，linux 中提供了一些方法来设定定时任务。</p>
+<h2 id="1、at"><a href="#1、at" class="headerlink" title="1、at"></a>1、at</h2><p>命令 at 从文件或标准输入中读取命令并在将来的一个时间执行，只执行一次。at 的正常执行需要有守护进程 atd(关于 systemctl 请看这一篇)：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#安装 at</span></div><div class="line">yum install -y at 或 apt-get install at -y</div><div class="line"><span class="comment">#启动守护进程</span></div><div class="line">service atd start 或 systemctl start atd</div><div class="line"><span class="comment">#查看是否开机启动</span></div><div class="line">chkconfig --list|grep atd 或 systemctl list-unit-files|grep atd</div><div class="line"><span class="comment">#设置开机启动</span></div><div class="line">chkconfig --level 235 atd on 或 systemctl <span class="built_in">enable</span> atd</div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-network-transmission-and-security/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-cron/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
