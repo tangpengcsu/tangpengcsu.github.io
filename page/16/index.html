@@ -302,7 +302,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/24/docker-container-networking/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/24/harbor-configure-https-v05.0-rc2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -324,8 +324,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/24/docker-container-networking/" itemprop="url">
-                  使用网络
+                <a class="post-title-link" href="/2016/10/24/harbor-configure-https-v05.0-rc2/" itemprop="url">
+                  配置 HTTPS 访问的 Harbor:v05.0
                 </a>
               
             
@@ -364,8 +364,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Docker/" itemprop="url" rel="index">
-                    <span itemprop="name">Docker</span>
+                  <a href="/categories/Harbor/" itemprop="url" rel="index">
+                    <span itemprop="name">Harbor</span>
                   </a>
                 </span>
 
@@ -382,8 +382,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/24/docker-container-networking/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/24/docker-container-networking/" itemprop="commentCount"></span>
+                <a href="/2016/10/24/harbor-configure-https-v05.0-rc2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/24/harbor-configure-https-v05.0-rc2/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -410,19 +410,14 @@
 
       
         
-          <p>大量的互联网应用服务包括多个服务组件，这往往需要多个容器之间通过网络进行相互配合。Docker 目前提供映射端口到宿主机和容器互联机制为容器提供网络服务。</p>
-<h2 id="端口映射实现访问容器"><a href="#端口映射实现访问容器" class="headerlink" title="端口映射实现访问容器"></a>端口映射实现访问容器</h2><h3 id="外部访问容器"><a href="#外部访问容器" class="headerlink" title="外部访问容器"></a>外部访问容器</h3><p>容器中可以运行一些网络应用，要让外部也可以访问这些应用，可以通过 <code>-P</code> 或 <code>-p</code> 参数来指定端口映射。</p>
-<p>当使用 <code>-P</code> 标记时，Docker 会随机映射一个 <strong>49000~49900</strong> 的端口到内部容器开放的网络端口。</p>
-<p>使用 <code>docker ps</code> 可以看到，本地主机的 49155 被映射到了容器的 5000 端口。此时访问本机的 49155 端口即可访问容器内 web 应用提供的界面。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ sudo docker run <span class="_">-d</span> -P training/webapp python app.py</div><div class="line">$ sudo docker ps <span class="_">-l</span></div><div class="line">CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES</div><div class="line">bc533791f3f5 training/webapp:latest python app.py 5 seconds ago Up 2 seconds 0.0.0.0:49155-&gt;5000/tcp nostalgic_morse</div></pre></td></tr></table></figure>
-<p>同样的，可以通过 <code>docker logs</code> 命令来 <em>查看应用的信息</em> 。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ sudo docker logs <span class="_">-f</span> nostalgic_morse</div><div class="line">* Running on http://0.0.0.0:5000/</div><div class="line">10.0.2.2 - - [23/May/2014 20:16:31] <span class="string">"GET / HTTP/1.1"</span> 200 -</div><div class="line">10.0.2.2 - - [23/May/2014 20:16:31] <span class="string">"GET /favicon.ico HTTP/1.1"</span> 404 -</div></pre></td></tr></table></figure>
-<blockquote>
-<p>-p（小写的）则可以指定要映射的端口，并且，在一个指定端口上只可以绑定一个容器。支持的格式有 ip:hostPort:containerPort | ip:containerPort | hostPort:containerPort。</p>
-</blockquote>
+          <p>Harbor 默认 HTTP 请求注册服务器，并不分发任何证书。使得其配置相对简单。然而，强烈建议在生产环境中增强安全性。Harbor 有一个 Nginx 实例为所有服务提供反向代理，你可以在 Nginx 配置中启用 HTTPS 。</p>
+<h2 id="获取证书"><a href="#获取证书" class="headerlink" title="获取证书"></a>获取证书</h2><p>假定你的仓库的 <strong>hostname</strong> 是 <strong>reg.yourdomain.com</strong>，并且其 DNS 记录指向主机正在运行的 Harbor。首先，你需要获取一个 CA 证书。证书通常包含一个 .crt 文件和 .key 文件，例如， <strong>yourdomain.com.crt</strong> 和 <strong>yourdomain.com.key</strong>。</p>
+<p>在测试或开发环境中，你可能会选择使用自签名证书，而不是购买 CA 证书。下面的命令会生成自签名证书：</p>
+<p>1) 生成自签名 CA 证书:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">openssl req \</div><div class="line">  -newkey rsa:4096 -nodes -sha256 -keyout ca.key \</div><div class="line">  -x509 -days 365 -out ca.crt</div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/24/docker-container-networking/#more" rel="contents">
+            <a class="btn" href="/2016/10/24/harbor-configure-https-v05.0-rc2/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

@@ -302,6 +302,164 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-heapster/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/10/26/kubernetes-heapster/" itemprop="url">
+                  Heapster 在 Kubernetes 集群中的部署--包含 InfluxDB 后台 和 Grafana UI
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-26T12:39:04+08:00">
+                2016-10-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">Kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/10/26/kubernetes-heapster/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-heapster/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <blockquote>
+<p>原文引用：<a href="https://github.com/kubernetes/heapster/blob/master/docs/influxdb.md" title="https://github.com/kubernetes/heapster/blob/master/docs/influxdb.md">https://github.com/kubernetes/heapster/blob/master/docs/influxdb.md</a></p>
+</blockquote>
+<h2 id="启动-k8s-集群"><a href="#启动-k8s-集群" class="headerlink" title="启动 k8s 集群"></a>启动 k8s 集群</h2><h2 id="启动所有的-pods-和-services"><a href="#启动所有的-pods-和-services" class="headerlink" title="启动所有的 pods 和 services"></a>启动所有的 pods 和 services</h2><p>为部署 Heapster 和 InfluxDB，你需要通过 <a href="https://github.com/kubernetes/heapster/tree/master/deploy/kube-config/influxdb" title="https://github.com/kubernetes/heapster/tree/master/deploy/kube-config/influxdb">deploy/kube-config/influxdb</a> 创建 kubernetes 资源。确保你已经在 <code>root</code>目录下 <code>checkout</code> 有效的 <code>Heapster</code> 资源。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/kubernetes/heapster.git</div></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/10/26/kubernetes-heapster/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-replication_controller/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -422,162 +580,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2016/10/26/kubernetes-replication_controller/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-labels/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="IAN">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="北冥有鱼">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/26/kubernetes-labels/" itemprop="url">
-                  Labels
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-26T12:39:04+08:00">
-                2016-10-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Kubernetes/" itemprop="url" rel="index">
-                    <span itemprop="name">Kubernetes</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2016/10/26/kubernetes-labels/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-labels/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>标签其实就一对 key/value，被关联到对象上，比如 Pod，标签的使用我们倾向于能够标示对象的特殊特点，并且对用户而言是有意义的（就是一眼就看出了这个 Pod 是尼玛数据库），但是标签对内核系统是没有直接意义的。标签可以用来划分特定组的对象（比如，所有女的），标签可以在创建一个对象的时候直接给与，也可以在后期随时修改，每一个对象可以拥有多个标签，但是，key 值必须是唯一的</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">"labels": &#123;</div><div class="line"> "key1" : "value1",</div><div class="line"> "key2" : "value2"</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<p>我们最终会索引并且反向索引（ reverse-index ）labels，以获得更高效的查询和监视，把他们用到 UI 或者 CLI 中用来排序或者分组等等。我们不想用那些不具有指认效果的 label 来污染 label，特别是那些体积较大和结构型的的数据。不具有指认效果的信息应该使用 annotation 来记录。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kubernetes-labels/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -937,7 +939,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/24/harbor-configure-https-v0.4.5/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/24/docker-network-containers/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -959,8 +961,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/24/harbor-configure-https-v0.4.5/" itemprop="url">
-                  配置 HTTPS 访问的 Harbor:v0.45
+                <a class="post-title-link" href="/2016/10/24/docker-network-containers/" itemprop="url">
+                  高级网络配置
                 </a>
               
             
@@ -999,8 +1001,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Harbor/" itemprop="url" rel="index">
-                    <span itemprop="name">Harbor</span>
+                  <a href="/categories/Docker/" itemprop="url" rel="index">
+                    <span itemprop="name">Docker</span>
                   </a>
                 </span>
 
@@ -1017,8 +1019,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/24/harbor-configure-https-v0.4.5/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/24/harbor-configure-https-v0.4.5/" itemprop="commentCount"></span>
+                <a href="/2016/10/24/docker-network-containers/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/24/docker-network-containers/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1045,12 +1047,10 @@
 
       
         
-          <p>Harbor 默认 HTTP 请求注册服务器，并不分发任何证书。使得其配置相对简单。然而，强烈建议在生产环境中增强安全性。Harbor 有一个 Nginx 实例为所有服务提供反向代理，你可以在 Nginx 配置中启用 HTTPS 。</p>
-<h2 id="获取证书"><a href="#获取证书" class="headerlink" title="获取证书"></a>获取证书</h2><p>假定你的仓库的 <strong>hostname</strong> 是 <strong>reg.yourdomain.com</strong>，并且其 DNS 记录指向主机正在运行的 Harbor。首先，你需要获取一个 CA 证书。证书通常包含一个 .crt 文件和 .key 文件，例如， <strong>yourdomain.com.crt</strong> 和 <strong>yourdomain.com.key</strong>。</p>
-<p>在测试或开发环境中，你可能会选择使用自签名证书，而不是购买 CA 证书。下面的命令会生成自签名证书：</p>
+          <p>使用 Docker 网络功能可以帮助我们在建设 web 应用时保证一致和安全性。网络的定义就是为容器之间提供完全的独立性。因此对应用运行的网络控制是非常重要的。Docker 容器网络功能正好给我们提供了这样的控制。下面主要会介绍 Docker Engine 原生发布的默认网络的特性，描述默认的网络类型以及如何自定义我们自己的网络，并且提供了关于如何在单机或者集群创建网络所需要的资源。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/24/harbor-configure-https-v0.4.5/#more" rel="contents">
+            <a class="btn" href="/2016/10/24/docker-network-containers/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

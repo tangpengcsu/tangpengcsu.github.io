@@ -638,7 +638,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-network-transmission-and-security/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-variable/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -660,8 +660,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-network-transmission-and-security/" itemprop="url">
-                  Linux 基础之网络传输与安全
+                <a class="post-title-link" href="/2016/10/28/linux-variable/" itemprop="url">
+                  Linux 基础之变量
                 </a>
               
             
@@ -718,8 +718,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-network-transmission-and-security/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-network-transmission-and-security/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-variable/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-variable/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -746,12 +746,12 @@
 
       
         
-          <p>本篇接着介绍网络相关命令</p>
-<h2 id="1、wget-文件下载工具"><a href="#1、wget-文件下载工具" class="headerlink" title="1、wget 文件下载工具"></a>1、wget 文件下载工具</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget [option]... [URL]...</div></pre></td></tr></table></figure>
-<p>wget 是一个非交互的下载器，支持 HTTP, HTTPS 和 FTP 协议，也可以使用代理。所谓’非交互’意思是说，可以在一个系统中启动一个 wget 下载任务，然后退出系统，wget 会在完成下载 (或出现异常) 之后才退出，不需要用户参与。</p>
+          <p>本篇开始，介绍 shell 脚本编程，更确切的说是 bash 脚本编程 (版本：4.2.46(1)-release)。我们从变量开始。</p>
+<p>和所有的编程语言一样，bash 也提供变量，变量是一些用来指代数据并支持数据操作的名称。</p>
+<h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><h3 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h3><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>当我们通过 ssh 等工具登录系统时，便获得一个 shell(一个 bash 进程)，bash 在启动过程中会加载一系列的配置文件，这些配置文件的作用就是为用户准备好 bash 环境，大部分 <code>环境变量</code> 都是在这些文件中被设置的。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-network-transmission-and-security/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-variable/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -794,7 +794,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-secrets/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-volumes/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -816,8 +816,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/26/kubernetes-secrets/" itemprop="url">
-                  Secrets
+                <a class="post-title-link" href="/2016/10/26/kubernetes-volumes/" itemprop="url">
+                  Volumes
                 </a>
               
             
@@ -874,8 +874,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/26/kubernetes-secrets/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-secrets/" itemprop="commentCount"></span>
+                <a href="/2016/10/26/kubernetes-volumes/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-volumes/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -902,10 +902,29 @@
 
       
         
-          <h2 id="Secrets-构建"><a href="#Secrets-构建" class="headerlink" title="Secrets 构建"></a>Secrets 构建</h2><h3 id="yaml-构建"><a href="#yaml-构建" class="headerlink" title="yaml 构建"></a>yaml 构建</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">test-secret.yaml：</div><div class="line">apiVersion: v1</div><div class="line">kind: Secret</div><div class="line">metadata:</div><div class="line">  name: mysecret</div><div class="line">type: Opaque</div><div class="line">data:</div><div class="line">  password: MWYyZDFlMmU2N2Rm</div><div class="line">  username: YWRtaW4=</div></pre></td></tr></table></figure>
+          <h2 id="k8s-支持一下类型的-volumes"><a href="#k8s-支持一下类型的-volumes" class="headerlink" title="k8s 支持一下类型的 volumes"></a>k8s 支持一下类型的 volumes</h2><ol>
+<li>emptyDir</li>
+<li>hostPath</li>
+<li>gcePersistentDisk</li>
+<li>awsElasticBlockStore</li>
+<li>nfs</li>
+<li>iscsi</li>
+<li>flocker</li>
+<li>glusterfs</li>
+<li>rbd</li>
+<li>cephfs</li>
+<li>gitRepo</li>
+<li>secret</li>
+<li>persistentVolumeClaim</li>
+<li>downwardAPI</li>
+<li>azureFileVolume</li>
+<li>azureDisk</li>
+<li>vsphereVolume</li>
+<li>Quobyte</li>
+</ol>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kubernetes-secrets/#more" rel="contents">
+            <a class="btn" href="/2016/10/26/kubernetes-volumes/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -948,7 +967,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kuberntes-ha/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-what-is-k8s/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -970,8 +989,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/26/kuberntes-ha/" itemprop="url">
-                  构建 High-Availability 集群
+                <a class="post-title-link" href="/2016/10/26/kubernetes-what-is-k8s/" itemprop="url">
+                  什么是 Kubernetes?
                 </a>
               
             
@@ -1028,8 +1047,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/26/kuberntes-ha/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kuberntes-ha/" itemprop="commentCount"></span>
+                <a href="/2016/10/26/kubernetes-what-is-k8s/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-what-is-k8s/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1056,13 +1075,10 @@
 
       
         
-          <p>这篇文章主要介绍怎样部署一个 <code>高可用(HA)</code> 的 Kubernetes 集群。这是一个相当高阶的主题。</p>
-<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>建立一个真正可靠、高可用性的分布式系统需要若干步骤，它就像是穿着内衣、裤子、皮带、吊带，另外一对内裤和另一条裤子。下面，我们对这些步骤进行详细的探究，但在这里进行了一些总结，以帮助指导用户。</p>
-<p>所涉及的步骤如下：</p>
-<p>-<br>-<br>-<br>-</p>
+          <p>Kubernetes 是一个开源的自动化部署，</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kuberntes-ha/#more" rel="contents">
+            <a class="btn" href="/2016/10/26/kubernetes-what-is-k8s/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
