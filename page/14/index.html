@@ -302,6 +302,169 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-pods/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/10/26/kubernetes-pods/" itemprop="url">
+                  Pods
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-26T12:39:04+08:00">
+                2016-10-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">Kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/10/26/kubernetes-pods/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-pods/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>在 Kubernetes 中，最小的管理元素不是一个个独立的容器，而是 Pod 是最小的，管理，创建，计划的最小单元。</p>
+<p><img src="/images/pods_1.jpg" alt="pods"></p>
+<h2 id="什么是-Pod"><a href="#什么是-Pod" class="headerlink" title="什么是 Pod"></a>什么是 Pod</h2><p>一个 Pod（就像一群鲸鱼，或者一个豌豆夹）相当于一个共享 context 的配置组，在同一个 context 下，应用可能还会有独立的 cgroup 隔离机制，一个 Pod 是一个容器环境下的 “逻辑主机”，它可能包含一个或者多个紧密相连的应用，这些应用可能是在同一个物理主机或虚拟机上。</p>
+<p>Pod 的 context 可以理解成多个 linux 命名空间的联合</p>
+<ul>
+<li>PID 命名空间（同一个 Pod 中应用可以看到其它进程）</li>
+<li>网络 命名空间（同一个 Pod 的中的应用对相同的 IP 地址和端口有权限）</li>
+<li>IPC 命名空间（同一个 Pod 中的应用可以通过 VPC 或者 POSIX 进行通信）</li>
+<li>UTS 命名空间（同一个 Pod 中的应用共享一个主机名称）</li>
+</ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/10/26/kubernetes-pods/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-heapster/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -460,7 +623,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-replication_controller/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-install-kubernetes/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -482,8 +645,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/26/kubernetes-replication_controller/" itemprop="url">
-                  Replication Controller
+                <a class="post-title-link" href="/2016/10/26/kubernetes-install-kubernetes/" itemprop="url">
+                  在 Linux 上安装 kubernetes
                 </a>
               
             
@@ -540,8 +703,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/26/kubernetes-replication_controller/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-replication_controller/" itemprop="commentCount"></span>
+                <a href="/2016/10/26/kubernetes-install-kubernetes/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-install-kubernetes/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -568,181 +731,18 @@
 
       
         
-          <blockquote>
-<p>已被 RS 取代</p>
-</blockquote>
-<h2 id="RC-伸缩-Resizing-a-Replication-Controller"><a href="#RC-伸缩-Resizing-a-Replication-Controller" class="headerlink" title="RC 伸缩 - Resizing a Replication Controller"></a>RC 伸缩 - Resizing a Replication Controller</h2><h3 id="语法："><a href="#语法：" class="headerlink" title="语法："></a>语法：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ kubectl scale rc NAME --replicas=COUNT \</div><div class="line">    [--current-replicas=COUNT] \</div><div class="line">    [--resource-version=VERSION]</div></pre></td></tr></table></figure>
-<ul>
-<li>NAME: 待更新的 RC 名称，必选。</li>
-<li>replicas: 期望伸缩的副本数，必选。</li>
-<li>current-replicas: 当前 RC 副本数，可选。</li>
-<li><p>resource-version: 匹配 RC labels[].version 的值，可选。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kubernetes-replication_controller/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-pods/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="IAN">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="北冥有鱼">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/26/kubernetes-pods/" itemprop="url">
-                  Pods
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-26T12:39:04+08:00">
-                2016-10-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Kubernetes/" itemprop="url" rel="index">
-                    <span itemprop="name">Kubernetes</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2016/10/26/kubernetes-pods/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-pods/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>在 Kubernetes 中，最小的管理元素不是一个个独立的容器，而是 Pod 是最小的，管理，创建，计划的最小单元。</p>
-<p><img src="/images/pods_1.jpg" alt="pods"></p>
-<h2 id="什么是-Pod"><a href="#什么是-Pod" class="headerlink" title="什么是 Pod"></a>什么是 Pod</h2><p>一个 Pod（就像一群鲸鱼，或者一个豌豆夹）相当于一个共享 context 的配置组，在同一个 context 下，应用可能还会有独立的 cgroup 隔离机制，一个 Pod 是一个容器环境下的 “逻辑主机”，它可能包含一个或者多个紧密相连的应用，这些应用可能是在同一个物理主机或虚拟机上。</p>
-<p>Pod 的 context 可以理解成多个 linux 命名空间的联合</p>
-<ul>
-<li>PID 命名空间（同一个 Pod 中应用可以看到其它进程）</li>
-<li>网络 命名空间（同一个 Pod 的中的应用对相同的 IP 地址和端口有权限）</li>
-<li>IPC 命名空间（同一个 Pod 中的应用可以通过 VPC 或者 POSIX 进行通信）</li>
-<li>UTS 命名空间（同一个 Pod 中的应用共享一个主机名称）</li>
+          <h2 id="先决条件"><a href="#先决条件" class="headerlink" title="先决条件"></a>先决条件</h2><ol>
+<li>操作系统： Ubuntu 16.04, CentOS 7 or HypriotOS v1.0.1+</li>
+<li>至少 1GB RAM</li>
+<li>确保集群内所有计算机之间的网络连接（公共或专用网络都行）</li>
+</ol>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><ul>
+<li>在你的机器上安装一个安全的 Kubernetes 集群</li>
+<li>在集群上安装一个 pod 网络，一遍应用组件（pods）之间可以正常通信。</li>
 </ul>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kubernetes-pods/#more" rel="contents">
+            <a class="btn" href="/2016/10/26/kubernetes-install-kubernetes/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -939,7 +939,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/24/docker-network-containers/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/24/harbor-configure-https-v0.4.5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -961,8 +961,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/24/docker-network-containers/" itemprop="url">
-                  高级网络配置
+                <a class="post-title-link" href="/2016/10/24/harbor-configure-https-v0.4.5/" itemprop="url">
+                  配置 HTTPS 访问的 Harbor:v0.45
                 </a>
               
             
@@ -1001,8 +1001,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Docker/" itemprop="url" rel="index">
-                    <span itemprop="name">Docker</span>
+                  <a href="/categories/Harbor/" itemprop="url" rel="index">
+                    <span itemprop="name">Harbor</span>
                   </a>
                 </span>
 
@@ -1019,8 +1019,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/24/docker-network-containers/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/24/docker-network-containers/" itemprop="commentCount"></span>
+                <a href="/2016/10/24/harbor-configure-https-v0.4.5/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/24/harbor-configure-https-v0.4.5/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1047,10 +1047,12 @@
 
       
         
-          <p>使用 Docker 网络功能可以帮助我们在建设 web 应用时保证一致和安全性。网络的定义就是为容器之间提供完全的独立性。因此对应用运行的网络控制是非常重要的。Docker 容器网络功能正好给我们提供了这样的控制。下面主要会介绍 Docker Engine 原生发布的默认网络的特性，描述默认的网络类型以及如何自定义我们自己的网络，并且提供了关于如何在单机或者集群创建网络所需要的资源。</p>
+          <p>Harbor 默认 HTTP 请求注册服务器，并不分发任何证书。使得其配置相对简单。然而，强烈建议在生产环境中增强安全性。Harbor 有一个 Nginx 实例为所有服务提供反向代理，你可以在 Nginx 配置中启用 HTTPS 。</p>
+<h2 id="获取证书"><a href="#获取证书" class="headerlink" title="获取证书"></a>获取证书</h2><p>假定你的仓库的 <strong>hostname</strong> 是 <strong>reg.yourdomain.com</strong>，并且其 DNS 记录指向主机正在运行的 Harbor。首先，你需要获取一个 CA 证书。证书通常包含一个 .crt 文件和 .key 文件，例如， <strong>yourdomain.com.crt</strong> 和 <strong>yourdomain.com.key</strong>。</p>
+<p>在测试或开发环境中，你可能会选择使用自签名证书，而不是购买 CA 证书。下面的命令会生成自签名证书：</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/24/docker-network-containers/#more" rel="contents">
+            <a class="btn" href="/2016/10/24/harbor-configure-https-v0.4.5/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

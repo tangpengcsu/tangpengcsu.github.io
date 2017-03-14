@@ -615,7 +615,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-users-and-files/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-firewall/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -637,8 +637,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-users-and-files/" itemprop="url">
-                  Linux 基础之用户与文件
+                <a class="post-title-link" href="/2016/10/28/linux-firewall/" itemprop="url">
+                  Firewalld 防火墙
                 </a>
               
             
@@ -695,8 +695,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-users-and-files/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-users-and-files/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-firewall/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-firewall/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -723,170 +723,10 @@
 
       
         
-          <p>linux 系统是一个多用户多任务的分时操作系统，但系统并不能识别人，它通过账号来区别每个用户。每个 linux 系统在安装的过程中都要为 root 账号设置密码，这个 root 即为系统的第一个账号。每一个用这个账号登录系统的用户都是超级管理员，他们对此系统有绝对的控制权。通过向系统管理员进行申请，还可以为系统创建普通账号。每个用普通账号登录系统的用户，对系统都只有部分控制权。</p>
-<p>我们知道计算机中的数据是以二进制 0、1 的形式存储在硬件之上的。在 linux 中，为了管理的方便，系统将这些数据组织成目录和文件，并以一个树形的结构呈现给用户。如下图所示：</p>
-<p><img src="/images/linux/directory-tree.png" alt="Linux 目录树结构"></p>
-<p>其中处于顶端的 / 是根目录，linux 下所有的文件均起始于根目录。另外很重要的一点，linux 中不仅普通文档是文件，目录是文件，甚至设备、进程等等都被抽象成文件。这样做的目的是为了简化操作和方便管理。</p>
-<p>于是，本文开始所说的控制权，即为用户对系统中文件的控制权。通常所说的某某文件的权限，是针对特定用户而言的。</p>
+          <p>Firewalld 服务是红帽 RHEL7 系统中默认的防火墙管理工具，特点是拥有运行时配置与永久配置选项且能够支持动态更新以及 “zone” 的区域功能概念，使用图形化工具 firewall-config 或文本管理工具 firewall-cmd，下面实验中会讲到~</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-users-and-files/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-grep/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="IAN">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="北冥有鱼">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/28/linux-grep/" itemprop="url">
-                  Linux 基础之文本过滤 grep
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-28T18:39:04+08:00">
-                2016-10-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2016/10/28/linux-grep/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-grep/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>在 linux 中经常需要对文本或输出内容进行过滤，最常用的过滤命令是 <code>grep</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">grep [OPTIONS] PATTERN [FILE...]</div></pre></td></tr></table></figure>
-<p><code>grep</code> 按行检索输入的每一行，如果输入行包含模式 <code>PATTERN</code>，则输出这一行。这里的 <code>PATTERN</code> 是正则表达式 (参考前一篇，本文将结合 grep 一同举例)。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-grep/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-firewall/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1043,6 +883,162 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2016/10/28/linux-network-transmission-and-security/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-variable/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/10/28/linux-variable/" itemprop="url">
+                  Linux 基础之变量
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-28T18:39:04+08:00">
+                2016-10-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/10/28/linux-variable/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-variable/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>本篇开始，介绍 shell 脚本编程，更确切的说是 bash 脚本编程 (版本：4.2.46(1)-release)。我们从变量开始。</p>
+<p>和所有的编程语言一样，bash 也提供变量，变量是一些用来指代数据并支持数据操作的名称。</p>
+<h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><h3 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h3><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>当我们通过 ssh 等工具登录系统时，便获得一个 shell(一个 bash 进程)，bash 在启动过程中会加载一系列的配置文件，这些配置文件的作用就是为用户准备好 bash 环境，大部分 <code>环境变量</code> 都是在这些文件中被设置的。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/10/28/linux-variable/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

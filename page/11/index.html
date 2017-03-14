@@ -302,7 +302,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-ssh-authentication/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-vim/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -324,8 +324,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-ssh-authentication/" itemprop="url">
-                  Redhat 7/CentOS 7 SSH 免密登录
+                <a class="post-title-link" href="/2016/10/28/linux-vim/" itemprop="url">
+                  Linux 基础之文本编辑 vim
                 </a>
               
             
@@ -382,8 +382,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-ssh-authentication/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-ssh-authentication/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-vim/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-vim/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -410,36 +410,14 @@
 
       
         
-          <h2 id="先决条件"><a href="#先决条件" class="headerlink" title="先决条件"></a>先决条件</h2><p><strong>3 台 CentOS 7</strong></p>
-<table>
-<thead>
-<tr>
-<th>HOSTNAME</th>
-<th>IP</th>
-<th>ROLE</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>server1</td>
-<td>10.8.26.197</td>
-<td>Master</td>
-</tr>
-<tr>
-<td>server2</td>
-<td>10.8.26.196</td>
-<td>Slave1</td>
-</tr>
-<tr>
-<td>server3</td>
-<td>10.8.26.195</td>
-<td>Slave2</td>
-</tr>
-</tbody>
-</table>
+          <p>本文介绍 vim(版本 7.4) 的一般用法</p>
+<p>vim 是功能强大的文本编辑器，是 vi 的增强版。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim [options] [file ..]</div></pre></td></tr></table></figure>
+<p>使用 vim 编辑一个文件的最常用命令就是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim file</div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-ssh-authentication/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-vim/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -482,7 +460,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-syntax/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-users-and-files/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -504,8 +482,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-syntax/" itemprop="url">
-                  Linux 基础之语法
+                <a class="post-title-link" href="/2016/10/28/linux-users-and-files/" itemprop="url">
+                  Linux 基础之用户与文件
                 </a>
               
             
@@ -562,8 +540,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-syntax/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-syntax/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-users-and-files/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-users-and-files/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -590,12 +568,14 @@
 
       
         
-          <p>本文开始正式介绍 shell 脚本的编写方法以及 bash 的语法。</p>
-<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p><code>元字符</code> 用来分隔词 (token) 的单个字符，包括：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">| &amp; ; () &lt;&gt; space tab</div></pre></td></tr></table></figure>
+          <p>linux 系统是一个多用户多任务的分时操作系统，但系统并不能识别人，它通过账号来区别每个用户。每个 linux 系统在安装的过程中都要为 root 账号设置密码，这个 root 即为系统的第一个账号。每一个用这个账号登录系统的用户都是超级管理员，他们对此系统有绝对的控制权。通过向系统管理员进行申请，还可以为系统创建普通账号。每个用普通账号登录系统的用户，对系统都只有部分控制权。</p>
+<p>我们知道计算机中的数据是以二进制 0、1 的形式存储在硬件之上的。在 linux 中，为了管理的方便，系统将这些数据组织成目录和文件，并以一个树形的结构呈现给用户。如下图所示：</p>
+<p><img src="/images/linux/directory-tree.png" alt="Linux 目录树结构"></p>
+<p>其中处于顶端的 / 是根目录，linux 下所有的文件均起始于根目录。另外很重要的一点，linux 中不仅普通文档是文件，目录是文件，甚至设备、进程等等都被抽象成文件。这样做的目的是为了简化操作和方便管理。</p>
+<p>于是，本文开始所说的控制权，即为用户对系统中文件的控制权。通常所说的某某文件的权限，是针对特定用户而言的。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-syntax/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-users-and-files/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -638,7 +618,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-variable/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-networking/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -660,8 +640,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-variable/" itemprop="url">
-                  Linux 基础之变量
+                <a class="post-title-link" href="/2016/10/28/linux-networking/" itemprop="url">
+                  Linux 基础之网络
                 </a>
               
             
@@ -718,8 +698,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-variable/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-variable/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-networking/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-networking/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -746,12 +726,11 @@
 
       
         
-          <p>本篇开始，介绍 shell 脚本编程，更确切的说是 bash 脚本编程 (版本：4.2.46(1)-release)。我们从变量开始。</p>
-<p>和所有的编程语言一样，bash 也提供变量，变量是一些用来指代数据并支持数据操作的名称。</p>
-<h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><h3 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h3><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>当我们通过 ssh 等工具登录系统时，便获得一个 shell(一个 bash 进程)，bash 在启动过程中会加载一系列的配置文件，这些配置文件的作用就是为用户准备好 bash 环境，大部分 <code>环境变量</code> 都是在这些文件中被设置的。</p>
+          <p>本文将讲述网络相关命令，作者假定读者具备 TCP/IP 协议栈的基础知识。对于相关命令及其输出只介绍它的基本的使用方法和大概的描述，具体协议将不作详细解释。</p>
+<p>如今网络无疑是很重要的，linux 系统中提供了丰富的网络测试与管理命令。我们来一起看看它们。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-variable/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-networking/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -794,7 +773,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-volumes/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-secrets/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -816,8 +795,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/26/kubernetes-volumes/" itemprop="url">
-                  Volumes
+                <a class="post-title-link" href="/2016/10/26/kubernetes-secrets/" itemprop="url">
+                  Secrets
                 </a>
               
             
@@ -874,8 +853,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/26/kubernetes-volumes/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-volumes/" itemprop="commentCount"></span>
+                <a href="/2016/10/26/kubernetes-secrets/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-secrets/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -902,29 +881,10 @@
 
       
         
-          <h2 id="k8s-支持一下类型的-volumes"><a href="#k8s-支持一下类型的-volumes" class="headerlink" title="k8s 支持一下类型的 volumes"></a>k8s 支持一下类型的 volumes</h2><ol>
-<li>emptyDir</li>
-<li>hostPath</li>
-<li>gcePersistentDisk</li>
-<li>awsElasticBlockStore</li>
-<li>nfs</li>
-<li>iscsi</li>
-<li>flocker</li>
-<li>glusterfs</li>
-<li>rbd</li>
-<li>cephfs</li>
-<li>gitRepo</li>
-<li>secret</li>
-<li>persistentVolumeClaim</li>
-<li>downwardAPI</li>
-<li>azureFileVolume</li>
-<li>azureDisk</li>
-<li>vsphereVolume</li>
-<li>Quobyte</li>
-</ol>
+          <h2 id="Secrets-构建"><a href="#Secrets-构建" class="headerlink" title="Secrets 构建"></a>Secrets 构建</h2><h3 id="yaml-构建"><a href="#yaml-构建" class="headerlink" title="yaml 构建"></a>yaml 构建</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">test-secret.yaml：</div><div class="line">apiVersion: v1</div><div class="line">kind: Secret</div><div class="line">metadata:</div><div class="line">  name: mysecret</div><div class="line">type: Opaque</div><div class="line">data:</div><div class="line">  password: MWYyZDFlMmU2N2Rm</div><div class="line">  username: YWRtaW4=</div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kubernetes-volumes/#more" rel="contents">
+            <a class="btn" href="/2016/10/26/kubernetes-secrets/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
