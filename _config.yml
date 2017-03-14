@@ -70,7 +70,7 @@ theme: next
 deploy:
   type: git
   repository: https://github.com/tangpengcsu/tangpengcsu.github.io.git
-  branch: gh-pages
+  branch: master
   message: 'Daily updated：{{now("YYYY-MM-DD HH:mm:ss")}} by tangpeng personal PC'
 baidu_analytics: dda06c0f41d225c14b70c9d51326cc61
 duoshuo_share: true
