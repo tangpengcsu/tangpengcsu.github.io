@@ -1,0 +1,1030 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Kubernetes," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="在 Kubernetes 中，最小的管理元素不是一个个独立的容器，而是 Pod 是最小的，管理，创建，计划的最小单元。
+
+什么是 Pod一个 Pod（就像一群鲸鱼，或者一个豌豆夹）相当于一个共享 context 的配置组，在同一个 context 下，应用可能还会有独立的 cgroup 隔离机制，一个 Pod 是一个容器环境下的 “逻辑主机”，它可能包含一个或者多个紧密相连的应用，这些应用可能是在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pods">
+<meta property="og:url" content="https://tangpengcsu.github.io/2016/10/26/kubernetes-pods/index.html">
+<meta property="og:site_name" content="北冥有鱼">
+<meta property="og:description" content="在 Kubernetes 中，最小的管理元素不是一个个独立的容器，而是 Pod 是最小的，管理，创建，计划的最小单元。
+
+什么是 Pod一个 Pod（就像一群鲸鱼，或者一个豌豆夹）相当于一个共享 context 的配置组，在同一个 context 下，应用可能还会有独立的 cgroup 隔离机制，一个 Pod 是一个容器环境下的 “逻辑主机”，它可能包含一个或者多个紧密相连的应用，这些应用可能是在">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/pods_1.jpg">
+<meta property="og:updated_time" content="2017-03-14T05:18:19.047Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pods">
+<meta name="twitter:description" content="在 Kubernetes 中，最小的管理元素不是一个个独立的容器，而是 Pod 是最小的，管理，创建，计划的最小单元。
+
+什么是 Pod一个 Pod（就像一群鲸鱼，或者一个豌豆夹）相当于一个共享 context 的配置组，在同一个 context 下，应用可能还会有独立的 cgroup 隔离机制，一个 Pod 是一个容器环境下的 “逻辑主机”，它可能包含一个或者多个紧密相连的应用，这些应用可能是在">
+<meta name="twitter:image" content="https://tangpengcsu.github.io/images/pods_1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-pods/"/>
+
+
+
+
+
+  <title> Pods | 北冥有鱼 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dda06c0f41d225c14b70c9d51326cc61";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">北冥有鱼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-pods/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Pods
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-26T12:39:04+08:00">
+                2016-10-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">Kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/10/26/kubernetes-pods/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-pods/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在 Kubernetes 中，最小的管理元素不是一个个独立的容器，而是 Pod 是最小的，管理，创建，计划的最小单元。</p>
+<p><img src="/images/pods_1.jpg" alt="pods"></p>
+<h2 id="什么是-Pod"><a href="#什么是-Pod" class="headerlink" title="什么是 Pod"></a>什么是 Pod</h2><p>一个 Pod（就像一群鲸鱼，或者一个豌豆夹）相当于一个共享 context 的配置组，在同一个 context 下，应用可能还会有独立的 cgroup 隔离机制，一个 Pod 是一个容器环境下的 “逻辑主机”，它可能包含一个或者多个紧密相连的应用，这些应用可能是在同一个物理主机或虚拟机上。</p>
+<p>Pod 的 context 可以理解成多个 linux 命名空间的联合</p>
+<ul>
+<li>PID 命名空间（同一个 Pod 中应用可以看到其它进程）</li>
+<li>网络 命名空间（同一个 Pod 的中的应用对相同的 IP 地址和端口有权限）</li>
+<li>IPC 命名空间（同一个 Pod 中的应用可以通过 VPC 或者 POSIX 进行通信）</li>
+<li>UTS 命名空间（同一个 Pod 中的应用共享一个主机名称）</li>
+</ul>
+<a id="more"></a>
+<p>同一个 Pod 中的应用可以共享磁盘，磁盘是 Pod 级的，应用可以通过文件系统调用，额外的，一个 Pod 可能会定义顶级的 cgroup 隔离，这样的话绑定到任何一个应用（好吧，这句是在没怎么看懂，就是说 Pod，应用，隔离）</p>
+<p>由于 docker 的架构，一个 Pod 是由多个相关的并且共享磁盘的容器组成，Pid 的命名空间共享还没有应用到 Docker 中</p>
+<p>与相互独立的容器一样，Pod 是一种相对短暂的存在，而不是持久存在的，正如我们在 Pod 的生命周期中提到的，Pod 被安排到结点上，并且保持在这个节点上直到被终止（根据重启的设定）或者被删除，当一个节点死掉之后，上面的所有 Pod 均会被删除。特殊的 Pod 永远不会被转移到的其他的节点，作为替代，他们必须被 replace.</p>
+<h2 id="Pod-的发展"><a href="#Pod-的发展" class="headerlink" title="Pod 的发展"></a>Pod 的发展</h2><h3 id="资源的共享及通信"><a href="#资源的共享及通信" class="headerlink" title="资源的共享及通信"></a>资源的共享及通信</h3><p>Pod 使 Pod 内的数据共享及通信变得容易</p>
+<p>Pod 的中的应用均使用相同的网络命名空间及端口，并且可以通过 localhost 发现并沟通其他应用，每个 Pod 都有一个扁平化的网络命名空间下 IP 地址，它是 Pod 可以和其他的物理机及其他的容器进行无障碍通信，（The hostname is set to the pod’s Name for the application containers within the pod）主机名被设置为 Pod 的名称（这个没翻译出来…）</p>
+<p>除了定义了在 Pod 中运行的应用之外，Pod 还定义了一系列的共享的磁盘，磁盘让这些数据在容器重启的时候不回丢失并且可以将这些数据在 Pod 中的应用进行共享</p>
+<h3 id="管理"><a href="#管理" class="headerlink" title="管理"></a>管理</h3><p>Pod 通过提供一个高层次抽象而不是底层的接口简化了应用的部署及管理，Pod 作为最小的部署及管理单位，位置管理，拷贝复制，资源共享，依赖关系都是自动处理的。（fate sharing 估计就说什么时候该死了，什么时候该新增一个了…）</p>
+<h2 id="Pod-的使用"><a href="#Pod-的使用" class="headerlink" title="Pod 的使用"></a>Pod 的使用</h2><p>Pod 可以作为垂直应用整合的载体，但是它的主要特点是支持同地协作，同地管理程序，例如：</p>
+<ul>
+<li>内容管理系统，文件和数据加载，本地缓存等等</li>
+<li>日志和检查点备份，压缩，循环，快照等等</li>
+<li>数据交换监控，日志追踪，日志记录和监控适配器，以及事件发布等等</li>
+<li>代理，网桥，适配器</li>
+<li>控制，管理，配置，更新</li>
+</ul>
+<p>总体来说，独立的 Pod 不会去加载多个相同的应用实例</p>
+<h2 id="考虑过的其他方案"><a href="#考虑过的其他方案" class="headerlink" title="考虑过的其他方案"></a>考虑过的其他方案</h2><p><strong>为什么不直接在一个容器上运行所有的应用？</strong></p>
+<ul>
+<li>透明，Pod 中的容器对基础设施可见使的基础设施可以给容器提供服务，例如线程管理和资源监控，这为用户提供很多便利</li>
+<li>解耦软件依赖关系, 独立的容器可以独立的进行重建和重新发布，Kubernetes 甚至会在将来支持独立容器的实时更新</li>
+<li>易用，用户不需要运行自己的线程管理器，也不需要关心程序的信号以及异常结束码等</li>
+<li>高效，因为基础设施承载了更多的责任，所以容器可以更加高效</li>
+</ul>
+<p><strong>为什么不支持容器的协同调度？</strong></p>
+<p> 容器的协同调度可以提供，但是它不具备 Pod 的大多数优点，比如资源共享，IPC，选择机制，简单管理等</p>
+<h2 id="Pod-的持久性"><a href="#Pod-的持久性" class="headerlink" title="Pod 的持久性"></a>Pod 的持久性</h2><p> Pod 并不是被设计成一个持久化的资源，它不会在调度失败，节点崩溃，或者其他回收中（比如因为资源的缺乏，或者其他的维护中）幸存下来</p>
+<p>总体来说，用户并应该直接的去创建 Pod，用户因该一直使用 controller(replication controller), 即使是一个节点的情况，这是因为 controller 提供了集群范围内的自我修复，以及复制还有展示管理</p>
+<p>集群 API 的使用是用户的主要使用方式，这是相对普遍的在如下云管理平台中（ Borg, Marathon, Aurora, and Tupperware.）</p>
+<p><strong>Pod 的直接暴露是如下操作变得更容器</strong></p>
+<ul>
+<li>调度和管理的易用性</li>
+<li>在没有代理的情况下通过 API 可以对 Pod 进行操作</li>
+<li>Pod 的生命周期与管理器的生命周期的分离</li>
+<li>解偶控制器和服务，后段管理器仅仅监控 Pod</li>
+<li>划分清楚了 Kubelet 级别的功能与云平台级别的功能，kubelet 实际上是一个 Pod 管理器</li>
+<li>高可用，当发生一些删除或者维护的过程时，Pod 会自动的在他们被终止之前创建新的替代</li>
+</ul>
+<p>目前对于宠物的最佳实践是，创建一个副本等于 1 和有对应 service 的一个 replication 控制器。如果你觉得这太麻烦，请在这里留下你的意见。</p>
+<h2 id="容器的终止"><a href="#容器的终止" class="headerlink" title="容器的终止"></a>容器的终止</h2><p>因为 pod 代表着一个集群中节点上运行的进程，让这些进程不再被需要，优雅的退出是很重要的（与粗暴的用一个 KILL 信号去结束，让应用没有机会进行清理操作）。用户应该能请求删除，并且在室进程终止的情况下能知道，而且也能保证删除最终完成。当一个用户请求删除 pod，系统记录想要的优雅退出时间段，在这之前 Pod 不允许被强制的杀死，TERM 信号会发送给容器主要的进程。一旦优雅退出的期限过了，KILL 信号会送到这些进程，pod 会从 API 服务器其中被删除。如果在等待进程结束的时候，Kubelet 或者容器管理器重启了，结束的过程会带着完整的优雅退出时间段进行重试。</p>
+<p>一个示例流程：</p>
+<ol>
+<li>用户发送一个命令来删除 Pod，默认的优雅退出时间是 30 秒</li>
+<li>API 服务器中的 Pod 更新时间，超过该时间 Pod 被认为死亡</li>
+<li>在客户端命令的的里面，Pod 显示为”Terminating（退出中）” 的状态</li>
+<li>（与第 3 同时）当 Kubelet 看到 Pod 标记为退出中的时候，因为第 2 步中时间已经设置了，它开始 pod 关闭的流程<ol>
+<li>如果该 Pod 定义了一个停止前的钩子，其会在 pod 内部被调用。如果钩子在优雅退出时间段超时仍然在运行，第二步会意一个很小的优雅时间断被调用</li>
+<li>进程被发送 TERM 的信号</li>
+</ol>
+</li>
+<li>（与第三步同时进行）Pod 从 service 的列表中被删除，不在被认为是运行着的 pod 的一部分。缓慢关闭的 pod 可以继续对外服务，当负载均衡器将他们轮流移除。</li>
+<li>当优雅退出时间超时了，任何 pod 中正在运行的进程会被发送 SIGKILL 信号被杀死。</li>
+<li>Kubelet 会完成 pod 的删除，将优雅退出的时间设置为 0（表示立即删除）。pod 从 API 中删除，不在对客户端可见。</li>
+</ol>
+<p>默认情况下，所有的删除操作的优雅退出时间都在30秒以内。kubectl delete命令支持–graceperiod=的选项，以运行用户来修改默认值。0表示删除立即执行，并且立即从API中删除pod这样一个新的pod会在同时被创建。在节点上，被设置了立即结束的的pod，仍然会给一个很短的优雅退出时间段，才会开始被强制杀死。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Kubernetes/" rel="tag"># Kubernetes</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/26/kubernetes-configmap/" rel="next" title="ConfigMap">
+                <i class="fa fa-chevron-left"></i> ConfigMap
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/26/kubernetes-dashboard/" rel="prev" title="Kubernetes Dashboard">
+                Kubernetes Dashboard <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/10/26/kubernetes-pods/"
+     data-title="Pods"
+     data-content=""
+     data-url="https://tangpengcsu.github.io/2016/10/26/kubernetes-pods/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/26/kubernetes-pods/"
+           data-title="Pods" data-url="https://tangpengcsu.github.io/2016/10/26/kubernetes-pods/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="IAN" />
+          <p class="site-author-name" itemprop="name">IAN</p>
+           
+              <p class="site-description motion-element" itemprop="description">啊~ 五环</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangpengcsu" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/tangpcn" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tpeang" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是-Pod"><span class="nav-number">1.</span> <span class="nav-text">什么是 Pod</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pod-的发展"><span class="nav-number">2.</span> <span class="nav-text">Pod 的发展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#资源的共享及通信"><span class="nav-number">2.1.</span> <span class="nav-text">资源的共享及通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#管理"><span class="nav-number">2.2.</span> <span class="nav-text">管理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pod-的使用"><span class="nav-number">3.</span> <span class="nav-text">Pod 的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#考虑过的其他方案"><span class="nav-number">4.</span> <span class="nav-text">考虑过的其他方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pod-的持久性"><span class="nav-number">5.</span> <span class="nav-text">Pod 的持久性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容器的终止"><span class="nav-number">6.</span> <span class="nav-text">容器的终止</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">IAN</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访问数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tangpeng"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="local-search-pop-overlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

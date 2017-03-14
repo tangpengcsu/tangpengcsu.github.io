@@ -1,0 +1,1227 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Spark 不仅可以运行在 Mesos 或者 Yarn 上，而且还提供独立部署模式。可以手动启动一个 master 和 多个 worker，或选用我们提供的 脚本 来启动 standalone 集群。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark Standalone 模式">
+<meta property="og:url" content="https://tangpengcsu.github.io/2016/12/24/spark-standalone/index.html">
+<meta property="og:site_name" content="北冥有鱼">
+<meta property="og:description" content="Spark 不仅可以运行在 Mesos 或者 Yarn 上，而且还提供独立部署模式。可以手动启动一个 master 和 多个 worker，或选用我们提供的 脚本 来启动 standalone 集群。">
+<meta property="og:updated_time" content="2017-03-14T05:20:19.283Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spark Standalone 模式">
+<meta name="twitter:description" content="Spark 不仅可以运行在 Mesos 或者 Yarn 上，而且还提供独立部署模式。可以手动启动一个 master 和 多个 worker，或选用我们提供的 脚本 来启动 standalone 集群。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tangpengcsu.github.io/2016/12/24/spark-standalone/"/>
+
+
+
+
+
+  <title> Spark Standalone 模式 | 北冥有鱼 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dda06c0f41d225c14b70c9d51326cc61";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">北冥有鱼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-standalone/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Spark Standalone 模式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-24T18:39:04+08:00">
+                2016-12-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/12/24/spark-standalone/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-standalone/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Spark 不仅可以运行在 Mesos 或者 Yarn 上，而且还提供独立部署模式。可以手动启动一个 master 和 多个 worker，或选用我们提供的 <a href="http://spark.apache.org/docs/latest/spark-standalone.html#cluster-launch-scripts" title="启动脚本" target="_blank" rel="external">脚本</a> 来启动 standalone 集群。</p>
+<a id="more"></a>
+<hr>
+<h2 id="安装-Spark-standalone-集群"><a href="#安装-Spark-standalone-集群" class="headerlink" title="安装 Spark  standalone 集群"></a>安装 Spark  standalone 集群</h2><p>独立安装 Spark 集群，只需要把编译好的版本部署在每个节点上，然后启动，或者也可以自己 <a href="http://spark.apache.org/docs/latest/building-spark.html" title="编译指定版本" target="_blank" rel="external">编译指定版本</a>。</p>
+<hr>
+<h2 id="手动启动集群"><a href="#手动启动集群" class="headerlink" title="手动启动集群"></a>手动启动集群</h2><p>通过下面脚本启动集群的主节点:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./sbin/start-master.sh</div></pre></td></tr></table></figure>
+<p>通过上面脚本启动 master ，master 会通过 spark://host:portURL 生成链接，你可以手动访问，或者通过 master 的 SparkContext 来创建访问，或者通过浏览器访问 Spark 的 Web UI , 默认情况： <a href="http://localhost:8080" target="_blank" rel="external">http://localhost:8080</a></p>
+<p>同样，你可以启动一个和多个 worker ，并通过 主节点把他们连接到一起:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./sbin/start-slave.sh &lt;master-spark-URL&gt;</div></pre></td></tr></table></figure>
+<p>一旦你已经启动成功了一个 worker , 即可访问 master 的 WEB UI（<a href="http://localhost:8080，默认），不仅" target="_blank" rel="external">http://localhost:8080，默认），不仅</a>  可以看到新添加的节点，还可以看到新的节点列表、节点的 CPU 数以及内存。</p>
+<p>最后, 下面的配置参数可以传递给 master 和 worker</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-h HOST， –host HOST</td>
+<td>监听的主机名</td>
+</tr>
+<tr>
+<td>-i HOST， –ip HOST</td>
+<td>同上，不建议使用</td>
+</tr>
+<tr>
+<td>-p PORT， –port PORT</td>
+<td>监听的服务的端口（master 默认是 7077，worker 随机）</td>
+</tr>
+<tr>
+<td>–webui-port PORT</td>
+<td>web UI 的端口 (master 默认是 8080，worker 默认是 8081)</td>
+</tr>
+<tr>
+<td>-c CORES， –cores CORES</td>
+<td>Spark 应用程序可以使用的 CPU 核数（默认是所有可用）；这个选项仅在 worker 上可用</td>
+</tr>
+<tr>
+<td>-m MEM， –memory MEM</td>
+<td>Spark 应用程序可以使用的内存数（默认情况是你的机器内存数减去 1g）；这个选项仅在 worker 上可用</td>
+</tr>
+<tr>
+<td>-d DIR， –work-dir DIR</td>
+<td>用于暂存空间和工作输出日志的目录（默认是 SPARK_HOME/work）；这个选项仅在 worker 上可用</td>
+</tr>
+<tr>
+<td>–properties-file FILE</td>
+<td>自定义的 Spark 配置文件的加载目录（默认是 conf/spark-defaults.conf）</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="脚本启动集群"><a href="#脚本启动集群" class="headerlink" title="脚本启动集群"></a>脚本启动集群</h2><p>为了用启动脚本启动 Spark 独立集群，你应该在你的 Spark 目录下建立一个名为 conf/slaves 的文件，这个文件必须包含所有你要启动的 Spark worker 所在机器的主机名，一行一个。如果 conf/slaves 不存在，启动脚本默认为单个机器（localhost），这台机器对于测试是有用的。注意，master 机器通过 ssh 访问所有的 worker。在默认情况下，SSH 是并行运行，需要设置无密码（采用私有密钥）的访问。 如果你没有设置为无密码访问，你可以设置环境变量 SPARK_SSH_FOREGROUND，为每个 worker 提供密码。</p>
+<p>一旦你设置了这个文件，你就可以通过下面的 shell 脚本启动或者停止你的集群。</p>
+<ul>
+<li>sbin/start-master.sh：在机器上启动一个 master 实例</li>
+<li>sbin/start-slaves.sh：在每台机器上启动一个 slave 实例</li>
+<li>sbin/start-slave.sh - Starts a slave instance on the machine the script is executed on.</li>
+<li>sbin/start-all.sh：同时启动一个 master 实例和所有 slave 实例</li>
+<li>sbin/stop-master.sh：停止 master 实例</li>
+<li>sbin/stop-slaves.sh：停止所有 slave 实例</li>
+<li>sbin/stop-all.sh：停止 master 实例和所有 slave 实例</li>
+</ul>
+<blockquote>
+<p>注意，这些脚本必须在你的 Spark<br>master 运行的机器上执行，而不是在你的本地机器上面。</p>
+</blockquote>
+<p>你可以在 conf/spark-env.sh 中设置环境变量进一步配置集群。利用 conf/spark-env.sh.template 创建这个文件，然后将它复制到所有的 worker 机器上使设置有效。下面的设置可以起作用：</p>
+<table>
+<thead>
+<tr>
+<th>环境变量</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SPARK_MASTER_HOST</td>
+<td>绑定 master 到一个指定的 ip 地址</td>
+</tr>
+<tr>
+<td>SPARK_MASTER_PORT</td>
+<td>不同的端口上启动主（默认值：7077）</td>
+</tr>
+<tr>
+<td>SPARK_MASTER_WEBUI_PORT</td>
+<td>master web UI 的端口（默认是 8080）</td>
+</tr>
+<tr>
+<td>SPARK_MASTER_OPTS</td>
+<td>应用到 master 的配置属性，格式是 “-Dx=y”（默认是 none），查看下面的表格的选项以组成一个可能的列表</td>
+</tr>
+<tr>
+<td>SPARK_LOCAL_DIRS</td>
+<td>Spark 中暂存空间的目录。包括 map 的输出文件和存储在磁盘上的 RDDs(including map output files and RDDs that get stored on disk)。这必须在一个快速的、可靠的系统本地磁盘上。它可以是一个逗号分隔的列表，代表不同磁盘的多个目录</td>
+</tr>
+<tr>
+<td>SPARK_WORKER_CORES</td>
+<td>Spark 应用程序可以用到的核心数（默认是所有可用）</td>
+</tr>
+<tr>
+<td>SPARK_WORKER_MEMORY</td>
+<td>Spark 应用程序用到的内存总数（默认是内存总数减去 1G）。注意，每个应用程序个体的内存通过 spark.executor.memory 设置</td>
+</tr>
+<tr>
+<td>SPARK_WORKER_PORT</td>
+<td>在指定的端口上启动 Spark worker(默认是随机)</td>
+</tr>
+<tr>
+<td>SPARK_WORKER_WEBUI_PORT</td>
+<td>worker UI 的端口（默认是 8081）</td>
+</tr>
+<tr>
+<td>SPARK_WORKER_DIR</td>
+<td>Spark worker 运行目录，该目录包括日志和暂存空间（默认是 SPARK_HOME/work）</td>
+</tr>
+<tr>
+<td>SPARK_WORKER_OPTS</td>
+<td>应用到 worker 的配置属性，格式是 “-Dx=y”（默认是 none），查看下面表格的选项以组成一个可能的列表</td>
+</tr>
+<tr>
+<td>SPARK_DAEMON_MEMORY</td>
+<td>分配给 Spark master 和 worker 守护进程的内存（默认是 512m）</td>
+</tr>
+<tr>
+<td>SPARK_DAEMON_JAVA_OPTS</td>
+<td>Spark master 和 worker 守护进程的 JVM 选项，格式是 “-Dx=y”（默认为 none）</td>
+</tr>
+<tr>
+<td>SPARK_PUBLIC_DNS</td>
+<td>Spark master 和 worker 公共的 DNS 名（默认是 none）</td>
+</tr>
+</tbody>
+</table>
+<p>注意，启动脚本还不支持 windows。为了在 windows 上启动 Spark 集群，需要手动启动 master 和 workers。</p>
+<p>SPARK_MASTER_OPTS 支持以下系统属性：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>默认</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spark.deploy.retainedApplications</td>
+<td>200</td>
+<td>展示完成的应用程序的最大数目。老的应用程序会被删除以满足该限制</td>
+</tr>
+<tr>
+<td>spark.deploy.retainedDrivers</td>
+<td>200</td>
+<td>展示完成的 drivers 的最大数目。老的应用程序会被删除以满足该限制</td>
+</tr>
+<tr>
+<td>spark.deploy.spreadOut</td>
+<td>true</td>
+<td>这个选项控制独立的集群管理器是应该跨节点传递应用程序还是应努力将程序整合到尽可能少的节点上。在 HDFS 中，传递程序是数据本地化更好的选择，但是，对于计算密集型的负载，整合会更有效率。</td>
+</tr>
+<tr>
+<td>spark.deploy.defaultCores</td>
+<td>（infinite）</td>
+<td>在 Spark 独立模式下，给应用程序的默认核数（如果没有设置 spark.cores.max）。如果没有设置，应用程序总数获得所有可用的核，除非设置了 spark.cores.max。在共享集群上设置较低的核数，可用防止用户默认抓住整个集群</td>
+</tr>
+<tr>
+<td>spark.deploy.maxExecutorRetries</td>
+<td>10</td>
+<td>限制上的独立的集群管理器中删除有问题的应用程序之前可能发生的后端到回执行人失败的最大数量。应用程序将永远不会被删除，如果有任何正在运行的执行人。如果一个应用程序的经验超过 spark.deploy.maxExecutorRetries 连续的失败，没有遗嘱执行人成功启动这些失败之间运行，并且应用程序没有运行执行人那么独立的集群管理器将删除该应用程序并将其标记为失败。要禁用此自动删除，设置 spark.deploy.maxExecutorRetries 为 -1</td>
+</tr>
+<tr>
+<td>spark.worker.timeout</td>
+<td>60</td>
+<td>独立部署的 master 认为 worker 失败（没有收到心跳信息）的间隔时间</td>
+</tr>
+</tbody>
+</table>
+<p>SPARK_WORKER_OPTS 支持以下系统属性：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>默认</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spark.worker.cleanup.enabled</td>
+<td>false</td>
+<td>周期性的清空 worker / 应用程序目录。注意，这仅仅影响独立部署模式。不管应用程序是否还在执行，用于程序目录都会被清空</td>
+</tr>
+<tr>
+<td>spark.worker.cleanup.interval</td>
+<td>1800（30 分钟）</td>
+<td>在本地机器上，worker 清空老的应用程序工作目录的时间间隔</td>
+</tr>
+<tr>
+<td>spark.worker.cleanup.appDataTtl</td>
+<td>7 <em> 24 </em> 3600（7 天）</td>
+<td>每个 worker 中应用程序工作目录的保留时间。这个时间依赖于你可用磁盘空间的大小。应用程序日志和 jar 包上传到每个应用程序的工作目录。随着时间的推移，工作目录会很快的填满磁盘空间，特别是如果你运行的作业很频繁</td>
+</tr>
+<tr>
+<td>spark.worker.ui.compressedLogFileLengthCacheSize</td>
+<td>100</td>
+<td>For compressed log files, the uncompressed file can only be computed by uncompressing the files. Spark caches the uncompressed file size of compressed log files. This property controls the cache size.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="提交应用程序到集群"><a href="#提交应用程序到集群" class="headerlink" title="提交应用程序到集群"></a>提交应用程序到集群</h2><p>为了简单的运行 Spark 的应用程序，只需要通过 <a href="http://spark.apache.org/docs/latest/programming-guide.html#initializing-spark" title="SparkContext Constructor" target="_blank" rel="external">SparkContext Constructor</a> spark://IP:PORT 这个 URL 。</p>
+<p>集群的交互式运行可以通过 Spark shell，运行下面命名:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./bin/spark-shell --master spark://IP:PORT</div></pre></td></tr></table></figure>
+<p>你也可以通过选项 –total-executor-cores <numcores> 传递参数去控制 spark-shell 的核数</numcores></p>
+<hr>
+<h2 id="启动-Spark-应用程序"><a href="#启动-Spark-应用程序" class="headerlink" title="启动 Spark 应用程序"></a>启动 Spark 应用程序</h2><p><a href="/2016/12/24/spark-submitting-applications/" title="/2016/12/24/spark-submitting-applications/">spark-submit</a> 脚本提供了最直接的方式将一个 Spark 应用程序提交到集群。对于独立部署的集群，Spark 目前支持两种部署模式。在 client 模式中，driver 与客户端提交应用程序运行在同一个进程中。然而，在 cluster 模式中，driver 在集群的某个 worker 进程中启动，一旦客户端进程完成了已提交任务，它就会立即退出，并不会等到应用程序完成后再退出。</p>
+<p>如果你的应用程序通过 Spark submit 启动，你的应用程序 jar 包将会自动分发到所有的 worker 节点。对于你的应用程序依赖的其它 jar 包，你应该用 –jars 符号指定（如 –jars jar1,jar2）。 更多配置详见 <a href="http://spark.apache.org/docs/latest/configuration.html" title="Spark Configuration." target="_blank" rel="external">Spark Configuration</a>.</p>
+<p>另外，如果你的应用程序以非 0 (non-zero) 状态退出，独立集群模式支持重启程序。要支持自动重启，需要向 spark-submit 传递 –supervise 标志。如果你想杀掉一个重复失败的应用程序，你可以使用如下方式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./bin/spark-class org.apache.spark.deploy.Client <span class="built_in">kill</span> &lt;master url&gt; &lt;driver ID&gt;</div></pre></td></tr></table></figure>
+<p>你可以在 Master 的 web UI 上 http://\<master url\="">:8080 找到 driver ID。</master></p>
+<hr>
+<h2 id="资源调度"><a href="#资源调度" class="headerlink" title="资源调度"></a>资源调度</h2><p>独立部署的集群模式仅仅支持简单的 FIFO 调度器。然而，为了允许多个并行的用户，你能够控制每个应用程序能用的最大资源数。在默认情况下，它将获得集群的所有核，这只有在某一时刻只允许一个应用程序才有意义。你可以通过 spark.cores.max 在 <a href="http://spark.apache.org/docs/latest/configuration.html#spark-properties" title="SparkConf" target="_blank" rel="external">SparkConf</a> 中设置核数。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>()</div><div class="line">             .setMaster(...)</div><div class="line">             .setAppName(...)</div><div class="line">             .set(<span class="string">"spark.cores.max"</span>, <span class="string">"10"</span>)</div><div class="line"><span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</div></pre></td></tr></table></figure>
+<p>另外，你可以在集群的 master 进程中配置 spark.deploy.defaultCores 来改变默认的值。在 conf/spark-env.sh 添加下面的行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> SPARK_MASTER_OPTS=<span class="string">"-Dspark.deploy.defaultCores=&lt;value&gt;"</span></div></pre></td></tr></table></figure>
+<p>这在用户没有配置最大核数的共享集群中是有用的。</p>
+<hr>
+<h2 id="监控和日志记录"><a href="#监控和日志记录" class="headerlink" title="监控和日志记录"></a>监控和日志记录</h2><p>Spark 的独立模式提供了一个基于 Web 的用户界面来监控集群。Master 和 每个 Worker 都有自己的 web 用户界面，显示集群和作业统计信息。默认情况下你可以在 8080 端口访问 Web UI 的主端口也可以在配置文件中或通过命令行选项进行更改。</p>
+<p>此外，对于每个作业详细的日志也会输出每个 worker 目录下（默认情况工作目录 SPARK_HOME/work）。你会看到两个文件为每个作业，stdout 并 stderr 与所有输出它写信给其控制台。</p>
+<hr>
+<h2 id="与-hadoop-的集成"><a href="#与-hadoop-的集成" class="headerlink" title="与 hadoop 的集成"></a>与 hadoop 的集成</h2><p>你可以在 Hadoop 上单独启动一个 Spark 服务。若要从 Spark 访问 Hadoop 的数据，只需使用一个 HDFS:// URL（通常是 hdfs://\<namenode\>:9000/path，也可以找到 Hadoop 的 Web UI 找到 Namenode 的 URL）。另外，您也可以单独启动 Spark 集群，而且还有它通过网络进行访问 HDFS， 但这将是比本地磁盘访问速度慢，最好是在一个局域网之内（例如，Hadoop 各项服务或者各个节点在同一个机架上）。</namenode\></p>
+<hr>
+<h2 id="端口配置和网络安全"><a href="#端口配置和网络安全" class="headerlink" title="端口配置和网络安全"></a>端口配置和网络安全</h2><p>Spark  对网络的需求比较高，对网络环境有紧密联系，需要严谨设置防火墙。端口配置列表，请参阅 <a href="http://spark.apache.org/docs/latest/security.html#configuring-ports-for-network-security" title="安全网页" target="_blank" rel="external">安全网页</a>。</p>
+<hr>
+<h2 id="高可用性"><a href="#高可用性" class="headerlink" title="高可用性"></a>高可用性</h2><p>默认情况下，独立的调度集群对 worker 失败是有弹性的（在 Spark 本身的范围内是有弹性的，对丢失的工作通过转移它到另外的 worker 来解决）。然而，调度器通过 master 去执行调度决定， 这会造成单点故障：如果 master 死了，新的应用程序就无法创建。为了避免这个，我们有两个高可用的模式。</p>
+<h3 id="用-ZooKeeper-的备用-master"><a href="#用-ZooKeeper-的备用-master" class="headerlink" title="用 ZooKeeper 的备用 master"></a>用 ZooKeeper 的备用 master</h3><h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>利用 ZooKeeper 去支持 leader 选举以及一些状态存储，你能够在你的集群中启动多个 master，这些 master 连接到同一个 ZooKeeper 实例上。一个被选为 “leader” ，其它的保持备用模式。如果当前的 leader 死了，另一个 master 将会被选中，恢复老 master 的状态，然后恢复调度。整个的恢复过程大概需要 1 到 2 分钟。注意，这个恢复时间仅仅会影响调度新的应用程序——运行在失败 master 中的 应用程序将不受影响。</p>
+<p>了解更多关于如何开始使用的 ZooKeeper <a href="http://zookeeper.apache.org/doc/trunk/zookeeperStarted.html" title="这里" target="_blank" rel="external">这里</a>。</p>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>为了开启这个恢复模式，你可以用下面的属性在 spark-env 中设置 SPARK_DAEMON_JAVA_OPTS  spark.deploy.recoveryMode 及相关 spark.deploy.zookeeper.* 的配置。有关这些配置的详细信息，请参阅 <a href="/2016/12/24/spark-configuration/#section-4" title="/2016/12/24/spark-configuration/#section-4">配置文档</a></p>
+<p>可能的陷阱：如果你在集群中有多个 masters，但是没有用 zookeeper 正确的配置这些 masters，这些 masters 不会发现彼此，会认为它们都是 leaders。这将会造成一个不健康的集群状态（因为所有的 master 都会独立的调度）。</p>
+<h4 id="细节"><a href="#细节" class="headerlink" title="细节"></a>细节</h4><p>zookeeper 集群启动之后，开启高可用是简单的。在相同的 zookeeper 配置（zookeeper URL 和目录）下，在不同的节点上简单地启动多个 master 进程。master 可以随时添加和删除。</p>
+<p>为了调度新的应用程序或者添加 worker 到集群，它需要知道当前 leader 的 IP 地址。这可以通过简单的传递一个 master 列表来完成。例如，你可能启动你的 SparkContext 指向 spark://host1:port1,host2:port2。 这将造成你的 SparkContext 同时注册这两个 master – 如果 host1 死了，这个配置文件将一直是正确的，因为我们将找到新的 leader-host2。</p>
+<p>“registering with a Master” 和正常操作之间有重要的区别。当启动时，一个应用程序或者 worker 需要能够发现和注册当前的 leader master。一旦它成功注册，它就在系统中了。如果 错误发生，新的 leader 将会接触所有之前注册的应用程序和 worker，通知他们领导关系的变化，所以它们甚至不需要事先知道新启动的 leader 的存在。</p>
+<p>由于这个属性的存在，新的 master 可以在任何时候创建。你唯一需要担心的问题是新的应用程序和 workers 能够发现它并将它注册进来以防它成为 leader master。</p>
+<h3 id="用本地文件系统做单节点恢复"><a href="#用本地文件系统做单节点恢复" class="headerlink" title="用本地文件系统做单节点恢复"></a>用本地文件系统做单节点恢复</h3><h4 id="概述-1"><a href="#概述-1" class="headerlink" title="概述"></a>概述</h4><p>zookeeper 是生产环境下最好的选择，但是如果你想在 master 死掉后重启它，FILESYSTEM (文件系统) 模式可以解决。当应用程序和 worker 注册，它们拥有足够的状态写入提供的目录，以至于在重启 master 进程时它们能够恢复。</p>
+<h4 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h4><p>为了开启这个恢复模式，你可以用下面的属性在 spark-env 中设置 SPARK_DAEMON_JAVA_OPTS。</p>
+<table>
+<thead>
+<tr>
+<th>System property</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spark.deploy.recoveryMode</td>
+<td>设置为 FILESYSTEM 开启单节点恢复模式（默认为 none）</td>
+</tr>
+<tr>
+<td>spark.deploy.recoveryDirectory</td>
+<td>用来恢复状态的目录</td>
+</tr>
+</tbody>
+</table>
+<h4 id="细节-1"><a href="#细节-1" class="headerlink" title="细节"></a>细节</h4><ul>
+<li>这个解决方案可以和监控器 / 管理器（如 <a href="https://mmonit.com/monit/" title="monit" target="_blank" rel="external">monit</a>）相配合，或者仅仅通过重启开启手动恢复。</li>
+<li>虽然文件系统的恢复似乎比没有做任何恢复要好，但对于特定的开发或实验目的，这种模式可能是次优的。特别是，通过 stop-master.sh 杀掉 master 不会清除它的恢复状态，所以，不管你何时启动一个新的 master，它都将进入恢复模式。这可能使启动时间增加到 1 分钟。</li>
+<li>虽然它不是官方支持的方式，你也可以创建一个NFS目录作为恢复目录。如果原始的 master节点完全死掉，你可以在不同的节点启动 master，它可以正确的恢复之前注册的所有应用程序和 workers。未来的应用程序会发现这个新的 master。</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spark/" rel="tag"># Spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/24/spark-standalone-example/" rel="next" title="Spark Standalone 模式案例">
+                <i class="fa fa-chevron-left"></i> Spark Standalone 模式案例
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/24/spark-submitting-applications/" rel="prev" title="Spark 提交应用">
+                Spark 提交应用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/12/24/spark-standalone/"
+     data-title="Spark Standalone 模式"
+     data-content=""
+     data-url="https://tangpengcsu.github.io/2016/12/24/spark-standalone/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/12/24/spark-standalone/"
+           data-title="Spark Standalone 模式" data-url="https://tangpengcsu.github.io/2016/12/24/spark-standalone/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="IAN" />
+          <p class="site-author-name" itemprop="name">IAN</p>
+           
+              <p class="site-description motion-element" itemprop="description">啊~ 五环</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangpengcsu" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/tangpcn" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tpeang" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-Spark-standalone-集群"><span class="nav-number">1.</span> <span class="nav-text">安装 Spark  standalone 集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#手动启动集群"><span class="nav-number">2.</span> <span class="nav-text">手动启动集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#脚本启动集群"><span class="nav-number">3.</span> <span class="nav-text">脚本启动集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提交应用程序到集群"><span class="nav-number">4.</span> <span class="nav-text">提交应用程序到集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动-Spark-应用程序"><span class="nav-number">5.</span> <span class="nav-text">启动 Spark 应用程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资源调度"><span class="nav-number">6.</span> <span class="nav-text">资源调度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#监控和日志记录"><span class="nav-number">7.</span> <span class="nav-text">监控和日志记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#与-hadoop-的集成"><span class="nav-number">8.</span> <span class="nav-text">与 hadoop 的集成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#端口配置和网络安全"><span class="nav-number">9.</span> <span class="nav-text">端口配置和网络安全</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高可用性"><span class="nav-number">10.</span> <span class="nav-text">高可用性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#用-ZooKeeper-的备用-master"><span class="nav-number">10.1.</span> <span class="nav-text">用 ZooKeeper 的备用 master</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#概述"><span class="nav-number">10.1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置"><span class="nav-number">10.1.2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#细节"><span class="nav-number">10.1.3.</span> <span class="nav-text">细节</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用本地文件系统做单节点恢复"><span class="nav-number">10.2.</span> <span class="nav-text">用本地文件系统做单节点恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#概述-1"><span class="nav-number">10.2.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置-1"><span class="nav-number">10.2.2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#细节-1"><span class="nav-number">10.2.3.</span> <span class="nav-text">细节</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">IAN</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访问数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tangpeng"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="local-search-pop-overlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

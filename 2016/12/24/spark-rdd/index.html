@@ -1,0 +1,1007 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="RDD是什么？RDD是Spark中的抽象数据结构类型，任何数据在Spark中都被表示为RDD。从编程的角度来看，RDD可以简单看成是一个数组。和普通数组的区别是，RDD中的数据是分区存储的，这样不同分区的数据就可以分布在不同的机器上，同时可以被并行处理。因此，Spark应用程序所做的无非是把需要处理的数据转换为RDD，然后对RDD进行一系列的变换和操作从而得到结果。本文为第一部分，将介绍Spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark RDD API详解(一) Map和Reduce">
+<meta property="og:url" content="https://tangpengcsu.github.io/2016/12/24/spark-rdd/index.html">
+<meta property="og:site_name" content="北冥有鱼">
+<meta property="og:description" content="RDD是什么？RDD是Spark中的抽象数据结构类型，任何数据在Spark中都被表示为RDD。从编程的角度来看，RDD可以简单看成是一个数组。和普通数组的区别是，RDD中的数据是分区存储的，这样不同分区的数据就可以分布在不同的机器上，同时可以被并行处理。因此，Spark应用程序所做的无非是把需要处理的数据转换为RDD，然后对RDD进行一系列的变换和操作从而得到结果。本文为第一部分，将介绍Spark">
+<meta property="og:updated_time" content="2017-03-13T05:09:07.912Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spark RDD API详解(一) Map和Reduce">
+<meta name="twitter:description" content="RDD是什么？RDD是Spark中的抽象数据结构类型，任何数据在Spark中都被表示为RDD。从编程的角度来看，RDD可以简单看成是一个数组。和普通数组的区别是，RDD中的数据是分区存储的，这样不同分区的数据就可以分布在不同的机器上，同时可以被并行处理。因此，Spark应用程序所做的无非是把需要处理的数据转换为RDD，然后对RDD进行一系列的变换和操作从而得到结果。本文为第一部分，将介绍Spark">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tangpengcsu.github.io/2016/12/24/spark-rdd/"/>
+
+
+
+
+
+  <title> Spark RDD API详解(一) Map和Reduce | 北冥有鱼 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dda06c0f41d225c14b70c9d51326cc61";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">北冥有鱼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-rdd/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Spark RDD API详解(一) Map和Reduce
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-24T18:39:04+08:00">
+                2016-12-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/12/24/spark-rdd/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-rdd/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="RDD是什么？"><a href="#RDD是什么？" class="headerlink" title="RDD是什么？"></a>RDD是什么？</h2><p>RDD是Spark中的抽象数据结构类型，任何数据在Spark中都被表示为RDD。从编程的角度来看，RDD可以简单看成是一个数组。和普通数组的区别是，RDD中的数据是分区存储的，这样不同分区的数据就可以分布在不同的机器上，同时可以被并行处理。因此，Spark应用程序所做的无非是把需要处理的数据转换为RDD，然后对RDD进行一系列的变换和操作从而得到结果。本文为第一部分，将介绍Spark RDD中与Map和Reduce相关的API中。</p>
+<a id="more"></a>
+<h2 id="如何创建RDD？"><a href="#如何创建RDD？" class="headerlink" title="如何创建RDD？"></a>如何创建RDD？</h2><p>RDD可以从普通数组创建出来，也可以从文件系统或者HDFS中的文件创建出来。</p>
+<p>举例：从普通数组创建RDD，里面包含了1到9这9个数字，它们分别在3个分区中。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">val</span> a = sc.parallelize(<span class="number">1</span> to <span class="number">9</span>, <span class="number">3</span>)</div><div class="line">a: org.apache.spark.rdd.<span class="type">RDD</span>[<span class="type">Int</span>] = <span class="type">ParallelCollectionRDD</span>[<span class="number">1</span>] at parallelize at &lt;console&gt;:<span class="number">12</span></div></pre></td></tr></table></figure>
+<p>举例：读取文件README.md来创建RDD，文件中的每一行就是RDD中的一个元素</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">val</span> b = sc.textFile(<span class="string">"README.md"</span>)</div><div class="line">b: org.apache.spark.rdd.<span class="type">RDD</span>[<span class="type">String</span>] = <span class="type">MappedRDD</span>[<span class="number">3</span>] at textFile at &lt;console&gt;:<span class="number">12</span></div></pre></td></tr></table></figure>
+<p>虽然还有别的方式可以创建RDD，但在本文中我们主要使用上述两种方式来创建RDD以说明RDD的API。</p>
+<h2 id="map"><a href="#map" class="headerlink" title="map"></a>map</h2><p>map是对RDD中的每个元素都执行一个指定的函数来产生一个新的RDD。任何原RDD中的元素在新RDD中都有且只有一个元素与之对应。</p>
+<p>举例：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">val</span> a = sc.parallelize(<span class="number">1</span> to <span class="number">9</span>, <span class="number">3</span>)</div><div class="line">scala&gt; <span class="keyword">val</span> b = a.map(x =&gt; x*<span class="number">2</span>)</div><div class="line">scala&gt; a.collect</div><div class="line">res10: <span class="type">Array</span>[<span class="type">Int</span>] = <span class="type">Array</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>)</div><div class="line">scala&gt; b.collect</div><div class="line">res11: <span class="type">Array</span>[<span class="type">Int</span>] = <span class="type">Array</span>(<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">10</span>, <span class="number">12</span>, <span class="number">14</span>, <span class="number">16</span>, <span class="number">18</span>)</div></pre></td></tr></table></figure>
+<p>上述例子中把原RDD中每个元素都乘以2来产生一个新的RDD。</p>
+<h2 id="mapPartitions"><a href="#mapPartitions" class="headerlink" title="mapPartitions"></a>mapPartitions</h2><p>mapPartitions是map的一个变种。map的输入函数是应用于RDD中每个元素，而mapPartitions的输入函数是应用于每个分区，也就是把每个分区中的内容作为整体来处理的。</p>
+<p>它的函数定义为：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">mapPartitions</span></span>[<span class="type">U</span>: <span class="type">ClassTag</span>](f: <span class="type">Iterator</span>[<span class="type">T</span>] =&gt; <span class="type">Iterator</span>[<span class="type">U</span>], preservesPartitioning: <span class="type">Boolean</span> = <span class="literal">false</span>): <span class="type">RDD</span>[<span class="type">U</span>]</div></pre></td></tr></table></figure>
+<p>f即为输入函数，它处理每个分区里面的内容。每个分区中的内容将以Iterator[T]传递给输入函数f，f的输出结果是Iterator[U]。最终的RDD由所有分区经过输入函数处理后的结果合并起来的。</p>
+<p>举例：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">val</span> a = sc.parallelize(<span class="number">1</span> to <span class="number">9</span>, <span class="number">3</span>)</div><div class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">myfunc</span></span>[<span class="type">T</span>](iter: <span class="type">Iterator</span>[<span class="type">T</span>]) : <span class="type">Iterator</span>[(<span class="type">T</span>, <span class="type">T</span>)] = &#123;</div><div class="line">    <span class="keyword">var</span> res = <span class="type">List</span>[(<span class="type">T</span>, <span class="type">T</span>)]()</div><div class="line">    <span class="keyword">var</span> pre = iter.next <span class="keyword">while</span> (iter.hasNext) &#123;</div><div class="line">        <span class="keyword">val</span> cur = iter.next;</div><div class="line">        res .::= (pre, cur) pre = cur;</div><div class="line">    &#125;</div><div class="line">    res.iterator</div><div class="line">&#125;</div><div class="line">scala&gt; a.mapPartitions(myfunc).collect</div><div class="line">res0: <span class="type">Array</span>[(<span class="type">Int</span>, <span class="type">Int</span>)] = <span class="type">Array</span>((<span class="number">2</span>,<span class="number">3</span>), (<span class="number">1</span>,<span class="number">2</span>), (<span class="number">5</span>,<span class="number">6</span>), (<span class="number">4</span>,<span class="number">5</span>), (<span class="number">8</span>,<span class="number">9</span>), (<span class="number">7</span>,<span class="number">8</span>))</div></pre></td></tr></table></figure>
+<p>上述例子中的函数myfunc是把分区中一个元素和它的下一个元素组成一个Tuple。因为分区中最后一个元素没有下一个元素了，所以(3,4)和(6,7)不在结果中。</p>
+<p>mapPartitions还有些变种，比如mapPartitionsWithContext，它能把处理过程中的一些状态信息传递给用户指定的输入函数。还有mapPartitionsWithIndex，它能把分区的index传递给用户指定的输入函数。</p>
+<h2 id="mapValues"><a href="#mapValues" class="headerlink" title="mapValues"></a>mapValues</h2><p>mapValues顾名思义就是输入函数应用于RDD中Kev-Value的Value，原RDD中的Key保持不变，与新的Value一起组成新的RDD中的元素。因此，该函数只适用于元素为KV对的RDD。</p>
+<p>举例：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">val</span> a = sc.parallelize(<span class="type">List</span>(<span class="string">"dog"</span>, <span class="string">"tiger"</span>, <span class="string">"lion"</span>, <span class="string">"cat"</span>, <span class="string">"panther"</span>, <span class="string">" eagle"</span>), <span class="number">2</span>)</div><div class="line">scala&gt; <span class="keyword">val</span> b = a.map(x =&gt; (x.length, x))</div><div class="line">scala&gt; b.mapValues(<span class="string">"x"</span> + _ + <span class="string">"x"</span>).collect</div><div class="line">res5: <span class="type">Array</span>[(<span class="type">Int</span>, <span class="type">String</span>)] = <span class="type">Array</span>((<span class="number">3</span>,xdogx), (<span class="number">5</span>,xtigerx), (<span class="number">4</span>,xlionx),(<span class="number">3</span>,xcatx), (<span class="number">7</span>,xpantherx), (<span class="number">5</span>,xeaglex))</div></pre></td></tr></table></figure>
+<h2 id="mapWith"><a href="#mapWith" class="headerlink" title="mapWith"></a>mapWith</h2><p>mapWith是map的另外一个变种，map只需要一个输入函数，而mapWith有两个输入函数。它的定义如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">mapWith</span></span>[<span class="type">A</span>: <span class="type">ClassTag</span>, <span class="type">U</span>: ](constructA: <span class="type">Int</span> =&gt; <span class="type">A</span>, preservesPartitioning: <span class="type">Boolean</span> = <span class="literal">false</span>)(f: (<span class="type">T</span>, <span class="type">A</span>) =&gt; <span class="type">U</span>): <span class="type">RDD</span>[<span class="type">U</span>]</div></pre></td></tr></table></figure>
+<ul>
+<li>第一个函数constructA是把RDD的partition index（index从0开始）作为输入，输出为新类型A；</li>
+<li>第二个函数f是把二元组(T, A)作为输入（其中T为原RDD中的元素，A为第一个函数的输出），输出类型为U。</li>
+</ul>
+<p>举例：把partition index 乘以10，然后加上2作为新的RDD的元素。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> x = sc.parallelize(<span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>), <span class="number">3</span>)</div><div class="line">x.mapWith(a =&gt; a * <span class="number">10</span>)((a, b) =&gt; (b + <span class="number">2</span>)).collect</div><div class="line">res4: <span class="type">Array</span>[<span class="type">Int</span>] = <span class="type">Array</span>(<span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">12</span>, <span class="number">12</span>, <span class="number">12</span>, <span class="number">22</span>, <span class="number">22</span>, <span class="number">22</span>, <span class="number">22</span>)</div></pre></td></tr></table></figure>
+<h2 id="flatMap"><a href="#flatMap" class="headerlink" title="flatMap"></a>flatMap</h2><p>与map类似，区别是原RDD中的元素经map处理后只能生成一个元素，而原RDD中的元素经flatmap处理后可生成多个元素来构建新RDD。</p>
+<p>举例：对原RDD中的每个元素x产生y个元素（从1到y，y为元素x的值）</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">val</span> a = sc.parallelize(<span class="number">1</span> to <span class="number">4</span>, <span class="number">2</span>)</div><div class="line">scala&gt; <span class="keyword">val</span> b = a.flatMap(x =&gt; <span class="number">1</span> to x)</div><div class="line">scala&gt; b.collect</div><div class="line">res12: <span class="type">Array</span>[<span class="type">Int</span>] = <span class="type">Array</span>(<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</div></pre></td></tr></table></figure>
+<h2 id="flatMapWith"><a href="#flatMapWith" class="headerlink" title="flatMapWith"></a>flatMapWith</h2><p>flatMapWith与mapWith很类似，都是接收两个函数，一个函数把partitionIndex作为输入，输出是一个新类型A；另外一个函数是以二元组（T,A）作为输入，输出为一个序列，这些序列里面的元素组成了新的RDD。它的定义如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">flatMapWith</span></span>[<span class="type">A</span>: <span class="type">ClassTag</span>, <span class="type">U</span>: <span class="type">ClassTag</span>](constructA: <span class="type">Int</span> =&gt; <span class="type">A</span>, preservesPartitioning: <span class="type">Boolean</span> = <span class="literal">false</span>)(f: (<span class="type">T</span>, <span class="type">A</span>) =&gt; <span class="type">Seq</span>[<span class="type">U</span>]): <span class="type">RDD</span>[<span class="type">U</span>]</div></pre></td></tr></table></figure>
+<p>举例：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">val</span> a = sc.parallelize(<span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>), <span class="number">3</span>)</div><div class="line">scala&gt; a.flatMapWith(x =&gt; x, <span class="literal">true</span>)((x, y) =&gt; <span class="type">List</span>(y, x)).collect</div><div class="line">res58: <span class="type">Array</span>[<span class="type">Int</span>] = <span class="type">Array</span>(<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">6</span>, <span class="number">2</span>, <span class="number">7</span>, <span class="number">2</span>,</div><div class="line"><span class="number">8</span>, <span class="number">2</span>, <span class="number">9</span>)</div></pre></td></tr></table></figure>
+<h2 id="flatMapValues"><a href="#flatMapValues" class="headerlink" title="flatMapValues"></a>flatMapValues</h2><p>flatMapValues类似于mapValues，不同的在于flatMapValues应用于元素为KV对的RDD中Value。每个一元素的Value被输入函数映射为一系列的值，然后这些值再与原RDD中的Key组成一系列新的KV对。</p>
+<p>举例</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">val</span> a = sc.parallelize(<span class="type">List</span>((<span class="number">1</span>,<span class="number">2</span>),(<span class="number">3</span>,<span class="number">4</span>),(<span class="number">3</span>,<span class="number">6</span>)))</div><div class="line">scala&gt; <span class="keyword">val</span> b = a.flatMapValues(x=&gt;x.to(<span class="number">5</span>))</div><div class="line">scala&gt; b.collect</div><div class="line">res3: <span class="type">Array</span>[(<span class="type">Int</span>, <span class="type">Int</span>)] = <span class="type">Array</span>((<span class="number">1</span>,<span class="number">2</span>), (<span class="number">1</span>,<span class="number">3</span>), (<span class="number">1</span>,<span class="number">4</span>), (<span class="number">1</span>,<span class="number">5</span>), (<span class="number">3</span>,<span class="number">4</span>), (<span class="number">3</span>,<span class="number">5</span>))</div></pre></td></tr></table></figure>
+<p>上述例子中原RDD中每个元素的值被转换为一个序列（从其当前值到5），比如第一个KV对(1,2), 其值2被转换为2，3，4，5。然后其再与原KV对中Key组成一系列新的KV对(1,2),(1,3),(1,4),(1,5)。</p>
+<h2 id="reduce"><a href="#reduce" class="headerlink" title="reduce"></a>reduce</h2><p>reduce将RDD中元素两两传递给输入函数，同时产生一个新的值，新产生的值与RDD中下一个元素再被传递给输入函数直到最后只有一个值为止。</p>
+<p>举例</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">val</span> c = sc.parallelize(<span class="number">1</span> to <span class="number">10</span>)</div><div class="line">scala&gt; c.reduce((x, y) =&gt; x + y)</div><div class="line">res4: <span class="type">Int</span> = <span class="number">55</span></div></pre></td></tr></table></figure>
+<p>上述例子对RDD中的元素求和。</p>
+<h2 id="reduceByKey"><a href="#reduceByKey" class="headerlink" title="reduceByKey"></a>reduceByKey</h2><p>顾名思义，reduceByKey就是对元素为KV对的RDD中Key相同的元素的Value进行reduce，因此，Key相同的多个元素的值被reduce为一个值，然后与原RDD中的Key组成一个新的KV对。</p>
+<p>举例:</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">val</span> a = sc.parallelize(<span class="type">List</span>((<span class="number">1</span>,<span class="number">2</span>),(<span class="number">3</span>,<span class="number">4</span>),(<span class="number">3</span>,<span class="number">6</span>)))</div><div class="line">scala&gt; a.reduceByKey((x,y) =&gt; x + y).collect</div><div class="line">res7: <span class="type">Array</span>[(<span class="type">Int</span>, <span class="type">Int</span>)] = <span class="type">Array</span>((<span class="number">1</span>,<span class="number">2</span>), (<span class="number">3</span>,<span class="number">10</span>))</div></pre></td></tr></table></figure>
+<p>上述例子中，对Key相同的元素的值求和，因此Key为3的两个元素被转为了(3,10)。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spark/" rel="tag"># Spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/24/spark-overview/" rel="next" title="Spark 概述">
+                <i class="fa fa-chevron-left"></i> Spark 概述
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/24/spark-programming-guides/" rel="prev" title="Spark 编程指南">
+                Spark 编程指南 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/12/24/spark-rdd/"
+     data-title="Spark RDD API详解(一) Map和Reduce"
+     data-content=""
+     data-url="https://tangpengcsu.github.io/2016/12/24/spark-rdd/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/12/24/spark-rdd/"
+           data-title="Spark RDD API详解(一) Map和Reduce" data-url="https://tangpengcsu.github.io/2016/12/24/spark-rdd/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="IAN" />
+          <p class="site-author-name" itemprop="name">IAN</p>
+           
+              <p class="site-description motion-element" itemprop="description">啊~ 五环</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangpengcsu" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/tangpcn" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tpeang" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RDD是什么？"><span class="nav-number">1.</span> <span class="nav-text">RDD是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何创建RDD？"><span class="nav-number">2.</span> <span class="nav-text">如何创建RDD？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#map"><span class="nav-number">3.</span> <span class="nav-text">map</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mapPartitions"><span class="nav-number">4.</span> <span class="nav-text">mapPartitions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mapValues"><span class="nav-number">5.</span> <span class="nav-text">mapValues</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mapWith"><span class="nav-number">6.</span> <span class="nav-text">mapWith</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flatMap"><span class="nav-number">7.</span> <span class="nav-text">flatMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flatMapWith"><span class="nav-number">8.</span> <span class="nav-text">flatMapWith</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flatMapValues"><span class="nav-number">9.</span> <span class="nav-text">flatMapValues</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reduce"><span class="nav-number">10.</span> <span class="nav-text">reduce</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reduceByKey"><span class="nav-number">11.</span> <span class="nav-text">reduceByKey</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">IAN</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访问数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tangpeng"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="local-search-pop-overlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

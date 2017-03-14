@@ -1,0 +1,1109 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Spark 当前支持使用共享密钥来认证。可以通过配置 spark.authenticate 选项来开启认证。这个参数用来控制 Spark 的通讯协议是否使用共享密钥来执行认证。这个认证是一个基本的握手，用来保证两侧具有相同的共享密钥然后允许通讯。如果共享密钥无法识别，他们将不能通讯。创建共享密钥的方法如下 :
+
+对于 Spark on YARN 的部署方式，配置 spark.authenticat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark 安全">
+<meta property="og:url" content="https://tangpengcsu.github.io/2016/12/24/spark-security/index.html">
+<meta property="og:site_name" content="北冥有鱼">
+<meta property="og:description" content="Spark 当前支持使用共享密钥来认证。可以通过配置 spark.authenticate 选项来开启认证。这个参数用来控制 Spark 的通讯协议是否使用共享密钥来执行认证。这个认证是一个基本的握手，用来保证两侧具有相同的共享密钥然后允许通讯。如果共享密钥无法识别，他们将不能通讯。创建共享密钥的方法如下 :
+
+对于 Spark on YARN 的部署方式，配置 spark.authenticat">
+<meta property="og:updated_time" content="2017-03-13T05:09:34.614Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spark 安全">
+<meta name="twitter:description" content="Spark 当前支持使用共享密钥来认证。可以通过配置 spark.authenticate 选项来开启认证。这个参数用来控制 Spark 的通讯协议是否使用共享密钥来执行认证。这个认证是一个基本的握手，用来保证两侧具有相同的共享密钥然后允许通讯。如果共享密钥无法识别，他们将不能通讯。创建共享密钥的方法如下 :
+
+对于 Spark on YARN 的部署方式，配置 spark.authenticat">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tangpengcsu.github.io/2016/12/24/spark-security/"/>
+
+
+
+
+
+  <title> Spark 安全 | 北冥有鱼 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dda06c0f41d225c14b70c9d51326cc61";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">北冥有鱼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-security/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Spark 安全
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-24T18:39:04+08:00">
+                2016-12-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/12/24/spark-security/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-security/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Spark 当前支持使用共享密钥来认证。可以通过配置 spark.authenticate 选项来开启认证。这个参数用来控制 Spark 的通讯协议是否使用共享密钥来执行认证。这个认证是一个基本的握手，用来保证两侧具有相同的共享密钥然后允许通讯。如果共享密钥无法识别，他们将不能通讯。创建共享密钥的方法如下 :</p>
+<ul>
+<li>对于 Spark on YARN 的部署方式，配置 spark.authenticate 为 true，会自动生成和分发共享密钥。每个 application 会使用一个单独的共享密钥</li>
+<li>对于 Spark 的其他部署方式，需要在每一个 nodes 配置 spark.authenticate.secret 参数。这个密码将会被所有的 Master/Workers 和 aplication 使用</li>
+</ul>
+<a id="more"></a>
+<h2 id="WEB-UI"><a href="#WEB-UI" class="headerlink" title="WEB UI"></a>WEB UI</h2><p>Spark UI 可以通过配置 javax servlet filters 的 spark.ui.filters，或配置 https/SSL 的 spark.ui.https.enabled 进行安全保护。</p>
+<h3 id="认证"><a href="#认证" class="headerlink" title="认证"></a>认证</h3><p>当 UI 中有一些不允许其他用户看到的数据时，用户可能想对 UI 进行安全防护。用户指定的 javax servlet filter 可以对用户进行身份认证，用户一旦登入，Spark 可以比较与这个用户相对应的视图 ACLs 来确认是否授权用户访问 UI。配置项 spark.acls,enable,spark.ui.view.acls 和 spark.ui.view.acls.groups 控制 ACLs 的行为。注意，启动 application 的用户具有使用 UI 视图的访问权限。在 YARN 上，Spark UI 使用标准的 YARN web application 代理机制可以通过任何已安装的 Hadoop filters 进行认证。</p>
+<p>Spark 也支持修改 ACLs 来控制谁具有修改一个正在运行的 Spark application 的权限。这些权限包括 kill 这个 application 或者一个 task。以上功能通过选项 spark.acls.enable，spark.modify.acls 和 spark.modify.acls.groups 来控制。注意如果你已经登入 UI，为了使用 UI 上的 kill 按钮，必须先添加这个用户到 modify acls 和 view acls。在 YARN 上，modify acls 通过 YARN 接口传入并控制谁具有 modify 权限。Spark 允许在 acls 中指定多个对所有的 application 都具有 view 和 modify 权限的管理员，通过选项 spark.admin.acls 和 spark.admin.acls.groups 来控制。这样做对于一个有帮助用户调试 applications 的管理员或者支持人员的共享集群，非常有帮助。</p>
+<h2 id="事件日志"><a href="#事件日志" class="headerlink" title="事件日志"></a>事件日志</h2><p>如果你的 applications 使用事件日志，事件日志的的位置必须手动创建同时具有适当的访问权限（spark.eventLog.dir）。如果想对这些日志文件做安全保护，目录的权限应该设置为 drwxrwxrwxt。目录的属主应该是启动 history server 的高级用户，同时组权限应该仅限于这个高级用户组。这将允许所有的用户向目录中写入文件，同时防止删除不是属于自己的文件（权限字符 t 为防删位）。事件日志将会被 Spark 创建，只有特定的用户才就有读写权限。</p>
+<h2 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h2><p>Spark 支持 HTTP SSL 协议。SASL 加密用于块传输服务和 RPC 端。</p>
+<p>Spark 本地临时存储的数据（如 shuffle 文件，缓存的数据，其他和 application 相关文件）当前不支持加密。如果有这种需求，一个变通的方式是配置 cluster manager 将 application 数据存储到加密磁盘上。</p>
+<h3 id="SSL-配置"><a href="#SSL-配置" class="headerlink" title="SSL 配置"></a>SSL 配置</h3><p>SSL 配置是分级组织的。用户可以对所有的通讯协议配置默认的 SSL 设置，除非被特定协议的设置覆盖掉。这样用户可以很容易的为所有的协议提供通用的设置，无需禁用每个单独配置的能力。通用的 SSL 设置在 Spark 配置文件的 spark.ssl 命名空间中。下表描述了用于覆盖特定组件默认配置的命名空间</p>
+<table>
+<thead>
+<tr>
+<th>config Namespace（配置命名空间）</th>
+<th>Component（组件）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spark.ssl.fs</td>
+<td>HTTP file server and broadcast server</td>
+</tr>
+<tr>
+<td>spark.ssl.ui</td>
+<td>Spark application Web UI</td>
+</tr>
+<tr>
+<td>spark.ssl.standalone</td>
+<td>Standalone Master / Worker Web UI</td>
+</tr>
+<tr>
+<td>spark.ssl.historyServer</td>
+<td>History Server Web UI</td>
+</tr>
+</tbody>
+</table>
+<p>所有的 SSL 选项可以在 配置页面 里查询到。SSL 必须在所有的节点进行配置，对每个使用特定协议通讯的组件生效。</p>
+<h3 id="YARN-模式"><a href="#YARN-模式" class="headerlink" title="YARN 模式"></a>YARN 模式</h3><p>key-store 可以在客户端侧准备好，然后作为 application 的一部分通过 executor 进行分发和使用。因为用户能够通过使用 spark.yarn.dist.files 或者 spark.yarn.dis.archives 配置选项，在 YARN 上 启动 application 之前部署文件。加密和传输这些文件的责任在 YARN 一侧，与 Spark 无关。</p>
+<p>为了一个长期运行的应用比如 Spark Streaming 应用能够写 HDFS，需要通过分别设置 –principal 和 –keytab 参数传递 principal 和 keytab 给 spark-submit。传入的 keytab 会通过 Hadoop Distributed Cache 拷贝到运行 Application 的 Master（这是安全的 - 如果 YARN 使用 SSL 配置同时启用了 HDFS 加密）。Kerberos 会使用这个 principal 和 keytab 周期的更新登陆信息，同时 HDFS 需要的授权 tokens 会周期生成，因此应用可以持续的写入 HDFS。</p>
+<h3 id="STANDALONE-模式"><a href="#STANDALONE-模式" class="headerlink" title="STANDALONE 模式"></a>STANDALONE 模式</h3><p>用户需要为 master 和 slaves 提供 key-stores 和相关配置选项。必须通过附加恰当的 Java 系统属性到 SPARK_MASTER_OPTS 和 SPARK_WORKER_OPTS 环境变量中，或者只在 SPARK_DAEMON_JAVA_OPTS 中。在这种模式下，用户可以允许 executors 使用从派生它的 worker 继承来的 SSL 设置。可以通过设置 spark.ssl.useNodeLocalConf 为 true 来完成。如果设置这个参数，用户在客户端侧提供的设置不会被 executors 使用。</p>
+<h3 id="准备-key-store"><a href="#准备-key-store" class="headerlink" title="准备 key-store"></a>准备 key-store</h3><p>可以使用 keytool 程序生成 key-stores。这个工具的使用说明在这里。为 standalone 部署方式配置 key-stores 和 trust-store 最基本的步骤如下 :</p>
+<ul>
+<li>为每个 node 生成 keys pair</li>
+<li>在每个 node 上导出 key pair 到一个文件</li>
+<li>导入以上生成的所有的公钥到一个单独的 trust-store</li>
+<li>在所有的节点上分发 trust-store</li>
+</ul>
+<h3 id="配置-SASL-加密"><a href="#配置-SASL-加密" class="headerlink" title="配置 SASL 加密"></a>配置 SASL 加密</h3><p>当认证（sprk.authenticate）开启的时候，块传输支持 SASL 加密。通过在 application 配置中设置 spark.authenticate.enableSaslEncryption 为 true 来开启 SASL 加密。</p>
+<p>当使用外部 shuffle 服务，需要在 shuffle 服务配置中通过设置 spark.network.sasl.serverAlwaysEncrypt 为 true 来禁用未加密的连接。如果这个选项开启，未设置使用 SASL 加密的 application 在链接到 shuffer 服务的时候会失败。</p>
+<h2 id="针对网络安全配置端口"><a href="#针对网络安全配置端口" class="headerlink" title="针对网络安全配置端口"></a>针对网络安全配置端口</h2><p>Spark 严重依赖 network，同时一些环境对使用防火墙有严格的要求。下面使一些 Spark 网络通讯使用的主要的端口和配置方式。</p>
+<h3 id="仅对-Standalone-模式"><a href="#仅对-Standalone-模式" class="headerlink" title="仅对 Standalone 模式"></a>仅对 Standalone 模式</h3><table>
+<thead>
+<tr>
+<th>From</th>
+<th>To</th>
+<th>Default Port（默认端口）</th>
+<th>Purpose（目的）</th>
+<th>Configuration Setting（配置设置）</th>
+<th>Notes（注意）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Browser</td>
+<td>Standalone Master</td>
+<td>8080</td>
+<td>Web UI</td>
+<td>spark.master.ui.port /SPARK_MASTER_WEBUI_PORT</td>
+<td>Jetty-based.   Standalone mode only.</td>
+</tr>
+<tr>
+<td>Browser</td>
+<td>Standalone Worker</td>
+<td>8081</td>
+<td>Web UI</td>
+<td>spark.worker.ui.port / SPARK_WORKER_WEBUI_PORT</td>
+<td>Jetty-based. Standalone mode only.</td>
+</tr>
+<tr>
+<td>Driver / Standalone Worker</td>
+<td>Standalone Master</td>
+<td>7077</td>
+<td>Submit job to cluster / Join cluster</td>
+<td>spark.worker.ui.port / SPARK_WORKER_WEBUI_PORT</td>
+<td>Set to “0” to choose a port randomly. Standalone mode only.</td>
+</tr>
+<tr>
+<td>Standalone Master</td>
+<td>Standalone Worker</td>
+<td>(random)</td>
+<td>Schedule executors</td>
+<td>SPARK_WORKER_PORT</td>
+<td>Set to “0” to choose a port randomly. Standalone mode only.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="所有的集群管理器（cluster-managers"><a href="#所有的集群管理器（cluster-managers" class="headerlink" title="所有的集群管理器（cluster managers)"></a>所有的集群管理器（cluster managers)</h3><table>
+<thead>
+<tr>
+<th>From</th>
+<th>To</th>
+<th>Default Port（默认端口）</th>
+<th>Purpose（目的）</th>
+<th>Configuration Setting（配置设置）</th>
+<th>Notes（注意）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Browser</td>
+<td>Application</td>
+<td>4040</td>
+<td>Web UI</td>
+<td>spark.ui.port</td>
+<td>Jetty-based</td>
+</tr>
+<tr>
+<td>Browser</td>
+<td>History Server</td>
+<td>18080</td>
+<td>Web UI</td>
+<td>spark.history.ui.port</td>
+<td>Jetty-based</td>
+</tr>
+<tr>
+<td>Executor / Standalone Master</td>
+<td>Driver</td>
+<td>(random)</td>
+<td>Connect to application / Notify executor state changes</td>
+<td>spark.driver.port</td>
+<td>Set to “0” to choose a port randomly.</td>
+</tr>
+<tr>
+<td>Executor / Driver</td>
+<td>Executor / Driver</td>
+<td>(random)</td>
+<td>Block Manager port</td>
+<td>spark.blockManager.port</td>
+<td>Raw socket via ServerSocketChannel</td>
+</tr>
+</tbody>
+</table>
+<p>更多关于安全配置参数方面的细节请参考配置页面。安全方面的实施细节参考 org.apache.spark.SecurityManager</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spark/" rel="tag"># Spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/24/spark-running-on-yarn/" rel="next" title="Spark on YARN">
+                <i class="fa fa-chevron-left"></i> Spark on YARN
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/17/dc-consistency/" rel="prev" title="分布式系统理论基础 -- 一致性、2PC 和 3PC">
+                分布式系统理论基础 -- 一致性、2PC 和 3PC <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/12/24/spark-security/"
+     data-title="Spark 安全"
+     data-content=""
+     data-url="https://tangpengcsu.github.io/2016/12/24/spark-security/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/12/24/spark-security/"
+           data-title="Spark 安全" data-url="https://tangpengcsu.github.io/2016/12/24/spark-security/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="IAN" />
+          <p class="site-author-name" itemprop="name">IAN</p>
+           
+              <p class="site-description motion-element" itemprop="description">啊~ 五环</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangpengcsu" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/tangpcn" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tpeang" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#WEB-UI"><span class="nav-number">1.</span> <span class="nav-text">WEB UI</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#认证"><span class="nav-number">1.1.</span> <span class="nav-text">认证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件日志"><span class="nav-number">2.</span> <span class="nav-text">事件日志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加密"><span class="nav-number">3.</span> <span class="nav-text">加密</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SSL-配置"><span class="nav-number">3.1.</span> <span class="nav-text">SSL 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YARN-模式"><span class="nav-number">3.2.</span> <span class="nav-text">YARN 模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#STANDALONE-模式"><span class="nav-number">3.3.</span> <span class="nav-text">STANDALONE 模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备-key-store"><span class="nav-number">3.4.</span> <span class="nav-text">准备 key-store</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置-SASL-加密"><span class="nav-number">3.5.</span> <span class="nav-text">配置 SASL 加密</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#针对网络安全配置端口"><span class="nav-number">4.</span> <span class="nav-text">针对网络安全配置端口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#仅对-Standalone-模式"><span class="nav-number">4.1.</span> <span class="nav-text">仅对 Standalone 模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#所有的集群管理器（cluster-managers"><span class="nav-number">4.2.</span> <span class="nav-text">所有的集群管理器（cluster managers)</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">IAN</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访问数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tangpeng"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="local-search-pop-overlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

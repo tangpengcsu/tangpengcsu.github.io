@@ -1,0 +1,1035 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Kubernetes," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="概述Kubernetes　Pod 是平凡的，它门会被创建，也会死掉（生老病死），并且他们是不可复活的。 ReplicationControllers 动态的创建和销毁 Pods(比如规模扩大或者缩小，或者执行动态更新)。每个 pod 都由自己的 ip，这些 IP 也随着时间的变化也不能持续依赖。这样就引发了一个问题：如果一些 Pods（让我们叫它作后台，后端）提供了一些功能供其它的 Pod 使用（">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Service">
+<meta property="og:url" content="https://tangpengcsu.github.io/2016/10/26/kubernetes-service/index.html">
+<meta property="og:site_name" content="北冥有鱼">
+<meta property="og:description" content="概述Kubernetes　Pod 是平凡的，它门会被创建，也会死掉（生老病死），并且他们是不可复活的。 ReplicationControllers 动态的创建和销毁 Pods(比如规模扩大或者缩小，或者执行动态更新)。每个 pod 都由自己的 ip，这些 IP 也随着时间的变化也不能持续依赖。这样就引发了一个问题：如果一些 Pods（让我们叫它作后台，后端）提供了一些功能供其它的 Pod 使用（">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/service_1.jpg">
+<meta property="og:updated_time" content="2017-03-14T05:18:25.100Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Service">
+<meta name="twitter:description" content="概述Kubernetes　Pod 是平凡的，它门会被创建，也会死掉（生老病死），并且他们是不可复活的。 ReplicationControllers 动态的创建和销毁 Pods(比如规模扩大或者缩小，或者执行动态更新)。每个 pod 都由自己的 ip，这些 IP 也随着时间的变化也不能持续依赖。这样就引发了一个问题：如果一些 Pods（让我们叫它作后台，后端）提供了一些功能供其它的 Pod 使用（">
+<meta name="twitter:image" content="https://tangpengcsu.github.io/images/service_1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-service/"/>
+
+
+
+
+
+  <title> Service | 北冥有鱼 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dda06c0f41d225c14b70c9d51326cc61";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">北冥有鱼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-service/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Service
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-26T18:39:04+08:00">
+                2016-10-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">Kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/10/26/kubernetes-service/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-service/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Kubernetes　Pod 是平凡的，它门会被创建，也会死掉（生老病死），并且他们是不可复活的。 ReplicationControllers 动态的创建和销毁 Pods(比如规模扩大或者缩小，或者执行动态更新)。每个 pod 都由自己的 ip，这些 IP 也随着时间的变化也不能持续依赖。这样就引发了一个问题：如果一些 Pods（让我们叫它作后台，后端）提供了一些功能供其它的 Pod 使用（让我们叫作前台），在 kubernete 集群中是如何实现让这些前台能够持续的追踪到这些后台的？</p>
+<p><strong>答案是：Service</strong></p>
+<p>Kubernete Service 是一个定义了一组 Pod 的策略的抽象，我们也有时候叫做宏观服务。这些被服务标记的 Pod 都是（一般）通过 label Selector 决定的（下面我们会讲到我们为什么需要一个没有 label selector 的服务）</p>
+<p>举个例子，我们假设后台是一个图形处理的后台，并且由 3 个副本。这些副本是可以相互替代的，并且前台并需要关心使用的哪一个后台 Pod，当这个承载前台请求的 pod 发生变化时，前台并不需要直到这些变化，或者追踪后台的这些副本，服务是这些去耦</p>
+<p>对于 Kubernete 原生的应用，Kubernete 提供了一个简单的 Endpoints API，这个 Endpoints api 的作用就是当一个服务中的 pod 发生变化时，Endpoints API 随之变化，对于哪些不是原生的程序，Kubernetes 提供了一个基于虚拟 IP 的网桥的服务，这个服务会将请求转发到对应的后台 pod</p>
+<a id="more"></a>
+<h2 id="Defining-a-service-定义一个服务"><a href="#Defining-a-service-定义一个服务" class="headerlink" title="Defining a service(定义一个服务)"></a>Defining a service(定义一个服务)</h2><p>一个 Kubernete 服务是一个最小的对象，类似 pod, 和其它的终端对象一样，我们可以朝 paiserver 发送请求来创建一个新的实例，比如，假设你拥有一些 Pod, 每个 pod 都开放了 9376 端口，并且均带有一个标签 app=MyApp</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line"><span class="attr">"kind"</span>: <span class="string">"Service"</span>,</div><div class="line"><span class="attr">"apiVersion"</span>: <span class="string">"v1"</span>,</div><div class="line"><span class="attr">"metadata"</span>: &#123;</div><div class="line"><span class="attr">"name"</span>: <span class="string">"my-service"</span></div><div class="line">&#125;,</div><div class="line"><span class="attr">"spec"</span>: &#123;</div><div class="line"><span class="attr">"selector"</span>: &#123;</div><div class="line"><span class="attr">"app"</span>: <span class="string">"MyApp"</span></div><div class="line">&#125;,</div><div class="line"><span class="attr">"ports"</span>: [</div><div class="line">&#123;</div><div class="line"><span class="attr">"protocol"</span>: <span class="string">"TCP"</span>,</div><div class="line"><span class="attr">"port"</span>: <span class="number">80</span>,</div><div class="line"><span class="attr">"targetPort"</span>: <span class="number">9376</span></div><div class="line">&#125;</div><div class="line">]</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这段代码会创建一个新的服务对象，名称为：my-service，并且会连接目标端口 9376，并且带有 label app=MyApp 的 pod, 这个服务会被分配一个 ip 地址，这个 ip 是给服务代理使用的（下面我们会看到），服务的选择器会持续的评估，并且结果会被发送到一个 Endpoints 对象，这个 Endpoints 的对象的名字也叫 “my-service”.</p>
+<p>服务可以将一个 “入端口” 转发到任何”目标端口”，默认情况下 targetPort 的值会和 port 的值相同，更有趣的是，targetPort 可以是字符串，可以指定到一个 name, 这个 name 是 pod 的一个端口。并且实际指派给这个 name 的端口可以是不同在不同的后台 pod 中，这样让我们能更加灵活的部署我们的服务，比如；我们可以在下一个更新版本中修改后台 pod 暴露的端口而不会影响客户的使用（更新过程不会打断）</p>
+<ul>
+<li>服务支持 tcp 和 UDP，但是默认的是 TCP</li>
+<li>Services without selectors（没有选择器的服务）</li>
+</ul>
+<p>服务总体上抽象了对 Pod 的访问，但是服务也抽象了其它的内容，比如：</p>
+<ul>
+<li>比如你希望有一个额外的数据库云在生产环境中，但是在测试的时候，我们希望使用自己的数据库</li>
+<li>我们希望将服务指向其它的服务或者其它命名空间或者其它的云平台上的服务</li>
+<li>我们正在向 kubernete 迁移，并且我们后台并没有在 Kubernete 中</li>
+</ul>
+<p>如上的情况下，我们可以定义一个服务没有选择器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">&quot;kind&quot;: &quot;Service&quot;,</div><div class="line">&quot;apiVersion&quot;: &quot;v1&quot;,</div><div class="line">&quot;metadata&quot;: &#123;</div><div class="line">&quot;name&quot;: &quot;my-service&quot;</div><div class="line">&#125;,</div><div class="line">&quot;spec&quot;: &#123;</div><div class="line">&quot;ports&quot;: [</div><div class="line">&#123;</div><div class="line">&quot;protocol&quot;: &quot;TCP&quot;,</div><div class="line">&quot;port&quot;: 80,</div><div class="line">&quot;targetPort&quot;: 9376</div><div class="line">&#125;</div><div class="line">]</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>因为没有选择器，所以相应的 Endpoints 对象就不会被创建，但是我们手动把我们的服务和 Endpoints 对应起来</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line"><span class="attr">"kind"</span>: <span class="string">"Endpoints"</span>,</div><div class="line"><span class="attr">"apiVersion"</span>: <span class="string">"v1"</span>,</div><div class="line"><span class="attr">"metadata"</span>: &#123;</div><div class="line"><span class="attr">"name"</span>: <span class="string">"my-service"</span></div><div class="line">&#125;,</div><div class="line"><span class="attr">"subsets"</span>: [</div><div class="line">&#123;</div><div class="line"><span class="attr">"addresses"</span>: [</div><div class="line">&#123;<span class="attr">"IP"</span>: <span class="string">"1.2.3.4"</span> &#125;</div><div class="line">],</div><div class="line"><span class="attr">"ports"</span>: [</div><div class="line">&#123;<span class="attr">"port"</span>: <span class="number">80</span> &#125;</div><div class="line">]</div><div class="line">&#125;</div><div class="line">]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样的话，这个服务虽然没有 selector，但是却可以正常工作，所有的请求都会被转发到 1.2.3.4:80</p>
+<h2 id="Virtual-IPs-and-service-proxies（虚拟-IP-和服务代理）"><a href="#Virtual-IPs-and-service-proxies（虚拟-IP-和服务代理）" class="headerlink" title="Virtual IPs and service proxies（虚拟 IP 和服务代理）"></a>Virtual IPs and service proxies（虚拟 IP 和服务代理）</h2><p>每一个节点上都运行了一个 kube-proxy，这个应用监控着 Kubermaster 增加和删除服务，对于每一个服务，kube-proxy 会随机开启一个本机端口，任何发向这个端口的请求都会被转发到一个后台的 Pod 当中，而如何选择是哪一个后台的 pod 的是基于 SessionAffinity 进行的分配。kube-proxy 会增加 iptables rules 来实现捕捉这个服务的 Ip 和端口来并重定向到前面提到的端口。</p>
+<p>最终的结果就是所有的对于这个服务的请求都会被转发到后台的 Pod 中，这一过程用户根本察觉不到。</p>
+<p><img src="/images/service_1.jpg" alt="虚拟 IP 和服务代理" title="虚拟 IP 和服务代理"></p>
+<p>默认的，后台的选择是随机的，基于用户 session 机制的策略可以通过修改 service.spec.sessionAffinity 的值从 NONE 到 ClientIP。</p>
+<h3 id="Multi-Port-Services（多端口服务）"><a href="#Multi-Port-Services（多端口服务）" class="headerlink" title="Multi-Port Services（多端口服务）"></a>Multi-Port Services（多端口服务）</h3><p>可能很多服务需要开发不止一个端口, 为了满足这样的情况，Kubernetes 允许在定义时候指定多个端口，当我们使用多个端口的时候，我们需要指定所有端口的名称，这样 endpoints 才能清楚，例如：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line"><span class="attr">"kind"</span>: <span class="string">"Service"</span>,</div><div class="line"><span class="attr">"apiVersion"</span>: <span class="string">"v1"</span>,</div><div class="line"><span class="attr">"metadata"</span>: &#123;</div><div class="line"><span class="attr">"name"</span>: <span class="string">"my-service"</span></div><div class="line">&#125;,</div><div class="line"><span class="attr">"spec"</span>: &#123;</div><div class="line"><span class="attr">"selector"</span>: &#123;</div><div class="line"><span class="attr">"app"</span>: <span class="string">"MyApp"</span></div><div class="line">&#125;,</div><div class="line"><span class="attr">"ports"</span>: [</div><div class="line">&#123;</div><div class="line"><span class="attr">"name"</span>: <span class="string">"http"</span>,</div><div class="line"><span class="attr">"protocol"</span>: <span class="string">"TCP"</span>,</div><div class="line"><span class="attr">"port"</span>: <span class="number">80</span>,</div><div class="line"><span class="attr">"targetPort"</span>: <span class="number">9376</span></div><div class="line">&#125;,</div><div class="line">&#123;</div><div class="line"><span class="attr">"name"</span>: <span class="string">"https"</span>,</div><div class="line"><span class="attr">"protocol"</span>: <span class="string">"TCP"</span>,</div><div class="line"><span class="attr">"port"</span>: <span class="number">443</span>,</div><div class="line"><span class="attr">"targetPort"</span>: <span class="number">9377</span></div><div class="line">&#125;</div><div class="line">]</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="选择自己的-IP-地址"><a href="#选择自己的-IP-地址" class="headerlink" title="选择自己的 IP 地址"></a>选择自己的 IP 地址</h2><p>我们可以在创建服务的时候指定 IP 地址，将 spec.clusterIP 的值设定为我们想要的 IP 地址即可。例如，我们已经有一个 DNS 域我们希望用来替换，或者遗留系统只能对指定 IP 提供服务，并且这些都非常难修改，用户选择的 IP 地址必须是一个有效的 IP 地址，并且要在 API server 分配的 IP 范围内，如果这个 IP 地址是不可用的，apiserver 会返回 422http 错误代码来告知是 IP 地址不可用</p>
+<h3 id="为什么不使用循环的-DNS"><a href="#为什么不使用循环的-DNS" class="headerlink" title="为什么不使用循环的 DNS"></a>为什么不使用循环的 DNS</h3><p>一个问题持续的被提出来，这个问题就是我们为什么不使用标准的循环 DNS 而使用虚拟 IP，我们主要有如下几个原因</p>
+<ul>
+<li>DNS 不遵循 TTL 查询和缓存 name 查询的问题由来已久（这个还真不知道，就是 DNS 更新的问题估计）</li>
+<li>许多的应用的 DNS 查询查询一次后就缓存起来</li>
+<li>即使如上亮点被解决了，但是不停的进行 DNS 进行查询，大量的请求也是很难被管理的</li>
+</ul>
+<p>我们希望阻止用户使用这些可能会 “伤害” 他们的事情，但是如果足够多的人要求这么作，那么我们将对此提供支持，来作为一个可选项.</p>
+<h2 id="Discovering-services（服务的发现）"><a href="#Discovering-services（服务的发现）" class="headerlink" title="Discovering services（服务的发现）"></a>Discovering services（服务的发现）</h2><p>Kubernetes 支持两种方式的来发现服务 ，环境变量和 DNS</p>
+<h3 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h3><p>当一个 Pod 在一个 node 上运行时，kubelet 会针对运行的服务增加一系列的环境变量，它支持 Docker links compatible 和普通环境变量</p>
+<p><strong>举例子来说：</strong></p>
+<p>redis-master 服务暴露了 TCP 6379 端口，并且被分配了 10.0.0.11 IP 地址</p>
+<p>那么我们就会有如下的环境变量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">REDIS_MASTER_SERVICE_HOST=10.0.0.11</div><div class="line">REDIS_MASTER_SERVICE_PORT=6379</div><div class="line">REDIS_MASTER_PORT=tcp://10.0.0.11:6379</div><div class="line">REDIS_MASTER_PORT_6379_TCP=tcp://10.0.0.11:6379</div><div class="line">REDIS_MASTER_PORT_6379_TCP_PROTO=tcp</div><div class="line">REDIS_MASTER_PORT_6379_TCP_PORT=6379</div><div class="line">REDIS_MASTER_PORT_6379_TCP_ADDR=10.0.0.11</div></pre></td></tr></table></figure>
+<p>这样的话，对系统有一个要求：所有的想要被 POD 访问的服务，必须在 POD 创建之前创建，否则这个环境变量不会被填充，使用 DNS 则没有这个问题</p>
+<h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><p>一个可选择的云平台插件就是 DNS，DNS 服务器监控着 API SERVER ，当有服务被创建的时候，DNS 服务器会为之创建相应的记录，如果 DNS 这个服务被添加了，那么 Pod 应该是可以自动解析服务的。</p>
+<p>举个例子来说：如果我们在 my-ns 命名空间下有一个服务叫做 “my-service”，这个时候 DNS 就会创建一个 my-service.my-ns 的记录，所有 my-ns 命名空间下的 Pod, 都可以通过域名 my-service 查询找到对应的 ip 地址，不同命名空间下的 Pod 在查找是必须使用 my-sesrvice.my-ns 才可以。</p>
+<p>Kubernete 同样支持端口的解析，如果 my-service 有一个提供 http 的 TCP 主持的端口，那么我们可以通过查询 “_http._tcp.my-service.my-ns” 来查询这个端口。</p>
+<h2 id="Headless-services"><a href="#Headless-services" class="headerlink" title="Headless services"></a>Headless services</h2><p>有时候我们可能不需要一个固定的 IP 和分发，这个时候我们只需要将 spec.clusterIP 的值设置为 none 就可以了</p>
+<p>对于这样的服务来说，集群 IP 没有分配，这个时候当你查询服务的名称的时候，DNS 会返回多个 A 记录，这些记录都是指向后端 Pod 的。Kube 代理不会处理这个服务，在服务的前端也没有负载均衡器。但是 endpoints controller 还是会创建 Endpoints</p>
+<blockquote>
+<p>This option allows developers to reduce coupling to the Kubernetes system, if they desire, but leaves them freedom to do discovery in their own way. Applications can still use a self-registration pattern and adapters for other discovery systems could easily be built upon this API.</p>
+</blockquote>
+<h2 id="External-services（外部服务）"><a href="#External-services（外部服务）" class="headerlink" title="External services（外部服务）"></a>External services（外部服务）</h2><p>对于我们的应用程序来说，我们可能有一部分是放在 Kubernete 外部的（比如我们有单独的物理机来承担数据库的角色），Kubernetes 支持两种方式：NodePorts，LoadBalancers<br>每一个服务都会有一个字段定义了该服务如何被调用（发现），这个字段的值可以为：</p>
+<ul>
+<li>ClusterIP: 使用一个集群固定 IP，这个是默认选项</li>
+<li>NodePort：使用一个集群固定 IP，但是额外在每个 POD 上均暴露这个服务，端口</li>
+<li>LoadBalancer：使用集群固定 IP，和 NODEPord, 额外还会申请申请一个负载均衡器来转发到服务（load balancer ）</li>
+</ul>
+<blockquote>
+<p>NodePort 支持 TCP 和 UDN，但是 LoadBalancers 在 1.0 版本只支持 TCP</p>
+</blockquote>
+<h3 id="Type-NodePort"><a href="#Type-NodePort" class="headerlink" title="Type NodePort"></a>Type NodePort</h3><p>如果你选择了 “NodePort”，那么 Kubernetes master 会分配一个区域范围内，（默认是 30000-32767），并且，每一个 node，都会代理（proxy）这个端口到你的服务中，我们可以在 spec.ports[*].nodePort 找到具体的值</p>
+<p>如果我们向指定一个端口，我们可以直接写在 nodePort 上，系统就会给你指派指定端口，但是这个值必须是指定范围内的。</p>
+<p>这样的话就能够让开发者搭配自己的负载均衡器，去撘建一个 kubernete 不是完全支持的系统，又或者是直接暴露一个 node 的 ip 地址</p>
+<h3 id="Type-LoadBalancer"><a href="#Type-LoadBalancer" class="headerlink" title="Type LoadBalancer"></a>Type LoadBalancer</h3><p>在支持额外的负载均衡器的的平台上，将值设置为 LoadBalancer 会提供一个负载均衡器给你的服务，负载均衡器的创建其实是异步的。下面的例子</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line"><span class="attr">"kind"</span>: <span class="string">"Service"</span>,</div><div class="line"><span class="attr">"apiVersion"</span>: <span class="string">"v1"</span>,</div><div class="line"><span class="attr">"metadata"</span>: &#123;</div><div class="line"><span class="attr">"name"</span>: <span class="string">"my-service"</span></div><div class="line">&#125;,</div><div class="line"><span class="attr">"spec"</span>: &#123;</div><div class="line"><span class="attr">"selector"</span>: &#123;</div><div class="line"><span class="attr">"app"</span>: <span class="string">"MyApp"</span></div><div class="line">&#125;,</div><div class="line"><span class="attr">"ports"</span>: [</div><div class="line">&#123;</div><div class="line"><span class="attr">"protocol"</span>: <span class="string">"TCP"</span>,</div><div class="line"><span class="attr">"port"</span>: <span class="number">80</span>,</div><div class="line"><span class="attr">"targetPort"</span>: <span class="number">9376</span>,</div><div class="line"><span class="attr">"nodePort"</span>: <span class="number">30061</span></div><div class="line">&#125;</div><div class="line">],</div><div class="line"><span class="attr">"clusterIP"</span>: <span class="string">"10.0.171.239"</span>,</div><div class="line"><span class="attr">"type"</span>: <span class="string">"LoadBalancer"</span></div><div class="line">&#125;,</div><div class="line"><span class="attr">"status"</span>: &#123;</div><div class="line"><span class="attr">"loadBalancer"</span>: &#123;</div><div class="line"><span class="attr">"ingress"</span>: [</div><div class="line">&#123;</div><div class="line"><span class="attr">"ip"</span>: <span class="string">"146.148.47.155"</span></div><div class="line">&#125;</div><div class="line">]</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所有服务的请求均会直接到到 Pod, 具体是如何工作的是由平台决定的</p>
+<p><strong>缺点</strong></p>
+<p>我们希望使用 IPTABLES 和用户命名空间来代理虚拟 IP 能在中小型规模的平台上正常运行，但是可能出现问题在比较大的平台上当应对成千上万的服务的时候。</p>
+<p>这个时候，使用 kube-proxy 来封装服务的请求，这使得这些变成可能</p>
+<p>LoadBalancers 只支持 TCP，不支持 UDP</p>
+<p>Type 的值是设定好的，不同的值代表不同的功能，并不是所有的平台都需要的，但是是所有 API 需要的</p>
+<h2 id="Future-work"><a href="#Future-work" class="headerlink" title="Future work"></a>Future work</h2><p>在将来，我们预想 proxy 的策略能够更加细致，不再是单纯的转发，比如 master-elected or sharded，我们预想将来服务会拥有真正的负载均衡器，到时候虚拟 IP 直接转发到负载均衡器</p>
+<p>将来有倾向与将所的工作均通过iptables来进行，从而小从用户命名空间代理，这样的话会有更好的性能和消除一些原地值IP的问题，尽管这样的会减少一些灵活性.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Kubernetes/" rel="tag"># Kubernetes</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/26/kubernetes-secrets/" rel="next" title="Secrets">
+                <i class="fa fa-chevron-left"></i> Secrets
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/26/kubernetes-volumes/" rel="prev" title="Volumes">
+                Volumes <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/10/26/kubernetes-service/"
+     data-title="Service"
+     data-content=""
+     data-url="https://tangpengcsu.github.io/2016/10/26/kubernetes-service/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/26/kubernetes-service/"
+           data-title="Service" data-url="https://tangpengcsu.github.io/2016/10/26/kubernetes-service/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="IAN" />
+          <p class="site-author-name" itemprop="name">IAN</p>
+           
+              <p class="site-description motion-element" itemprop="description">啊~ 五环</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangpengcsu" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/tangpcn" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tpeang" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Defining-a-service-定义一个服务"><span class="nav-number">2.</span> <span class="nav-text">Defining a service(定义一个服务)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Virtual-IPs-and-service-proxies（虚拟-IP-和服务代理）"><span class="nav-number">3.</span> <span class="nav-text">Virtual IPs and service proxies（虚拟 IP 和服务代理）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Multi-Port-Services（多端口服务）"><span class="nav-number">3.1.</span> <span class="nav-text">Multi-Port Services（多端口服务）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选择自己的-IP-地址"><span class="nav-number">4.</span> <span class="nav-text">选择自己的 IP 地址</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么不使用循环的-DNS"><span class="nav-number">4.1.</span> <span class="nav-text">为什么不使用循环的 DNS</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Discovering-services（服务的发现）"><span class="nav-number">5.</span> <span class="nav-text">Discovering services（服务的发现）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#环境变量"><span class="nav-number">5.1.</span> <span class="nav-text">环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS"><span class="nav-number">5.2.</span> <span class="nav-text">DNS</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Headless-services"><span class="nav-number">6.</span> <span class="nav-text">Headless services</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#External-services（外部服务）"><span class="nav-number">7.</span> <span class="nav-text">External services（外部服务）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Type-NodePort"><span class="nav-number">7.1.</span> <span class="nav-text">Type NodePort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Type-LoadBalancer"><span class="nav-number">7.2.</span> <span class="nav-text">Type LoadBalancer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Future-work"><span class="nav-number">8.</span> <span class="nav-text">Future work</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">IAN</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访问数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tangpeng"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="local-search-pop-overlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

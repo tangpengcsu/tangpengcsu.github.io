@@ -1,0 +1,1023 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="概念scala 中的模式并不是指设计模式，它是数据结构上的模式，是用于描述一个结构的组成。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="scala 模式匹配">
+<meta property="og:url" content="https://tangpengcsu.github.io/2017/03/14/scala-pattern/index.html">
+<meta property="og:site_name" content="北冥有鱼">
+<meta property="og:description" content="概念scala 中的模式并不是指设计模式，它是数据结构上的模式，是用于描述一个结构的组成。">
+<meta property="og:updated_time" content="2017-03-14T02:45:27.672Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="scala 模式匹配">
+<meta name="twitter:description" content="概念scala 中的模式并不是指设计模式，它是数据结构上的模式，是用于描述一个结构的组成。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tangpengcsu.github.io/2017/03/14/scala-pattern/"/>
+
+
+
+
+
+  <title> scala 模式匹配 | 北冥有鱼 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dda06c0f41d225c14b70c9d51326cc61";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">北冥有鱼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2017/03/14/scala-pattern/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                scala 模式匹配
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-14T18:39:04+08:00">
+                2017-03-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/模式匹配/" itemprop="url" rel="index">
+                    <span itemprop="name">模式匹配</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/03/14/scala-pattern/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/14/scala-pattern/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>scala 中的模式并不是指设计模式，它是数据结构上的模式，是用于描述一个结构的组成。</p>
+<a id="more"></a>
+<h2 id="模式"><a href="#模式" class="headerlink" title="模式"></a>模式</h2><h3 id="常量模式-constant-patterns-包含常量变量和常量字面量"><a href="#常量模式-constant-patterns-包含常量变量和常量字面量" class="headerlink" title="常量模式(constant patterns)包含常量变量和常量字面量"></a>常量模式(constant patterns)包含常量变量和常量字面量</h3><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="keyword">val</span> site = <span class="string">"alibaba.com"</span></div><div class="line">scala&gt; site <span class="keyword">match</span> &#123; <span class="keyword">case</span> <span class="string">"alibaba.com"</span> =&gt; println(<span class="string">"ok"</span>) &#125;</div><div class="line">scala&gt; <span class="keyword">val</span> <span class="type">ALIBABA</span>=<span class="string">"alibaba.com"</span></div><div class="line"><span class="comment">//注意这里常量必须以大写字母开头</span></div><div class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">foo</span></span>(s:<span class="type">String</span>) &#123; s <span class="keyword">match</span> &#123; <span class="keyword">case</span> <span class="type">ALIBABA</span> =&gt; println(<span class="string">"ok"</span>) &#125; &#125;</div></pre></td></tr></table></figure>
+<p>常量模式和普通的 if 比较两个对象是否相等(equals) 没有区别，并没有感觉到什么威力</p>
+<h3 id="变量模式-variable-patterns"><a href="#变量模式-variable-patterns" class="headerlink" title="变量模式(variable patterns)"></a>变量模式(variable patterns)</h3><p>确切的说单纯的变量模式没有匹配判断的过程，只是把传入的对象给起了一个新的变量名。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&gt; site <span class="keyword">match</span> &#123; <span class="keyword">case</span> whateverName =&gt; println(whateverName) &#125;</div></pre></td></tr></table></figure>
+<p>上面把要匹配的 site 对象用 whateverName 变量名代替，所以它总会匹配成功。不过这里有个约定，对于变量，要求必须是以小写字母开头，否则会把它对待成一个常量变量，比如上面的 whateverName 如果写成 WhateverName 就会去找这个 WhateverName 的变量，如果找到则比较相等性，找不到则出错。</p>
+<p>变量模式通常不会单独使用，而是在多种模式组合时使用，比如</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>) <span class="keyword">match</span>&#123; <span class="keyword">case</span> <span class="type">List</span>(x,<span class="number">2</span>) =&gt; println(x) &#125;</div></pre></td></tr></table></figure>
+<p>里面的 x 就是对匹配到的第一个元素用变量 x 标记。</p>
+<h3 id="通配符模式-wildcard-patterns"><a href="#通配符模式-wildcard-patterns" class="headerlink" title="通配符模式(wildcard patterns)"></a>通配符模式(wildcard patterns)</h3><p>通配符用下划线表示：”_“ ，可以理解成一个特殊的变量或占位符。</p>
+<p>单纯的通配符模式通常在模式匹配的最后一行出现，case _ =&gt; 它可以匹配任何对象，用于处理所有其它匹配不成功的情况。<br>通配符模式也常和其他模式组合使用：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>) <span class="keyword">match</span>&#123; <span class="keyword">case</span> <span class="type">List</span>(_,_,<span class="number">3</span>) =&gt; println(<span class="string">"ok"</span>) &#125;</div></pre></td></tr></table></figure>
+<p>上面的 List(_,_,3) 里用了2个通配符表示第一个和第二个元素，这2个元素可以是任意类型<br>通配符通常用于代表所不关心的部分，它不像变量模式可以后续的逻辑中使用这个变量。</p>
+<h3 id="构造器模式-constructor-patterns"><a href="#构造器模式-constructor-patterns" class="headerlink" title="构造器模式(constructor patterns)"></a>构造器模式(constructor patterns)</h3><p>这个是真正能体现模式匹配威力的一个模式！</p>
+<p>我们来定义一个二叉树：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">scala&gt; :paste</div><div class="line"><span class="comment">//抽象节点</span></div><div class="line"><span class="class"><span class="keyword">trait</span> <span class="title">Node</span></span></div><div class="line"><span class="comment">//具体的节点实现，有两个子节点</span></div><div class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span>(<span class="params">v:<span class="type">String</span>, left:<span class="type">Node</span>, right:<span class="type">Node</span></span>) <span class="keyword">extends</span> <span class="title">Node</span></span></div><div class="line"><span class="comment">//Tree，构造参数是根节点</span></div><div class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Tree</span>(<span class="params">root:<span class="type">TreeNode</span></span>)</span></div></pre></td></tr></table></figure>
+<p>这样我们构造一个根节点含有2个子节点的数：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scala&gt;<span class="keyword">val</span> tree = <span class="type">Tree</span>(<span class="type">TreeNode</span>(<span class="string">"root"</span>,<span class="type">TreeNode</span>(<span class="string">"left"</span>,<span class="literal">null</span>,<span class="literal">null</span>),<span class="type">TreeNode</span>(<span class="string">"right"</span>,<span class="literal">null</span>,<span class="literal">null</span>)))</div></pre></td></tr></table></figure>
+<p>如果我们期望一个树的构成是根节点的左子节点值为”left”，右子节点值为”right”并且右子节点没有子节点<br>那么可以用下面的方式匹配：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">scala&gt; tree.root <span class="keyword">match</span> &#123;</div><div class="line">        <span class="keyword">case</span> <span class="type">TreeNode</span>(_, <span class="type">TreeNode</span>(<span class="string">"left"</span>,_,_), <span class="type">TreeNode</span>(<span class="string">"right"</span>,<span class="literal">null</span>,<span class="literal">null</span>)) =&gt;</div><div class="line">             println(<span class="string">"bingo"</span>)</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>只要一行代码就可以很清楚的描述，如果用java实现，是不是没这么直观呢？</p>
+<h3 id="类型模式-type-patterns"><a href="#类型模式-type-patterns" class="headerlink" title="类型模式(type patterns)"></a>类型模式(type patterns)</h3><p>类型模式很简单，就是判断对象是否是某种类型：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="string">"hello"</span> <span class="keyword">match</span> &#123; <span class="keyword">case</span> _:<span class="type">String</span> =&gt; println(<span class="string">"ok"</span>) &#125;</div></pre></td></tr></table></figure>
+<p>跟 isInstanceOf 判断类型的效果一样，需要注意的是scala匹配泛型时要注意，<br>比如</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">scala&gt; <span class="function"><span class="keyword">def</span> <span class="title">foo</span></span>(a:<span class="type">Any</span>) = a <span class="keyword">match</span> &#123;</div><div class="line">            <span class="keyword">case</span> a :<span class="type">List</span>[<span class="type">String</span>] =&gt; println(<span class="string">"ok"</span>);</div><div class="line">            <span class="keyword">case</span> _ =&gt;</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
+<p>如果使用了泛型，它会被擦拭掉，如同java的做法，所以上面的 List[String] 里的String运行时并不能检测</p>
+<p>foo(List(“A”)) 和 foo(List(2)) 都可以匹配成功。实际上上面的语句编译时就会给出警告，但并不出错。</p>
+<p>通常对于泛型直接用通配符替代，上面的写为 case a : List[_] =&gt; …</p>
+<h3 id="变量绑定模式-variable-binding-patterns"><a href="#变量绑定模式-variable-binding-patterns" class="headerlink" title="变量绑定模式 (variable binding patterns)"></a>变量绑定模式 (variable binding patterns)</h3><p>这个和前边的变量模式有什么不同？看一下代码就清楚了：</p>
+<p>依然是上面的TreeNode，如果我们希望匹配到左边节点值为”left”就返回这个节点的话：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">scala&gt; tree.root <span class="keyword">match</span> &#123;</div><div class="line">         <span class="keyword">case</span> <span class="type">TreeNode</span>(_, leftNode<span class="meta">@TreeNode</span>(<span class="string">"left"</span>,_,_), _) =&gt; leftNode</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
+<p>用@符号绑定 leftNode变量到匹配到的左节点上，只有匹配成功才会绑定</p>
+<h2 id="模式匹配方法"><a href="#模式匹配方法" class="headerlink" title="模式匹配方法"></a>模式匹配方法</h2><ol>
+<li>面向对象的分解 (decomposition)</li>
+<li>访问器模式 (visitor)</li>
+<li>类型测试/类型造型 (type-test/type-cast)</li>
+<li>typecase</li>
+<li>样本类 (case class)</li>
+<li>抽取器 (extractor)</li>
+</ol>
+<h3 id="样本类-case-class"><a href="#样本类-case-class" class="headerlink" title="样本类(case class)"></a>样本类(case class)</h3><p>本质上case class是个语法糖，对你的类构造参数增加了getter访问，还有toString, hashCode, equals 等方法；</p>
+<p>最重要的是帮你实现了一个伴生对象，这个伴生对象里定义了apply 方法和 unapply 方法。</p>
+<p>apply方法是用于在构造对象时，减少new关键字；而unapply方法则是为模式匹配所服务。</p>
+<p>这两个方法可以看做两个相反的行为，apply是构造(工厂模式)，unapply是分解(解构模式)。</p>
+<p>case class在暴露了它的构造方式，所以要注意应用场景：当我们想要把某个类型暴露给客户，但又想要隐藏其数据表征时不适宜。</p>
+<h3 id="抽取器-extrator"><a href="#抽取器-extrator" class="headerlink" title="抽取器(extrator)"></a>抽取器(extrator)</h3><p>抽取器是指定义了 unapply 方法的 object。在进行模式匹配的时候会调用该方法。</p>
+<p>unapply 方法接受一个数据类型，返回另一数据类型，表示可以把入参的数据解构为返回的数据。</p>
+<p>比如</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span>(<span class="params">val a:<span class="type">A</span></span>)</span></div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">TT</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">unapply</span></span>(b:<span class="type">B</span>) = <span class="type">Some</span>(<span class="keyword">new</span> <span class="type">A</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样定义了抽取器 TT 后，看看模式匹配：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> b = <span class="keyword">new</span> <span class="type">B</span>(<span class="keyword">new</span> <span class="type">A</span>);</div><div class="line">b <span class="keyword">match</span>&#123; <span class="keyword">case</span> <span class="type">TT</span>(a) =&gt; println(a) &#125;</div></pre></td></tr></table></figure>
+<p>直观上以为 要拿 b 和 TT 类型匹配，实际被翻译为</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="type">TT</span>.unapply(b)  <span class="keyword">match</span>&#123; <span class="keyword">case</span> <span class="type">Some</span>(…) =&gt; … &#125;</div></pre></td></tr></table></figure>
+<p>它与上面的 case class 相比，相当于自己手动实现 unapply，这也带来了灵活性。</p>
+<p>后续会专门介绍一下 extrator，这里先看一下 extractor 怎么实现 case class 无法实现的“表征独立”(representation independence)</p>
+<p>比如我们想要暴露的类型为 A</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//定义为抽象类型</span></div><div class="line"><span class="class"><span class="keyword">trait</span> <span class="title">A</span></span></div><div class="line"></div><div class="line"><span class="comment">//然后再实现一个具体的子类，有2个构造参数</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> (<span class="params">val p1:<span class="type">String</span>, val p2:<span class="type">String</span></span>) <span class="keyword">extends</span> <span class="title">A</span></span></div><div class="line"></div><div class="line"><span class="comment">//定义一个抽取器</span></div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">MM</span></span>&#123;</div><div class="line">    <span class="comment">//抽取器中apply方法是可选的，这里是为了方便构造A的实例</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">apply</span></span>(p1:<span class="type">String</span>, p2:<span class="type">String</span>) : <span class="type">A</span> = <span class="keyword">new</span> <span class="type">B</span>(p1,p2);</div><div class="line"></div><div class="line">    <span class="comment">//把A分解为(String,String)</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">unapply</span></span>(a:<span class="type">A</span>) : <span class="type">Option</span>[(<span class="type">String</span>, <span class="type">String</span>)] = &#123;</div><div class="line">        <span class="keyword">if</span> (a.isInstanceOf[<span class="type">B</span>]) &#123;</div><div class="line">         <span class="keyword">val</span> b = a.asInstanceOf[<span class="type">B</span>]</div><div class="line">         <span class="keyword">return</span> <span class="type">Some</span>(b.p1, b.p2)</div><div class="line">        &#125;</div><div class="line">        <span class="type">None</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样客户只需要通过 MM(x,y) 来构造和模式匹配了。客户只需要和 MM 这个工厂/解构角色打交道，A 的实现怎么改变都不受影响。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/02/spring-mvc/" rel="next" title="Spring MVC">
+                <i class="fa fa-chevron-left"></i> Spring MVC
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/03/14/scala-pattern/"
+     data-title="scala 模式匹配"
+     data-content=""
+     data-url="https://tangpengcsu.github.io/2017/03/14/scala-pattern/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/03/14/scala-pattern/"
+           data-title="scala 模式匹配" data-url="https://tangpengcsu.github.io/2017/03/14/scala-pattern/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="IAN" />
+          <p class="site-author-name" itemprop="name">IAN</p>
+           
+              <p class="site-description motion-element" itemprop="description">啊~ 五环</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangpengcsu" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/tangpcn" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tpeang" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模式"><span class="nav-number">2.</span> <span class="nav-text">模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常量模式-constant-patterns-包含常量变量和常量字面量"><span class="nav-number">2.1.</span> <span class="nav-text">常量模式(constant patterns)包含常量变量和常量字面量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#变量模式-variable-patterns"><span class="nav-number">2.2.</span> <span class="nav-text">变量模式(variable patterns)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通配符模式-wildcard-patterns"><span class="nav-number">2.3.</span> <span class="nav-text">通配符模式(wildcard patterns)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构造器模式-constructor-patterns"><span class="nav-number">2.4.</span> <span class="nav-text">构造器模式(constructor patterns)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类型模式-type-patterns"><span class="nav-number">2.5.</span> <span class="nav-text">类型模式(type patterns)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#变量绑定模式-variable-binding-patterns"><span class="nav-number">2.6.</span> <span class="nav-text">变量绑定模式 (variable binding patterns)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模式匹配方法"><span class="nav-number">3.</span> <span class="nav-text">模式匹配方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#样本类-case-class"><span class="nav-number">3.1.</span> <span class="nav-text">样本类(case class)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#抽取器-extrator"><span class="nav-number">3.2.</span> <span class="nav-text">抽取器(extrator)</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">IAN</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访问数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tangpeng"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="local-search-pop-overlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
