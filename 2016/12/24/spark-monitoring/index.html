@@ -1,0 +1,1230 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="有几种方法可以监视 Spark 应用 : Web UI，metrics 和其他扩展工具。
+Web 接口每一个 SparkContext 启动一个 web UI，默认情况下使用端口 4040，可以显示关于运行程序的有用信息。这包括 :
+
+调度器阶段和任务的列表 　　
+RDD 大小和内存使用的概要信息 　　
+环境信息　
+正在运行的程序的信息
+
+您只需打开 http://\:4040 的 web 浏览器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark 监控">
+<meta property="og:url" content="https://tangpengcsu.github.io/2016/12/24/spark-monitoring/index.html">
+<meta property="og:site_name" content="北冥有鱼">
+<meta property="og:description" content="有几种方法可以监视 Spark 应用 : Web UI，metrics 和其他扩展工具。
+Web 接口每一个 SparkContext 启动一个 web UI，默认情况下使用端口 4040，可以显示关于运行程序的有用信息。这包括 :
+
+调度器阶段和任务的列表 　　
+RDD 大小和内存使用的概要信息 　　
+环境信息　
+正在运行的程序的信息
+
+您只需打开 http://\:4040 的 web 浏览器">
+<meta property="og:updated_time" content="2017-03-14T05:19:52.065Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spark 监控">
+<meta name="twitter:description" content="有几种方法可以监视 Spark 应用 : Web UI，metrics 和其他扩展工具。
+Web 接口每一个 SparkContext 启动一个 web UI，默认情况下使用端口 4040，可以显示关于运行程序的有用信息。这包括 :
+
+调度器阶段和任务的列表 　　
+RDD 大小和内存使用的概要信息 　　
+环境信息　
+正在运行的程序的信息
+
+您只需打开 http://\:4040 的 web 浏览器">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tangpengcsu.github.io/2016/12/24/spark-monitoring/"/>
+
+
+
+
+
+  <title> Spark 监控 | 北冥有鱼 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dda06c0f41d225c14b70c9d51326cc61";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">北冥有鱼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-monitoring/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Spark 监控
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-24T18:39:04+08:00">
+                2016-12-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/12/24/spark-monitoring/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-monitoring/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>有几种方法可以监视 Spark 应用 : Web UI，metrics 和其他扩展工具。</p>
+<h2 id="Web-接口"><a href="#Web-接口" class="headerlink" title="Web 接口"></a>Web 接口</h2><p>每一个 SparkContext 启动一个 web UI，默认情况下使用端口 4040，可以显示关于运行程序的有用信息。这包括 :</p>
+<ul>
+<li>调度器阶段和任务的列表 　　</li>
+<li>RDD 大小和内存使用的概要信息 　　</li>
+<li>环境信息　</li>
+<li>正在运行的程序的信息</li>
+</ul>
+<p>您只需打开 <em>http://\<driver-node\>:4040</driver-node\></em> 的 web 浏览器就可以访问。如果在同一主机上运行多个 SparkContexts，他们将开始连续绑定到端口 4040（4041、4042、等）。</p>
+<p>注意，<strong>默认情况下这些信息仅在有程序的执行时显示</strong>。你可以在启动 Spark 之前修改配置，设置 <strong>spark.eventLog.enabled</strong> 为 <strong>true</strong>。让 Spark 记录并持久化存储 Spark 事件使其可以在 UI 中显示。</p>
+<a id="more"></a>
+<h3 id="历史信息"><a href="#历史信息" class="headerlink" title="历史信息"></a>历史信息</h3><p>如果 Spark 在 Mesos 或者 YARN 上运行，它仍有可能用已存在的程序日志通过 Spark history server（历史信息记录服务）来显示该程序运行时的详细信息。启动命令如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./sbin/start-history-server.sh</div></pre></td></tr></table></figure>
+<p>这个会默认创建一个 web 接口 : <em>http://\<server-url\>:18080</server-url\></em>，显示未完成、完成以及其他尝试的任务信息。</p>
+<p>当指定使用一个文件系统提供 class 类（具体见下 spark.history.provider），那么基本的日志存储路径应该在 spark.history.fs.logDirectory 这个配置中指定，并且会有子目录，每个都表示某个程序信息的日志 log。</p>
+<p>Spark 任务本身必须配置启用日志，并用相同的、共享的、可写的目录记录他们。例如，如果服务器配置的日志目录为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">spark.eventLog.enabled true</div><div class="line">spark.eventLog.dir hdfs://namenode/shared/spark-logs</div></pre></td></tr></table></figure>
+<p>那么 history server 的配置信息可以如下 :</p>
+<h4 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h4><table>
+<thead>
+<tr>
+<th>环境变量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SPARK_DAEMON_MEMORY</td>
+<td>history server 分配内存（默认 : 1g）.</td>
+</tr>
+<tr>
+<td>SPARK_DAEMON_JAVA_OPTS</td>
+<td>history server JVM 配置（默认 : none）.</td>
+</tr>
+<tr>
+<td>SPARK_PUBLIC_DNS</td>
+<td>history server 的公用地址. 如果未配置， 可能会使用服务器的内部地址， 导致连接失效 （默认 : none）.</td>
+</tr>
+<tr>
+<td>SPARK_HISTORY_OPTS</td>
+<td>spark.history.*  history server 的相关配置选项 （默认 : none）.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>文件：conf/spark-env.sh</p>
+</blockquote>
+<h4 id="Spark-配置选项"><a href="#Spark-配置选项" class="headerlink" title="Spark 配置选项"></a>Spark 配置选项</h4><table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>默认</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spark.history.provider</td>
+<td>org.apache.spark.deploy.history.FsHistoryProvider</td>
+<td>实现了 history backend 的 class 类的名称。目前只有一个实现，Spark 本身提供，用于检测存在文件系统中的程序的日志文件。</td>
+</tr>
+<tr>
+<td>spark.history.fs.logDirectory</td>
+<td><a href="http://file/tmp/spark-events" target="_blank" rel="external">http://file/tmp/spark-events</a></td>
+<td>提供历史日志文件存储路径，URL地址（包含可加载的程序日志的目录）。可以配置本地路径 file://，或者 HDFS 路径 hdfs://namenode/shared/spark-logs 或其他 Hadoop API 支持的文件系统。</td>
+</tr>
+<tr>
+<td>spark.history.fs.update.interval</td>
+<td>10s</td>
+<td>以秒为单位，更新日志相关信息的时间间隔，更短的时间间隔帮助检测到新的程序更快，但是牺牲更多的服务器负载。一旦更新完成，完成和未完成的程序的都会发生变化。</td>
+</tr>
+<tr>
+<td>spark.history.retainedApplications</td>
+<td>50</td>
+<td>保存在 UI 缓存中的程序数量。如果超过这个上限，那么时间最老的程序将从缓存中移除。如果一个程序未被缓存，它就必须从磁盘加载。</td>
+</tr>
+<tr>
+<td>spark.history.ui.maxApplications</td>
+<td>Int.MaxValue</td>
+<td>显示在总历史页面中的程序的数量。如果总历史页面未显示，程序 UI 仍可通过访问其 URL 来显示。</td>
+</tr>
+<tr>
+<td>spark.history.ui.port</td>
+<td>18080</td>
+<td>UI 端口设置.</td>
+</tr>
+<tr>
+<td>spark.history.kerberos.enabled</td>
+<td>false</td>
+<td>表明 history server 是否应该使用 kerberos 登录。如果历史服务器访问 HDFS 文件安全的 Hadoop 集群，这是必需的。如果设置为 true，将会使用 spark.history.kerberos.principal 和 spark.history.kerberos.keytab 两个配置。</td>
+</tr>
+<tr>
+<td>spark.history.kerberos.principal</td>
+<td>（none）</td>
+<td>Kerberos 凭证名称。</td>
+</tr>
+<tr>
+<td>spark.history.kerberos.keytab</td>
+<td>（none）</td>
+<td>kerberos keytab 文件位置。</td>
+</tr>
+<tr>
+<td>spark.history.ui.acls.enable</td>
+<td>false</td>
+<td>指定是否通过 acl 授权限制用户查看程序。如果启用，程序运行时会强制执行访问控制检查，检测程序是否设置 spark.ui.acls.enable，程序所有者总能够查看自己的应用程序和任何指定 spark.ui.view.acls 和 spark.ui.view.acls.groups 的程序。当程序运行也将要授权查看。如果禁用，就没有访问控制检查。</td>
+</tr>
+<tr>
+<td>spark.history.fs.cleaner.enabled</td>
+<td>false</td>
+<td>是否定期清理历史日志文件。</td>
+</tr>
+<tr>
+<td>spark.history.fs.cleaner.interval</td>
+<td>1d</td>
+<td>清理历史日志文件的间隔，只会清理比 spark.history.fs.cleaner.maxAge 更老的日志文件。</td>
+</tr>
+<tr>
+<td>spark.history.fs.cleaner.maxAge</td>
+<td>7d</td>
+<td>日志文件的最大年龄，超过就会被清理。</td>
+</tr>
+<tr>
+<td>spark.history.fs.numReplayThreads</td>
+<td>25% of available cores histroy sever</td>
+<td>操作日志的最大线程数。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>文件： conf/spark-defaults.conf</p>
+</blockquote>
+<p>请注意，在所有这些 UI，表是可排序的点击他们的表头，让它容易更容易识别任务缓慢，数据倾斜的任务。</p>
+<p>注意 :</p>
+<ol>
+<li>history server 会显示完成和未完成的 Spark 任务。如果一个程序多次尝试失败后，这时会显示失败的尝试，或任何正在进行的却未完成的尝试，或者最终成功的尝试。</li>
+<li>未完成的程序只会间歇性地更新。更新之间的时间间隔定义在的检查文件变化间隔（spark.history.fs.update.interval）。在更大的集群上更新间隔可能被设置为更大值。可以通过 web UI 查看正在运行的程序。</li>
+<li>程序如果退出时没有表明注册已经完成，将会被列入未完成的一栏，尽管他们不再运行。如果一个应用程序崩溃可能导致该情况发生，。</li>
+<li>一种表明 Spark 工作完成方法是显式调用停止 Spack Context 的 sc.stop() 方法，或者在 Python 中使用 with SparkContext() as sc : 构造方法来加载和去除 Spark Context。</li>
+</ol>
+<h4 id="REST-API"><a href="#REST-API" class="headerlink" title="REST API"></a>REST API</h4><p>除了 UI 中查看这些指标，也可以得到任务信息的 JSON ，这个能够是开发者更方便的创造新的 Spark 可视化和监控。 正在运行的程序和历史的程序都可以得到他们的 JSON 信息。挂载在 /api/v1，比如，对于 histroy server，他们通常会访问 <em>http://\<server-url\>:18080/api/v1</server-url\></em> ，对于运行的程序，则是 <em><a href="http://localhost:4040/api/v1" target="_blank" rel="external">http://localhost:4040/api/v1</a></em>。</p>
+<p>API 中，程序拥有一个程序 ID， [app-id]。在 YARN 上执行时，每个程序可能进行有多次尝试，但尝试的 ID（attempt IDs）只有在集群模式下有，客户端模式的程序没有。在 YARN 集群模式上执行的程序会有 [attempt-id]。在下面列出的 API 中，是在 YARN 集群模式下运行时， [app-id] 就是 [base-app-id]/[attempt-id]，[base-app-id] 是 YARN 的程序 ID。</p>
+<table>
+<thead>
+<tr>
+<th>位置</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/applications</td>
+<td>所有的应用程序的列表。?status=[completed\</td>
+<td>running] 显示特定状态的程序。?minDate=[date] 显示的最早时间.。示例 :?minDate=2015-02-10；?minDate=2015-02-03T16:42:40.000GMT；?maxDate=[date] 显示的最新的时间; 格式和 minDate 相同；?limit=[limit] 程序显示数量的限制。</td>
+</tr>
+<tr>
+<td>/applications/[app-id]/jobs</td>
+<td>指定应用的所有 Job（作业）列表 :?status=[complete\</td>
+<td>succeeded\</td>
+<td>failed] 显示特定状态的信息。</td>
+</tr>
+<tr>
+<td>/applications/[app-id]/jobs/[job-id]</td>
+<td>某个 job 的详情。</td>
+</tr>
+<tr>
+<td>/applications/[app-id]/stages</td>
+<td>显示某个程序的 stages 列表。</td>
+</tr>
+<tr>
+<td>/applications/[app-id]/stages/[stage-id]</td>
+<td>显示给定的 stages-id 状态。?status=[active\</td>
+<td>complete\</td>
+<td>pending\</td>
+<td>failed] 显示特定状态的信息。</td>
+</tr>
+<tr>
+<td>/applications/[app-id]/stages/[stage-id]/[stage-attempt-id]</td>
+<td>指定 stage attempt 的详情。</td>
+</tr>
+<tr>
+<td>/applications/[app-id]/stages/[stage-id]/[stage-attempt-id]/taskSummary</td>
+<td>stage attempt 的指标集合统计。?quantiles 统计指定的 quantiles。示例 : ?quantiles=0.01，0.5，0.99</td>
+</tr>
+<tr>
+<td>/applications/[app-id]/stages/[stage-id]/[stage-attempt-id]/taskList</td>
+<td>指定 stage attempt 的 task 列表。?offset=[offset]&amp;length=[len] 显示指定范围的task.。?sortBy=[runtime\</td>
+<td>-runtime] task 排序.。示例 : ?offset=10&amp;length=50&amp;sortBy=runtime</td>
+</tr>
+<tr>
+<td>/applications/[app-id]/executors</td>
+<td>程序的 executors。</td>
+</tr>
+<tr>
+<td>/applications/[app-id]/storage/rdd</td>
+<td>程序的 RDDs。</td>
+</tr>
+<tr>
+<td>/applications/[app-id]/storage/rdd/[rdd-id]</td>
+<td>指定 RDD 详情。</td>
+</tr>
+<tr>
+<td>/applications/[base-app-id]/logs</td>
+<td>以 zip 文件形式下载指定程序的 log。</td>
+</tr>
+<tr>
+<td>/applications/[base-app-id]/[attempt-id]/logs</td>
+<td>以 zip 文件形式下载指定程序 atempt 的 log。</td>
+</tr>
+</tbody>
+</table>
+<p>可恢复的 jobs 和 stages 的数量被独立的 Spark UI 的相同保留机制所约束;  “spark.ui.retainedJobs” 定义触发回收垃圾 jobs 阈值，和 spark.ui.retainedStages 限定 stages。注意，配置需要重启才能生效:通过增加这些值和重新启动服务器才可以保存获取更多的信息。</p>
+<h4 id="API-版本政策"><a href="#API-版本政策" class="headerlink" title="API 版本政策"></a>API 版本政策</h4><p>这些 endpoints 都已经版本化以便在其之上开发，Spark 保证 :</p>
+<ul>
+<li>endpoints 不会被移除</li>
+<li>对于任何给定的 endpoint，不会删除个别 fields</li>
+<li>可能新增 endpoints</li>
+<li>可能新增已有 endpoints 的 fields</li>
+<li>将来可能在单独的 endpoint（例如，api / v2）添加 api 的新版本。 新版本不需要向后兼容。</li>
+<li>API 版本可能被删除，但之前至少有版本老的 API 与新的 API 版本共存。</li>
+</ul>
+<p>注意，即使检查正在运行的程序的 UI，applications/[app-id] 部分仍然是必需的，尽管只有一个程序可用。如。查看正在运行的应用程序的工作列表，你会去 <em><a href="http://localhost:4040/api/v1/applications/[app-id]/jobs" target="_blank" rel="external">http://localhost:4040/api/v1/applications/[app-id]/jobs</a></em>。这是保持在两种模式下的路径一致。</p>
+<h3 id="Metrics"><a href="#Metrics" class="headerlink" title="Metrics"></a>Metrics</h3><p>Spark 拥有可配置的 metrics system （度量系统） 其基于 <a href="http://metrics.dropwizard.io/3.1.0/" title="http://metrics.dropwizard.io/3.1.0/" target="_blank" rel="external">Dropwizard Metrics Library</a>。这使用户可以通过多种 sinks 比如 HTTP，JMX，CSV 文件报告 Spark 的各项指标。Metrics system 是通过一个配置文件配置， Spark 需要其在路径 $SPARK_HOME/conf/metrics.properties 下。 可以通过 spark.metrics.conf <a href="/2016/12/24/spark-configuration/#spark-" title="/2016/12/24/spark-configuration/#spark-">配置属性</a> 指定自定义文件的位置 。Spark 的指标拥有不同实例，对于不同的 Spark 组件是解耦的。在每个实例中，您可以配置一组需要的 Metrics 。目前支持以下 :</p>
+<ul>
+<li>master :  Spark 独立的 master 进程。</li>
+<li>applications : 一个 master 组件用于报告各种程序。</li>
+<li>worker : Spark 独立的 worker 进程。</li>
+<li>executor :  Spark executor。</li>
+<li>driver : Spark 驱动进程，（创建 SparkContext 的进程）。</li>
+</ul>
+<p>每个例子都可以报告 0 项以上的 sinks，包含在 org.apache.spark.metrics.sink 之中</p>
+<ul>
+<li>ConsoleSink : 记录指标信息到控制台。</li>
+<li>CSVSink : 周期记录到 CSV 文件。</li>
+<li>JmxSink : JMX 监控。</li>
+<li>MetricsServlet : 启动 Servlet 向 Spark UI 提供 JSON 格式信息。</li>
+<li>GraphiteSink : 传送到 Graphite 节点。</li>
+<li>Slf4jSink : 存到 slf4j 。</li>
+</ul>
+<p>Spark 同样支持 Ganglia sink ，因为版权原因无法默认安装 :</p>
+<ul>
+<li>GangliaSink : 发到 Ganglia 节点或者组播组（multicast group）。</li>
+</ul>
+<p>安装 GangliaSink 需要构建一个定制的 Spark。注意，通过嵌入这个插件库 Spark 将包括 <a href="http://www.gnu.org/copyleft/lesser.html" title="http://www.gnu.org/copyleft/lesser.html" target="_blank" rel="external">LGPL</a>-licensed 授权的代码。对于 sbt 用户，构建前设置 SPARK_GANGLIA_LGPL 环境变量。对于 Maven 用户，要使 -Pspark-ganglia-lgpl 生效，除了修改 Spark 集群构建的环境配置，用户程序也需要加入 spark-ganglia-lgpl 组件。标准配置的语法在示例文件中，$SPARK_HOME/conf/metrics.properties.template。</p>
+<h2 id="高级工具"><a href="#高级工具" class="headerlink" title="高级工具"></a>高级工具</h2><p>一些扩展工具可以用来帮助监控 Spark 任务性能 :</p>
+<ul>
+<li>集群监控工具， 比如 <a href="http://ganglia.sourceforge.net/" title="http://ganglia.sourceforge.net/" target="_blank" rel="external">Ganglia</a>， 可以对整个集群的利用率和性能瓶颈监控。比如， 一个 Ganglia 监控表盘可以很快地展示一个特定任务是否占用磁盘，网络，cpu。</li>
+<li>操作系统分析工具如 <a href="http://dag.wiee.rs/home-made/dstat/" title="http://dag.wiee.rs/home-made/dstat/" target="_blank" rel="external">dstat</a>， <a href="https://linux.die.net/man/1/iostat" title="https://linux.die.net/man/1/iostat" target="_blank" rel="external">iostat</a>， 和 <a href="https://linux.die.net/man/1/iotop" title="https://linux.die.net/man/1/iotop" target="_blank" rel="external">iotop</a> 可以在单个节点上提供细粒度分析。</li>
+<li>JVM 工具例如 jstack 生成 stack traces（线程堆栈信息）， jmap 生成 heap-dump（内存信息）， jstat 报告运行状态信息，并且 jconsole 提供对帮助理解 JVM 核心的各项属性可视化监视、管理。</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spark/" rel="tag"># Spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/24/spark-job-scheduling/" rel="next" title="Spark 作业调度">
+                <i class="fa fa-chevron-left"></i> Spark 作业调度
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/24/spark-overview/" rel="prev" title="Spark 概述">
+                Spark 概述 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/12/24/spark-monitoring/"
+     data-title="Spark 监控"
+     data-content=""
+     data-url="https://tangpengcsu.github.io/2016/12/24/spark-monitoring/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/12/24/spark-monitoring/"
+           data-title="Spark 监控" data-url="https://tangpengcsu.github.io/2016/12/24/spark-monitoring/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="IAN" />
+          <p class="site-author-name" itemprop="name">IAN</p>
+           
+              <p class="site-description motion-element" itemprop="description">啊~ 五环</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangpengcsu" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/tangpcn" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tpeang" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-接口"><span class="nav-number">1.</span> <span class="nav-text">Web 接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#历史信息"><span class="nav-number">1.1.</span> <span class="nav-text">历史信息</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#环境变量"><span class="nav-number">1.1.1.</span> <span class="nav-text">环境变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spark-配置选项"><span class="nav-number">1.1.2.</span> <span class="nav-text">Spark 配置选项</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#REST-API"><span class="nav-number">1.1.3.</span> <span class="nav-text">REST API</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#API-版本政策"><span class="nav-number">1.1.4.</span> <span class="nav-text">API 版本政策</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Metrics"><span class="nav-number">1.2.</span> <span class="nav-text">Metrics</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高级工具"><span class="nav-number">2.</span> <span class="nav-text">高级工具</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">IAN</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访问数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tangpeng"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="local-search-pop-overlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

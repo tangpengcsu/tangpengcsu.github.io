@@ -1,0 +1,1209 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Linux,shell," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="linux 系统是一个多用户多任务的分时操作系统，但系统并不能识别人，它通过账号来区别每个用户。每个 linux 系统在安装的过程中都要为 root 账号设置密码，这个 root 即为系统的第一个账号。每一个用这个账号登录系统的用户都是超级管理员，他们对此系统有绝对的控制权。通过向系统管理员进行申请，还可以为系统创建普通账号。每个用普通账号登录系统的用户，对系统都只有部分控制权。
+我们知道计算机中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 基础之用户与文件">
+<meta property="og:url" content="https://tangpengcsu.github.io/2016/10/28/linux-users-and-files/index.html">
+<meta property="og:site_name" content="北冥有鱼">
+<meta property="og:description" content="linux 系统是一个多用户多任务的分时操作系统，但系统并不能识别人，它通过账号来区别每个用户。每个 linux 系统在安装的过程中都要为 root 账号设置密码，这个 root 即为系统的第一个账号。每一个用这个账号登录系统的用户都是超级管理员，他们对此系统有绝对的控制权。通过向系统管理员进行申请，还可以为系统创建普通账号。每个用普通账号登录系统的用户，对系统都只有部分控制权。
+我们知道计算机中">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/linux/directory-tree.png">
+<meta property="og:updated_time" content="2017-03-14T05:19:07.415Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux 基础之用户与文件">
+<meta name="twitter:description" content="linux 系统是一个多用户多任务的分时操作系统，但系统并不能识别人，它通过账号来区别每个用户。每个 linux 系统在安装的过程中都要为 root 账号设置密码，这个 root 即为系统的第一个账号。每一个用这个账号登录系统的用户都是超级管理员，他们对此系统有绝对的控制权。通过向系统管理员进行申请，还可以为系统创建普通账号。每个用普通账号登录系统的用户，对系统都只有部分控制权。
+我们知道计算机中">
+<meta name="twitter:image" content="https://tangpengcsu.github.io/images/linux/directory-tree.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tangpengcsu.github.io/2016/10/28/linux-users-and-files/"/>
+
+
+
+
+
+  <title> Linux 基础之用户与文件 | 北冥有鱼 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dda06c0f41d225c14b70c9d51326cc61";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">北冥有鱼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-users-and-files/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Linux 基础之用户与文件
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-28T18:39:04+08:00">
+                2016-10-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/10/28/linux-users-and-files/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-users-and-files/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>linux 系统是一个多用户多任务的分时操作系统，但系统并不能识别人，它通过账号来区别每个用户。每个 linux 系统在安装的过程中都要为 root 账号设置密码，这个 root 即为系统的第一个账号。每一个用这个账号登录系统的用户都是超级管理员，他们对此系统有绝对的控制权。通过向系统管理员进行申请，还可以为系统创建普通账号。每个用普通账号登录系统的用户，对系统都只有部分控制权。</p>
+<p>我们知道计算机中的数据是以二进制 0、1 的形式存储在硬件之上的。在 linux 中，为了管理的方便，系统将这些数据组织成目录和文件，并以一个树形的结构呈现给用户。如下图所示：</p>
+<p><img src="/images/linux/directory-tree.png" alt="Linux 目录树结构"></p>
+<p>其中处于顶端的 / 是根目录，linux 下所有的文件均起始于根目录。另外很重要的一点，linux 中不仅普通文档是文件，目录是文件，甚至设备、进程等等都被抽象成文件。这样做的目的是为了简化操作和方便管理。</p>
+<p>于是，本文开始所说的控制权，即为用户对系统中文件的控制权。通常所说的某某文件的权限，是针对特定用户而言的。</p>
+<a id="more"></a>
+<p>另外，每一个登录的用户，在任意的时刻均处于某个目录之内，称为当前目录 (current directory)。用户在刚刚登录的时候所处的目录是家目录，root 用户的家目录是 / root, 普通用户的家目录通常为 / home/user_name。在这里第一个字符 / 即是上文所说的根目录，root 和 home 是根目录下的两个子目录名，要注意 home 后面的 / 是目录分隔符，而不是目录名的一部分，user_name 是普通用户家目录的名字。</p>
+<p>下面我们来看具体命令：</p>
+<h2 id="1、pwd-打印当前目录"><a href="#1、pwd-打印当前目录" class="headerlink" title="1、pwd 打印当前目录"></a>1、pwd 打印当前目录</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">pwd</span> [OPTION]...</div></pre></td></tr></table></figure>
+<p>例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">pwd</span></div><div class="line">/root</div></pre></td></tr></table></figure>
+<h2 id="2、cd-切换目录"><a href="#2、cd-切换目录" class="headerlink" title="2、cd 切换目录"></a>2、cd 切换目录</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> [DIR]</div></pre></td></tr></table></figure>
+<p>例如切换到根目录然后打印当前目录 (注意命令提示符的变化)：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> /</div><div class="line">$ <span class="built_in">pwd</span></div><div class="line">/</div></pre></td></tr></table></figure>
+<p>这两个命令非常简单，简单到它们的选项都不常用，其中 cd 命令后面跟一个路径名。这个路径名可以是 “绝对的” 也可以是“相对的”。绝对的表示成以 / 为开头的路径名，如命令 cd /usr/local/src 中的路径名；相对的表示成相对于当前目录的路径名，若将 linux 中目录的包含与被包含关系比喻成父子关系的话，符号.. 代表的是父目录，符号. 代表当前目录。</p>
+<p>例：假设当前所处目录为 / usr/local/src，那么切换到根目录可以用两种方法：cd / 和 cd ../../..</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> ../../..</div><div class="line">$ <span class="built_in">pwd</span></div><div class="line">/</div></pre></td></tr></table></figure>
+<p>然后再切换回 root 的家目录： cd root 和 cd ./root</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> ./root</div><div class="line">$ <span class="built_in">pwd</span></div><div class="line">/root</div></pre></td></tr></table></figure>
+<p>另外如果 cd 后面任何参数都没有的时候，执行的效果是切换回家目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span></div><div class="line">$ <span class="built_in">pwd</span></div><div class="line">/root</div></pre></td></tr></table></figure>
+<h2 id="3、ls-列出目录内容"><a href="#3、ls-列出目录内容" class="headerlink" title="3、ls 列出目录内容"></a>3、ls 列出目录内容</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ls [OPTION]... [FILE]...</div></pre></td></tr></table></figure>
+<p>当命令 ls 后不跟任何参数的时候显示当前目录的内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ls</div><div class="line">anaconda-ks.cfg  install.log  install.log.syslog</div></pre></td></tr></table></figure>
+<p>上面的例子显示了 / root 目录下的三个文件 anaconda-ks.cfg、anaconda-ks.cfg、anaconda-ks.cfg。<br>选项 - l 可以使 ls 命令的结果以长格式显示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ ls <span class="_">-l</span></div><div class="line">total 84</div><div class="line">-rw------- 1 root root  1666 Jan 14  2016 anaconda-ks.cfg</div><div class="line">-rw-r--r-- 1 root root 55745 Jan 14  2016 install.log</div><div class="line">-rw-r--r-- 1 root root  5039 Jan 14  2016 install.log.syslog</div></pre></td></tr></table></figure>
+<p>显示结果的意思后述。</p>
+<p>##　4、mkdir 创建目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mkdir [OPTION]... DIRECTORY...</div></pre></td></tr></table></figure>
+<p>通常的使用方法是命令名之后直接跟目录名 (可以多个)，这里说一下 linux 文件命名的规则：linux 允许文件名使用除字符 / 之外的所有字符，文件名的最大字符数为 255(中文字符为 127)，linux 不鼓励在文件名中出现特殊字符 (容易引起混淆)，文件名对大小写敏感。文件或目录数量限制与所使用的文件系统有关。</p>
+<p>如当前目录下创建 temp 目录并用 ls 查看：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ mkdir temp</div><div class="line">$ ls</div><div class="line">anaconda-ks.cfg  install.log  install.log.syslog  temp</div></pre></td></tr></table></figure>
+<p>选项 - p 可以递归地创建子目录，如进入 temp 并创建目录 dir1 和 dir2，dir1 的子目录 test：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> temp</div><div class="line">$ mkdir -p dir1/<span class="built_in">test</span> dir2</div><div class="line">$ ls</div><div class="line">dir1  dir2</div><div class="line">$ <span class="built_in">cd</span> dir1</div><div class="line">$ ls</div><div class="line"><span class="built_in">test</span></div></pre></td></tr></table></figure>
+<p>5、touch “创建文件”</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">touch [OPTION]... FILE...</div></pre></td></tr></table></figure>
+<p>其实此命令作用是修改文件时间，当指定的文件不存在时就会创建新文件。由于文件时间的更改可以通过许多其它途径，反而许多用户都误以为它就是创建文件的命令。如在 temp 目录下创建文件 file1 在 temp 的子目录 dir1 下创建文件 file2：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ touch file1 dir1/file2</div><div class="line">$ ls</div><div class="line">dir1  dir2  file1</div><div class="line">$ <span class="built_in">cd</span> dir1</div><div class="line">$ ls</div><div class="line">file2  <span class="built_in">test</span></div></pre></td></tr></table></figure>
+<h2 id="6、useradd-添加账号"><a href="#6、useradd-添加账号" class="headerlink" title="6、useradd 添加账号"></a>6、useradd 添加账号</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">useradd [options] name</div></pre></td></tr></table></figure>
+<p>如创建一个名叫 learner 的账号：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ useradd learner</div></pre></td></tr></table></figure>
+<p>useradd 命令默认在创建用户账号的同时也会创建用户的家目录，同时更新系统中与用户相关的配置文件 (linux 中有许多配置文件，它们的作用是为软件运行设置环境信息、参数等，它们通常是纯文本的格式，方便用户变更其内容以改变软件运行环境。在 linux 中，大多数配置文件都处于目录 / etc 内，如与用户管理相关的配置文件：/etc/passwd，/etc/group，/etc/shadow，/etc/gshadow 等)。</p>
+<p>让我们进入新创建的用户家目录并用 ls 命令查看目录内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> /home/learner</div><div class="line">$ ls</div><div class="line">$</div></pre></td></tr></table></figure>
+<p>终端上并没有打印出任何信息，试试 ls 的 -a 选项：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ls <span class="_">-a</span></div><div class="line">.  ..  .bash_logout  .bash_profile  .bashrc</div></pre></td></tr></table></figure>
+<p>选项 -a 作用是显示目录下所有文件，包括当前目录. 和父目录..，linux 中以. 开头的文件是隐藏文件。在这里的三个隐藏文件是用户 learner 登录系统时所要用到的配置文件。</p>
+<h2 id="7、passwd-添加或更改账号口令"><a href="#7、passwd-添加或更改账号口令" class="headerlink" title="7、passwd 添加或更改账号口令"></a>7、passwd 添加或更改账号口令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">passwd [OPTION]... [NAME]</div></pre></td></tr></table></figure>
+<p>注意通过命令 useradd 新添加的账号并不能马上进行登录，还必须为账号添加口令为新用户 learner 添加口令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ passwd learner</div><div class="line">Changing password <span class="keyword">for</span> user learner.</div><div class="line">New UNIX password: xxxxxx                       <span class="comment">#此处的 xxxxxx 并不在屏幕上显示</span></div><div class="line">BAD PASSWORD: it is too simplistic/systematic   <span class="comment">#此处可能会给出密码太简单的警告</span></div><div class="line">Retype new UNIX password: xxxxxx                <span class="comment">#重复输入，此处的 xxxxxx 不在屏幕上显示</span></div><div class="line">passwd: all authentication tokens updated successfully.</div></pre></td></tr></table></figure>
+<p>当 passwd 命令后没有用户名直接执行时，它的作用是更改当前账号的口令。</p>
+<h2 id="8、cat-查看文件内容"><a href="#8、cat-查看文件内容" class="headerlink" title="8、cat 查看文件内容"></a>8、cat 查看文件内容</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat [OPTION]... [FILE]...</div></pre></td></tr></table></figure>
+<p>如查看保存系统账号的配置文件 /etc/passwd</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ cat /etc/passwd</div><div class="line">root:x:0:0:root:/root:/bin/bash</div><div class="line">bin:x:1:1:bin:/bin:/sbin/nologin</div><div class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</div><div class="line">....</div><div class="line">learner:x:1000:1000::/home/learner:/bin/bash</div></pre></td></tr></table></figure>
+<p>这里节选了部分输出，我们看到新创建的账号 learner 的信息在文件最后一行。文件中每一行都被: 分割为 7 列，拿第一行举例说明每一列所表示的含义：</p>
+<ol>
+<li>root 表示账号名。</li>
+<li>x 是口令，在一些系统中，真正的口令加密保存在 /etc/shadow 里，这里保留 x 或 *。</li>
+<li>0 是用户 ID。</li>
+<li>0 是用户组 ID，对应着 / etc/group 文件中的一条记录。</li>
+<li>root 是描述性信息。</li>
+<li>/root 是用户家目录。</li>
+<li>/bin/bash 是用户的登录 shell，每一个登录的用户，系统都要启动一个 shell 程序以供用户使用。<br>对应于新创建的用户 learner 来说，它的用户 ID 是 1000，通常用户 ID(UID) 与用户名是一一对应的。root 的 UID 是 0。用户组 ID(GID) 如果在创建用户的时候没有被指定，那么系统会生成一个和 UID 号相同的 GID，并把新用户放到这个组里面。用户组的意义是为了给权限控制增加灵活性，比如把不同的用户归到一个组之内，然后使文件针对这个组设置权限。</li>
+</ol>
+<p>系统中还有一些登录 shell 为 / sbin/nologin 的用户，这些用户是 “伪用户”，它们是不能登录的，它们的存在主要是为了方便管理，满足相应的系统进程对文件属主的要求。</p>
+<h2 id="9、head-tail-more-less-查看内容"><a href="#9、head-tail-more-less-查看内容" class="headerlink" title="9、head tail more less 查看内容"></a>9、head tail more less 查看内容</h2><p>这四个命令使用和 cat 类似，只是显示方式的区别。</p>
+<p>head 从文件的第一行开始显示，默认显示 10 行，使用选项 - n 可以指定显示行数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ head -n 3 /etc/group</div><div class="line">root:x:0:</div><div class="line">bin:x:1:</div><div class="line">daemon:x:2:</div></pre></td></tr></table></figure>
+<p>显示文件 / etc/group 的前三行。</p>
+<p>/etc/group 中每行被: 分隔成 4 列：</p>
+<ol>
+<li>组名</li>
+<li>口令，linux 中一般无组口令，此处一般为 x 或 *</li>
+<li>组 ID(GID)</li>
+<li>组内成员列表，多个用逗号分隔。如果字段为空表示用户组为 GID 的用户名。</li>
+</ol>
+<p>tail 默认输出文件的倒数 10 行内容，也可以用选项 - n 指定行数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ tail -n 4 /etc/shadow</div><div class="line">postfix:!!:16814::::::</div><div class="line">sshd:!!:16814::::::</div><div class="line">tcpdump:!!:16994::::::</div><div class="line">learner:<span class="variable">$6</span>$.U5pPYhu<span class="variable">$h9TnYR9L4dbJY6b6VgnAQBG5qEg6s5fyJpxZVrAipHeeFhHAiHk6gjWa</span>/xOfvWx.CzM2fvk685OEUc.ZdBYiC0:17095:0:99999:7:::</div></pre></td></tr></table></figure>
+<p>显示文件 / etc/shadow 的后 4 行。</p>
+<p>/etc/shadow 中保存的是账号密码等信息，每行被: 分隔成 9 列：</p>
+<ol>
+<li>用户名</li>
+<li>加密的密码</li>
+<li>上次修改口令的时间；这个时间是从 1970 年 01 月 01 日算起到最近一次修改口令的时间间隔（天数）。</li>
+<li>两次修改口令间隔最少的天数；如果这个字段的值为空，帐号永久可用；</li>
+<li>两次修改口令间隔最多的天数；如果这个字段的值为空，帐号永久可用；</li>
+<li>提前多少天警告用户口令将过期；如果这个字段的值为空，帐号永久可用；</li>
+<li>在口令过期之后多少天禁用此用户；如果这个字段的值为空，帐号永久可用；</li>
+<li>用户过期日期；此字段指定了用户作废的天数（从 1970 年的 1 月 1 日开始的天数），如果这个字段的值为空，帐号永久可用；</li>
+<li>保留字段，目前为空，以备将来发展之用；</li>
+</ol>
+<p>/etc/shadow 中的记录行与 / etc/passwd 中的一一对应，它由 pwconv 命令根据 / etc/passwd 中的数据自动产生。</p>
+<p>另外命令 tail 还有个常用选项 - f，作用是随着文件内容的增加而输出，默认输出间隔为 1s。</p>
+<p>more 和 less 两个命令的作用都是分页显示文件内容，区别是 more 不允许往回翻，只能用 enter 键和空格键分别显示下一行和下一页 (类似于 man 命令)，less 允许往回翻，向上箭头和 pageup 按键也是可用的。读者可自行实验这两个命令，这里不再举例。</p>
+<h2 id="10、groupadd-创建用户组"><a href="#10、groupadd-创建用户组" class="headerlink" title="10、groupadd 创建用户组"></a>10、groupadd 创建用户组</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">groupadd [OPTION] group</div></pre></td></tr></table></figure>
+<p>选项’-g’可以为新创建用户组指定 GID。如创建一个新用户组 group1 并指定其 GID 为 1005，然后再新创建一个用户 tom，使他的 UID 为 1002，GID 为 1000，登录 shell 为 / bin/sh：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ groupadd -g 1005 group1</div><div class="line">$ useradd -u 1002 -g 1000 <span class="_">-s</span> /bin/sh tom</div><div class="line">$ tail -n 1 /etc/passwd</div><div class="line">tom:x:1002:1000::/home/tom:/bin/sh</div><div class="line">$ tail -n 1 /etc/group</div><div class="line">group1:x:1005:</div></pre></td></tr></table></figure>
+<p>这里 useradd 命令的选项 - u、-g 和 - s 分别指定新用户的 uid、gid 和登录 shell。</p>
+<h2 id="11、chmod-改变文件权限"><a href="#11、chmod-改变文件权限" class="headerlink" title="11、chmod 改变文件权限"></a>11、chmod 改变文件权限</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">chmod [OPTION]... MODE[,MODE]... FILE...</div><div class="line">chmod [OPTION]... OCTAL-MODE FILE...</div></pre></td></tr></table></figure>
+<p>在看此命令用法之前，我们先来解释一下命令 ls 的选项 - l 的输出：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ ls <span class="_">-l</span></div><div class="line">总用量 0</div><div class="line">drwxr-xr-x 3 root root 29 10 月 21 20:34 dir1</div><div class="line">drwxr-xr-x 2 root root  6 10 月 21 20:33 dir2</div><div class="line">-rw-r--r-- 1 root root  0 10 月 21 20:34 file1</div></pre></td></tr></table></figure>
+<p>这部分输出被分为 7 个部分：</p>
+<ol>
+<li><p>-rw-r–r– 10 个字符中第一个字符 - 代表文件类型，linux 中文件共有 7 种类型，分别表示如下：</p>
+<ul>
+<li>d：代表文件是一个目录</li>
+<li>l：符号链接</li>
+<li>s：套接字文件</li>
+<li>b：块设备文件</li>
+<li>c：字符设备文件</li>
+<li>p：命名管道文件</li>
+<li>-：普通文件，或者说除上述文件外的其他文件</li>
+</ul>
+<p>剩下的 9 个字符每三个一组，表示这个文件的权限，linux 中文件权限用二进制的 000-111(一位八进制数) 来分别代表文件的权限，其中：</p>
+<ul>
+<li>r(read)：读权限 (如果是文件表示读取文件内容，如果是目录表示浏览目录)。二进制第一位置 1 即 100，十进制为数字 4。</li>
+<li>w(write)：写权限 (对文件而言，具有新增、修改文件内容的权限，对目录来说，具有删除、移动目录内文件的权限。)。二进制第二位置 1 即 010，十进制为数字 2。</li>
+<li>x(execute)：执行权 (对文件而言，具有执行文件的权限；对目录来说具有进入该目录的权限。)。二进制第三位置 1 即 001，十进制为数字 1。</li>
+<li>-(无权限)：当没有上述权限时。二进制表示为 000。</li>
+</ul>
+<p>这样本例中最后一行文件 file1 权限：</p>
+<p>前三个字符 <code>rw-</code> 表示文件的所有者 (<code>owner</code>) 对文件具有读和写的权限，十进制数字为 4+2=6。</p>
+<p>中间三个字符 <code>r--</code> 表示文件的所属组 (<code>group</code>) 对文件具有读权限，十进制数字为 4。</p>
+<p>最后三个字符 <code>r--</code> 表示系统中其他用户 (<code>others</code>) 对文件具有读权限，十进制数字为 4。</p>
+<p>这样文件的权限可以用十进制数字 <code>644</code> 来表示。</p>
+<p>对于目录 dir1 来说：</p>
+<p>前三个字符 <code>rwx</code> 表示目录所有者 (<code>owner</code>) 对其具有读、写和执行的权限，十进制表示为 4+2+1=7。</p>
+<p>中间三个字符 <code>r-x</code> 表示目录的所属组 (<code>group</code>) 对其具有读和执行的权限，十进制表示为 4+1=5。</p>
+<p>后三个字符 <code>r-x</code> 表示系统中其他用户 (<code>others</code>) 对其具有读和执行的权限，十进制表示为 4+1=5。</p>
+<p>这个目录权限用十进制表示即为 <code>755</code>，注意文件和目录相同权限之间的区别。</p>
+</li>
+<li><p>权限后面的数字代表文件的硬链接数</p>
+</li>
+<li>root 文件的所有者，有时表示为用户的 UID。</li>
+<li>root 文件的所属组，有时表示为用户组的 GID。</li>
+<li>文件大小，以字节 <code>Byte</code> 为单位。</li>
+<li>10 月 21 表示文件内容最近一次被修改的时间。</li>
+<li>最后一列为文件名。</li>
+</ol>
+<p>如给文件 file1 的用户组增加执行权限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ chmod g+x file1</div><div class="line">$ ls <span class="_">-l</span> file1</div><div class="line">-rw-r-xr-- 1 root root 0 10 月 21 20:34 file1</div></pre></td></tr></table></figure>
+<p>这里 g+x 表示给 group 增加执行 x 的权限。</p>
+<p>如给文件 file1 的其他人减少读权限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ chmod o-r file1</div><div class="line">$ ls <span class="_">-l</span> file1</div><div class="line">-rw-r-x--- 1 root root 0 10 月 21 20:34 file1</div></pre></td></tr></table></figure>
+<p>这里 o-r 表示给 others 减少读 r 权限。</p>
+<p>如给文件 file1 的任何用户都设置成 rw - 权限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ chmod a=rw file1</div><div class="line">$ ls <span class="_">-l</span> file1</div><div class="line">-rw-rw-rw- 1 root root  0 10 月 21 20:34 file1</div></pre></td></tr></table></figure>
+<p>这里 a=rw 表示给所有人 all 设置成 rw - 权限。</p>
+<p>或者用十进制表示法直接指定文件的权限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ chmod 644 file1</div><div class="line">$ ls <span class="_">-l</span> file1</div><div class="line">-rw-r--r-- 1 root root 0 10 月 21 20:34 file1</div></pre></td></tr></table></figure>
+<p>如给目录 dir1 和目录内的所有目录和文件权限都设置成 777：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ chmod 777 -R dir1</div><div class="line">$ ls <span class="_">-l</span></div><div class="line">总用量 0</div><div class="line">drwxrwxrwx 3 root root 29 10 月 21 20:34 dir1</div><div class="line">drwxr-xr-x 2 root root  6 10 月 21 20:33 dir2</div><div class="line">-rw-r--r-- 1 root root  0 10 月 21 20:34 file1</div></pre></td></tr></table></figure>
+<p>选项 - R 作用是递归地改变目标权限。</p>
+<p>另外如目录 /tmp 的权限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ ls <span class="_">-l</span> /</div><div class="line">....</div><div class="line">drwxrwxrwt.   7 root root    88 10 月 22 21:14 tmp</div><div class="line">....</div></pre></td></tr></table></figure>
+<p>我们看到权限最后一位是 t，这里代表粘滞位 (sticky)，它的作用是给目录特殊的权限：使用户不能删除该目录下不属于此用户的文件。</p>
+<p>t 后面的. 表示该文件被 selinux 的安全上下文保护。</p>
+<p>如可执行文件 /bin/su 的权限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ls <span class="_">-l</span> /bin/su</div><div class="line">-rwsr-xr-x. 1 root root 32072 11 月 20 2015 /bin/su</div></pre></td></tr></table></figure>
+<p>所有者的权限 rws，这里的 s 代表 suid，如果在用户组位置的话代表 sgid，作用是给文件特殊的权限：当用户执行此文件的时候，把他当成是文件的所有者来执行。</p>
+<p>这些特殊用途的的权限对普通用户来说知道即可。</p>
+<h2 id="12、lsattr-列出隐藏权限"><a href="#12、lsattr-列出隐藏权限" class="headerlink" title="12、lsattr 列出隐藏权限"></a>12、lsattr 列出隐藏权限</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lsattr [option] [files...]</div></pre></td></tr></table></figure>
+<p>如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ lsattr</div><div class="line">---------------- ./dir1</div><div class="line">---------------- ./dir2</div><div class="line">---------------- ./file1</div></pre></td></tr></table></figure>
+<p>列出了文件的隐藏权限位，共有 16 位 (由于隐藏权限是文件系统相关的，不同的文件系统对于文件的隐藏权限的设定不一定相同)。</p>
+<h2 id="13、chattr-给文件设置隐藏权限"><a href="#13、chattr-给文件设置隐藏权限" class="headerlink" title="13、chattr 给文件设置隐藏权限"></a>13、chattr 给文件设置隐藏权限</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chattr [+-=] [mode] files...</div></pre></td></tr></table></figure>
+<p>如给文件 file1 增加隐藏权限 a：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ chattr +a file1</div><div class="line">$ lsattr file1</div><div class="line">----<span class="_">-a</span>---------- file1</div></pre></td></tr></table></figure>
+<p>这里的 a 权限表示：这个文件将只能添加数据，而不能删除也不能修改数据，只有 root 才能配置这个属性。<br>给文件 file2 增加隐藏属性 i：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ chattr +i file2</div><div class="line">$ lsattr file2</div><div class="line">----i----------- file2</div></pre></td></tr></table></figure>
+<p>这里的 i 权限表示：使文件不能被修改、删除、改名、链接。只有 root 才能配置这个属性。<br>这些隐藏权限都不常用，通常知道这两个就可以了。</p>
+<h2 id="14、chown-改变文件的所有者和所属组"><a href="#14、chown-改变文件的所有者和所属组" class="headerlink" title="14、chown 改变文件的所有者和所属组"></a>14、chown 改变文件的所有者和所属组</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chown [OPTION]... [OWNER][:[GROUP]] FILE...</div></pre></td></tr></table></figure>
+<p>如改变文件 file1 的所有者为 learner：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ chown learner file1</div><div class="line">$ ls <span class="_">-l</span> file1</div><div class="line">-rw-r--r-- 1 learner root 0 10 月 21 20:34 file1</div></pre></td></tr></table></figure>
+<p>如递归地改变目录 dir1 和其下面的所有目录和文件，使它们的所有者和所属组均为 learner：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ chown -R learner:learner dir1</div><div class="line">$ ls -l</div><div class="line">总用量 0</div><div class="line">drwxrwxrwx 3 learner learner 29 10 月 21 20:34 dir1</div><div class="line">....</div></pre></td></tr></table></figure>
+<p>这里的用户和用户组可以用对应的 uid 和 gid 代替，冒号: 也可以换为点号.。</p>
+<h2 id="15、userdel-和-groupdel-用于删除用户和用户组。"><a href="#15、userdel-和-groupdel-用于删除用户和用户组。" class="headerlink" title="15、userdel 和 groupdel 用于删除用户和用户组。"></a>15、userdel 和 groupdel 用于删除用户和用户组。</h2><p>userdel 用于删除用户账号，选项 - r 可以将用户家目录一并删除。</p>
+<p>groupdel 用于删除用户组，注意不能移除现有用户的主组。在移除此组之前，必须先移除此用户。</p>
+<h2 id="16、id-打印用户-ID-信息"><a href="#16、id-打印用户-ID-信息" class="headerlink" title="16、id 打印用户 ID 信息"></a>16、id 打印用户 ID 信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">id [OPTION]... [USER]</div></pre></td></tr></table></figure>
+<p>当不跟用户名时显示当前用户信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ id</div><div class="line">uid=0(root) gid=0(root) 组 = 0(root)</div></pre></td></tr></table></figure>
+<h2 id="17、whoami-who-w-显示登录用户信息"><a href="#17、whoami-who-w-显示登录用户信息" class="headerlink" title="17、whoami,who,w 显示登录用户信息"></a>17、whoami,who,w 显示登录用户信息</h2><p>命令 whoami 打印出当前用户名：</p>
+<figure class="highlight plain"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ whoami</div><div class="line">root</div></pre></td></tr></table></figure>
+<p>命令 who 打印当前登录用户信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ who</div><div class="line">root     tty1         2016-09-30 15:18</div><div class="line">root     pts/0        2016-10-23 17:12 (192.168.78.140)</div><div class="line">learner  pts/1        2016-10-23 17:49 (192.168.78.140)</div><div class="line">root     pts/2        2016-10-23 17:50 (192.168.78.140)</div></pre></td></tr></table></figure>
+<p>显示信息中第一列为用户名，第二列为登录终端，第三列为登录时间，最后为登录 ip 地址。</p>
+<p>命令 w 显示信息与命令 who 类似，增加了一些系统信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ w</div><div class="line"> 17:56:59 up 23 days,  2:39,  4 users,  load average: 0.00, 0.01, 0.05</div><div class="line">USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT</div><div class="line">root     tty1                      309 月 16 23days  0.01s  0.01s -bash</div><div class="line">root     pts/0    192.168.78.140   17:12    7:31   0.01s  0.00s bash</div><div class="line">learner  pts/1    192.168.78.140   17:49    7:29   0.00s  0.00s -bash</div><div class="line">root     pts/2    192.168.78.140   17:50    3.00s  0.00s  0.00s w</div></pre></td></tr></table></figure>
+<p>输出的第一行显示了系统运行时间，当前有多少用户登录，cpu 的平均负载 (以后文章中会有详述)。余下的信息增加了空闲时间，cpu 的使用时间以及运行的命令。</p>
+<h2 id="18、su-执行用户命令"><a href="#18、su-执行用户命令" class="headerlink" title="18、su 执行用户命令"></a>18、su 执行用户命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">su [options...] [-] [user [args...]]</div></pre></td></tr></table></figure>
+<p>两种常用用法：</p>
+<p>选项 - c command 用于使用目标账号执行 - c 指定的命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ su learner -c <span class="built_in">pwd</span></div><div class="line">/root</div></pre></td></tr></table></figure>
+<p>例子中使用账号 learner 执行了命令 pwd。当不使用选项 - c 时则为切换用户：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ whoami</div><div class="line">root</div><div class="line">$ su learner</div><div class="line">[learner@centos7 root]$ whoami</div><div class="line">learner</div></pre></td></tr></table></figure>
+<p>注意如果是从普通账号切换至 root 或其他账号时，需要输入对应密码。</p>
+<p>带与不带选项 - 或 - l 或 –login 切换账号时，会有环境变量上的区别。同时带这些选项也会把当前目录切换至目标账号的家目录。使用命令 exit 可以退出：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">pwd</span></div><div class="line">/root</div><div class="line">$ su - learner</div><div class="line">上一次登录：日 10 月 23 18:22:23 CST 2016pts/5 上</div><div class="line">[learner@centos7 ~]$ <span class="built_in">pwd</span></div><div class="line">/home/learner</div><div class="line">[learner@centos7 ~]$ <span class="built_in">exit</span></div><div class="line">登出</div><div class="line">$ whoami</div><div class="line">root</div></pre></td></tr></table></figure>
+<h2 id="19、sudo-作为另一个用户来执行命令"><a href="#19、sudo-作为另一个用户来执行命令" class="headerlink" title="19、sudo 作为另一个用户来执行命令"></a>19、sudo 作为另一个用户来执行命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo [OPTION]... <span class="built_in">command</span></div></pre></td></tr></table></figure>
+<p>linux 中为了安全，往往并不允许每个用户都用 root 账号登录系统，通常都会创建一些普通用户。但有些命令是只有 root 用户才能执行的，为了更灵活的分配权限，使普通用户也能执行某些 root 命令，我们可以使用 sudo 来完成这一任务。</p>
+<p>sudo 通过维护一个特权到用户名映射的数据库将特权分配给不同的用户，这些特权可由数据库中所列的一些不同的命令来识别。为了获得某一特权项，有资格的用户只需简单地在命令行输入 sudo 与命令之后，按照提示再次输入口令（用户自己的口令，不是 root 用户口令）。</p>
+<p>使用 -l 选项可以查看当前用户可以执行的 root 命令有哪些：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">[learner@centos7 ~]$ sudo <span class="_">-l</span></div><div class="line"></div><div class="line">We trust you have received the usual lecture from the <span class="built_in">local</span> System</div><div class="line">Administrator. It usually boils down to these three things:</div><div class="line"></div><div class="line"><span class="comment">#1) Respect the privacy of others.</span></div><div class="line"><span class="comment">#2) Think before you type.</span></div><div class="line"><span class="comment">#3) With great power comes great responsibility.</span></div><div class="line"></div><div class="line">[sudo] password <span class="keyword">for</span> learner:</div><div class="line">对不起，用户 learner 不能在 centos7 上运行 sudo。</div></pre></td></tr></table></figure>
+<p>这里看到 learner 用户并不能使用 sudo。若要设置用户使用 sudo，需要编辑 sudo 的配置文件 /etc/sudoers。该文件中以符号 #开头的都是注释行，用来解释或描述配置，并不起实际作用。</p>
+<p>需要使用命令 visudo 来编辑修改 / etc/sudoers(使用方法和使用 vi/vim 编辑器类似，后面有文章详细描述)。<br>配置文件中的一个条目格式为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">user MACHINE=COMMANDS</div></pre></td></tr></table></figure>
+<p>如给用户 learner 在所有地方 (ALL) 运行任何命令(ALL)：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">learner ALL=(ALL) ALL</div></pre></td></tr></table></figure>
+<p>之后查看：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[learner@centos7 ~]$ sudo <span class="_">-l</span></div><div class="line">[sudo] password <span class="keyword">for</span> learner:</div><div class="line">匹配此主机上 learner 的默认条目：</div><div class="line">....</div><div class="line">....</div><div class="line">用户 learner 可以在该主机上运行以下命令：</div><div class="line">    (ALL) ALL</div></pre></td></tr></table></figure>
+<p>当然并不会给普通用户所有权限，这里只是举例。通常的做法是给某个用户某些特定的命令权限，如允许用户 tom 在主机 machine 上执行立即关机的命令，在 / etc/sudoers 中添加条目：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tom machine=/usr/sbin/shutdown -h now</div></pre></td></tr></table></figure>
+<p>注意 machine 是 tom 登录系统所用的主机名，可以用 ip 地址代替，如使用命令 w 时 FROM 那一列所显示的登录 ip。等号后面的命令名必须是命令的绝对路径，-h now 是命令 / usr/sbin/shutdown 的参数，命令效果是立即关机。等号后面可以接多个命令，用逗号分隔它们。同时用户名也可以是用户组，用 % 组名代替。另外，用户 tom 在执行 sudo 命令时，sudo 后面的命令写法也必须和配置中的一致。</p>
+<h2 id="20、mv-移动文件或目录"><a href="#20、mv-移动文件或目录" class="headerlink" title="20、mv 移动文件或目录"></a>20、mv 移动文件或目录</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mv [OPTION]... SOURCE... DIRECTORY</div></pre></td></tr></table></figure>
+<p>mv 命令的作用是把文件或目录从源移动到目标目录，路径可以是绝对的也可以是相对的</p>
+<p>如将文件 file2 从当前目录移动到 /root/temp/dir2 中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ ls</div><div class="line">dir1  dir2  file1  file2</div><div class="line">$ mv file2 /root/temp/dir2/</div><div class="line">$ ls</div><div class="line">dir1  dir2  file1</div><div class="line">$ ls dir2/</div><div class="line">file2</div></pre></td></tr></table></figure>
+<p>命令 mv 还可以对文件进行改名，如将目录 dir2 移动到 dir1 内并改名为 dir3：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ ls</div><div class="line">dir1  dir2  file1</div><div class="line">$ mv dir2 ./dir1/dir3</div><div class="line">$ ls</div><div class="line">dir1  file1</div><div class="line">$ ls dir1/</div><div class="line">dir3  file2  <span class="built_in">test</span></div></pre></td></tr></table></figure>
+<h2 id="21、cp-复制文件或目录"><a href="#21、cp-复制文件或目录" class="headerlink" title="21、cp 复制文件或目录"></a>21、cp 复制文件或目录</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp [OPTION]... SOURCE... DIRECTORY</div></pre></td></tr></table></figure>
+<p>如复制文件 file1 为 file3：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ ls</div><div class="line">dir1  file1</div><div class="line">$ cp file1 file3</div><div class="line">$ ls</div><div class="line">dir1  file1  file3</div></pre></td></tr></table></figure>
+<p>复制目录 dir1 内目录 dir3 及其包含内容到当前目录下，起名为 dir2：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ cp -r dir1/dir3/ ./dir2</div><div class="line">$ ls</div><div class="line">dir1  dir2  file1  file3</div></pre></td></tr></table></figure>
+<p>复制目录的时候需要使用选项 - r，当目标已存在时，会需要用户确认是否覆盖，输入 y 或 yes 表示确认覆盖，输入 n 或 no 表示取消覆盖：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ cp file1 file3</div><div class="line">cp：是否覆盖 <span class="string">"file3"</span>？ y</div><div class="line">$ cp file1 file3</div><div class="line">cp：是否覆盖 <span class="string">"file3"</span>？ no</div></pre></td></tr></table></figure>
+<p>可以使用选项 - f(force) 来强制复制，不需要确认。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ cp -rf dir1/<span class="built_in">test</span> ./dir2/</div></pre></td></tr></table></figure>
+<p>注意此处 - rf，当有多个选项作用于一个命令时，在不引起混淆的情况下可以连写。</p>
+<h2 id="22、rm-删除文件"><a href="#22、rm-删除文件" class="headerlink" title="22、rm 删除文件"></a>22、rm 删除文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rm [OPTION]... FILE...</div></pre></td></tr></table></figure>
+<p>选项 -r 作用是递归地删除目录，-f 的作用是强制删除：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ ls</div><div class="line">dir1  dir2  file1  file3</div><div class="line">$ rm -rf dir2/</div><div class="line">$ ls</div><div class="line">dir1  file1  file3</div></pre></td></tr></table></figure>
+<h2 id="23、whereis-查找系统命令"><a href="#23、whereis-查找系统命令" class="headerlink" title="23、whereis 查找系统命令"></a>23、whereis 查找系统命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">whereis [options] name...</div></pre></td></tr></table></figure>
+<p>命令作用是显示命令名称的绝对路径和命令的手册位置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ whereis ls</div><div class="line">ls: /usr/bin/ls /usr/share/man/man1/ls.1.gz</div></pre></td></tr></table></figure>
+<h2 id="24、du-估算文件占用空间大小"><a href="#24、du-估算文件占用空间大小" class="headerlink" title="24、du 估算文件占用空间大小"></a>24、du 估算文件占用空间大小</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">du [OPTION]... [FILE]...</div></pre></td></tr></table></figure>
+<p>如查看文件 file1 的大小：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ du file1</div><div class="line">4       file1</div></pre></td></tr></table></figure>
+<p>输出的结果第一列表示所占空间大小 (单位是 KB)。第二列是是文件名。</p>
+<p>可以使用选项 - h 用人类可读 (human readable) 的方式显示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ du -h file1</div><div class="line">4.0K    file1</div></pre></td></tr></table></figure>
+<p>当使用 - s 选项作用在目录上时，只显示总用量。不用时则显示该目录下的每个文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ du dir1</div><div class="line">0       dir1/<span class="built_in">test</span></div><div class="line">0       dir1/dir3</div><div class="line">0       dir1</div><div class="line">$ du -sh dir1</div><div class="line">0       dir1</div></pre></td></tr></table></figure>
+<p>linux秉承“一切皆文件”的思想，在这样的思想作用之下，linux内的所有操作都可以说是文件相关的。这里列出的命令都是最为基础的文件相关命令，每一个使用者都需要牢记。当然这里并不能将它们的所有用法一一列举，如想了解更多，一定要记得man！</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/shell/" rel="tag"># shell</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/28/linux-awk/" rel="next" title="Linux 基础之文本分析 awk">
+                <i class="fa fa-chevron-left"></i> Linux 基础之文本分析 awk
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/24/harbor-kubernetes-deployment/" rel="prev" title="在 Kubernetes 上部署 Harbor">
+                在 Kubernetes 上部署 Harbor <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/10/28/linux-users-and-files/"
+     data-title="Linux 基础之用户与文件"
+     data-content=""
+     data-url="https://tangpengcsu.github.io/2016/10/28/linux-users-and-files/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/28/linux-users-and-files/"
+           data-title="Linux 基础之用户与文件" data-url="https://tangpengcsu.github.io/2016/10/28/linux-users-and-files/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="IAN" />
+          <p class="site-author-name" itemprop="name">IAN</p>
+           
+              <p class="site-description motion-element" itemprop="description">啊~ 五环</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangpengcsu" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/tangpcn" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tpeang" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、pwd-打印当前目录"><span class="nav-number">1.</span> <span class="nav-text">1、pwd 打印当前目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、cd-切换目录"><span class="nav-number">2.</span> <span class="nav-text">2、cd 切换目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、ls-列出目录内容"><span class="nav-number">3.</span> <span class="nav-text">3、ls 列出目录内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6、useradd-添加账号"><span class="nav-number">4.</span> <span class="nav-text">6、useradd 添加账号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7、passwd-添加或更改账号口令"><span class="nav-number">5.</span> <span class="nav-text">7、passwd 添加或更改账号口令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8、cat-查看文件内容"><span class="nav-number">6.</span> <span class="nav-text">8、cat 查看文件内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9、head-tail-more-less-查看内容"><span class="nav-number">7.</span> <span class="nav-text">9、head tail more less 查看内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10、groupadd-创建用户组"><span class="nav-number">8.</span> <span class="nav-text">10、groupadd 创建用户组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11、chmod-改变文件权限"><span class="nav-number">9.</span> <span class="nav-text">11、chmod 改变文件权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12、lsattr-列出隐藏权限"><span class="nav-number">10.</span> <span class="nav-text">12、lsattr 列出隐藏权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13、chattr-给文件设置隐藏权限"><span class="nav-number">11.</span> <span class="nav-text">13、chattr 给文件设置隐藏权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14、chown-改变文件的所有者和所属组"><span class="nav-number">12.</span> <span class="nav-text">14、chown 改变文件的所有者和所属组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15、userdel-和-groupdel-用于删除用户和用户组。"><span class="nav-number">13.</span> <span class="nav-text">15、userdel 和 groupdel 用于删除用户和用户组。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#16、id-打印用户-ID-信息"><span class="nav-number">14.</span> <span class="nav-text">16、id 打印用户 ID 信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#17、whoami-who-w-显示登录用户信息"><span class="nav-number">15.</span> <span class="nav-text">17、whoami,who,w 显示登录用户信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#18、su-执行用户命令"><span class="nav-number">16.</span> <span class="nav-text">18、su 执行用户命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#19、sudo-作为另一个用户来执行命令"><span class="nav-number">17.</span> <span class="nav-text">19、sudo 作为另一个用户来执行命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#20、mv-移动文件或目录"><span class="nav-number">18.</span> <span class="nav-text">20、mv 移动文件或目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#21、cp-复制文件或目录"><span class="nav-number">19.</span> <span class="nav-text">21、cp 复制文件或目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#22、rm-删除文件"><span class="nav-number">20.</span> <span class="nav-text">22、rm 删除文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#23、whereis-查找系统命令"><span class="nav-number">21.</span> <span class="nav-text">23、whereis 查找系统命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#24、du-估算文件占用空间大小"><span class="nav-number">22.</span> <span class="nav-text">24、du 估算文件占用空间大小</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">IAN</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访问数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tangpeng"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="local-search-pop-overlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

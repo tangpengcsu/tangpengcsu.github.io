@@ -1,0 +1,1072 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Apache Maven构建 Apache Spark 参考了基于 Maven 的构建。构建 Spark 会使用 Maven ，而且需要 3.3.9 或者更新版本的 Maven 以及 Java 7 及以上版本。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="构建 Spark">
+<meta property="og:url" content="https://tangpengcsu.github.io/2016/12/24/spark-building-spark/index.html">
+<meta property="og:site_name" content="北冥有鱼">
+<meta property="og:description" content="Apache Maven构建 Apache Spark 参考了基于 Maven 的构建。构建 Spark 会使用 Maven ，而且需要 3.3.9 或者更新版本的 Maven 以及 Java 7 及以上版本。">
+<meta property="og:updated_time" content="2017-03-13T05:08:08.263Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="构建 Spark">
+<meta name="twitter:description" content="Apache Maven构建 Apache Spark 参考了基于 Maven 的构建。构建 Spark 会使用 Maven ，而且需要 3.3.9 或者更新版本的 Maven 以及 Java 7 及以上版本。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tangpengcsu.github.io/2016/12/24/spark-building-spark/"/>
+
+
+
+
+
+  <title> 构建 Spark | 北冥有鱼 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dda06c0f41d225c14b70c9d51326cc61";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">北冥有鱼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-building-spark/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                构建 Spark
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-24T18:39:04+08:00">
+                2016-12-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/12/24/spark-building-spark/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-building-spark/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Apache-Maven"><a href="#Apache-Maven" class="headerlink" title="Apache Maven"></a>Apache Maven</h2><p>构建 Apache Spark 参考了基于 Maven 的构建。构建 Spark 会使用 Maven ，而且需要 3.3.9 或者更新版本的 Maven 以及 Java 7 及以上版本。</p>
+<a id="more"></a>
+<h3 id="设置-Maven-的内存使用率"><a href="#设置-Maven-的内存使用率" class="headerlink" title="设置 Maven 的内存使用率"></a>设置 Maven 的内存使用率</h3><p>想要使用更多内存，需要配置 Maven 设置中的 MAVEN_OPTS 项</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">export MAVEN_OPTS=&quot;-Xmx2g -XX : ReservedCodeCacheSize=512m&quot;</div></pre></td></tr></table></figure>
+<p>在使用 Java 7 来进行编译时，您需要添加额外选项 “-XX : MaxPermSize=512M” 到 MAVEN_OPTS 项</p>
+<p>如果不添加这些参数，那么您可能看到如下错误和警告 :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[INFO] Compiling 203 Scala sources and 9 Java sources to /Users/me/Development/spark/core/target/scala-2.11/classes...</div><div class="line">[ERROR] PermGen space -&gt; [Help 1]</div><div class="line"></div><div class="line">[INFO] Compiling 203 Scala sources and 9 Java sources to /Users/me/Development/spark/core/target/scala-2.11/classes...</div><div class="line">[ERROR] Java heap space -&gt; [Help 1]</div><div class="line"></div><div class="line">[INFO] Compiling 233 Scala sources and 41 Java sources to /Users/me/Development/spark/sql/core/target/scala-&#123;site.SCALA_BINARY_VERSION&#125;/classes...</div><div class="line">OpenJDK 64-Bit Server VM warning :  CodeCache is full. Compiler has been disabled.</div><div class="line">OpenJDK 64-Bit Server VM warning :  Try increasing the code cache size using -XX : ReservedCodeCacheSize=</div></pre></td></tr></table></figure>
+<p>您可以通过以上方法设置 MAVEN_OPTS 项来解决这一问题。</p>
+<p>注意 :</p>
+<ul>
+<li>如果使用 build/mvn 但是没有设置 MAVEN_OPTS，那么脚本会自动的将以上选项添加到 MAVEN_OPTS 环境变量</li>
+<li>构建 Spark 的测试阶段将自动把这些选项添加到 MAVEN_OPTS ，即使不使用 build/mvn</li>
+<li>在您使用 Java 8 和 build/mvn 来构建和运行测试时，您可能会看到类似于 “ignoring option MaxPermSize=1g; support was removed in 8.0” 的警告。这些警告无伤大雅。</li>
+</ul>
+<h3 id="build-mvn"><a href="#build-mvn" class="headerlink" title="build / mvn"></a>build / mvn</h3><p>Spark 现在与一个独立的 Maven 安装包封装到了一起，使从源目录 build/ 下的原始位置来构建和部署 Spark 更加容易。这个脚本能自动在本地的 build/ 目录下载和安装所有需要的构建需求包，例如 Maven、Scala、Zinc。其尊重任何已经存在的 mvn 二进制文件，但是却无论如何将自己的 Scala 和 Zinc 的副本摧毁，来确保需求包的版本是合适的。build/mvn 的执行通过 mvn 调用允许过渡到之前的构建方法。例如，可以使用如下方法构建一个版本的 Spark :</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./build/mvn -Pyarn -Phadoop-2.4 -Dhadoop.version=2.4.0 -DskipTests clean package</div></pre></td></tr></table></figure>
+<p>其他的构建例子能在下文找到</p>
+<h2 id="构建一个可运行的-Distribution-版本"><a href="#构建一个可运行的-Distribution-版本" class="headerlink" title="构建一个可运行的 Distribution 版本"></a>构建一个可运行的 Distribution 版本</h2><p>想要创建一个像是那些 Spark 下载页中的 Spark 的分布式版本，并且能使其运行，使用项目中 root 目录下的 ./dev/make-distribution.sh 脚本。它可以使用 Maven 的配置文件进行配置，如直接使用 Maven 构建。例如 :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./dev/make-distribution.sh --name custom-spark --tgz -Psparkr -Phadoop-2.4 -Phive -Phive-thriftserver -Pyarn</div></pre></td></tr></table></figure>
+<p>想要获取更详细的信息，可以运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./dev/make-distribution.sh --help</div></pre></td></tr></table></figure>
+<h2 id="指定-Hadoop-版本"><a href="#指定-Hadoop-版本" class="headerlink" title="指定 Hadoop 版本"></a>指定 Hadoop 版本</h2><p>因为 HDFS 并非跨版本协议兼容的，如果您想从 HDFS 读数据，那么您就需要构建与您的环境中 HDFS 版本相符的 Spark 。您可以通过设置属性 hadoop.version 来实现。如果不设置，那么 Spark 将默认按照 Hadoop 2.2.0 来进行构建。注意对于特定的 Hadoop 版本，需要某些特定的构造文件。</p>
+<table>
+<thead>
+<tr>
+<th>Hadoop version</th>
+<th>Profile required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.2.x</td>
+<td>hadoop-2.2</td>
+</tr>
+<tr>
+<td>2.3.x</td>
+<td>hadoop-2.3</td>
+</tr>
+<tr>
+<td>2.4.x</td>
+<td>hadoop-2.4</td>
+</tr>
+<tr>
+<td>2.6.x</td>
+<td>hadoop-2.6</td>
+</tr>
+<tr>
+<td>2.7.x and later 2.x</td>
+<td>hadoop-2.7</td>
+</tr>
+</tbody>
+</table>
+<p>您可以配置 yarn 的配置文件和可选设置 yarn.version 属性，如果其与 hadoop.version 不同的时候。 Spark 只支持 Yarn2.2.0 或者之后版本。</p>
+<p>例如 :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Apache Hadoop 2.2.X</span></div><div class="line">./build/mvn -Pyarn -Phadoop-2.2 -DskipTests clean package</div><div class="line"></div><div class="line"><span class="comment"># Apache Hadoop 2.3.X</span></div><div class="line">./build/mvn -Pyarn -Phadoop-2.3 -Dhadoop.version=2.3.0 -DskipTests clean package</div><div class="line"></div><div class="line"><span class="comment"># Apache Hadoop 2.4.X or 2.5.X</span></div><div class="line">./build/mvn -Pyarn -Phadoop-2.4 -Dhadoop.version=VERSION -DskipTests clean package</div><div class="line"></div><div class="line"><span class="comment"># Apache Hadoop 2.6.X</span></div><div class="line">./build/mvn -Pyarn -Phadoop-2.6 -Dhadoop.version=2.6.0 -DskipTests clean package</div><div class="line"></div><div class="line"><span class="comment"># Apache Hadoop 2.7.X and later</span></div><div class="line">./build/mvn -Pyarn -Phadoop-2.7 -Dhadoop.version=VERSION -DskipTests clean package</div><div class="line"></div><div class="line"><span class="comment"># Different versions of HDFS and YARN.</span></div><div class="line">./build/mvn -Pyarn -Phadoop-2.3 -Dhadoop.version=2.3.0 -Dyarn.version=2.2.0 -DskipTests clean package</div></pre></td></tr></table></figure>
+<h2 id="构建支持-Hive-和-JDBC-的支持"><a href="#构建支持-Hive-和-JDBC-的支持" class="headerlink" title="构建支持 Hive 和 JDBC 的支持"></a>构建支持 Hive 和 JDBC 的支持</h2><p>想要使 Spark SQL 集成 Hive 以及 JDBC 服务和 CLI ，请增加 -Phive 和 Phive-thriftserver 配置到您已经存在的配置选项。默认 Spark 绑定 Hive 1.2.1</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Apache Hadoop 2.4.X with Hive 1.2.1 support</span></div><div class="line">./build/mvn -Pyarn -Phadoop-2.4 -Dhadoop.version=2.4.0 -Phive -Phive-thriftserver -DskipTests clean package</div></pre></td></tr></table></figure>
+<h2 id="打包时排除针对-YARN-的-Hadoop-依赖"><a href="#打包时排除针对-YARN-的-Hadoop-依赖" class="headerlink" title="打包时排除针对 YARN 的 Hadoop 依赖"></a>打包时排除针对 YARN 的 Hadoop 依赖</h2><p>mvn package 生成的汇编目录，默认情况下将包括所有 Spark 的依赖，包括 Hadoop 和一些生态系统项目。在 YARN 的部署上，这会导致这些项目的许多版本都出现在执行目录中 : 包装在 Spark 组建在没个结点的版本，包括在属性 yarn.application.classpath 中。配置 hadoop-provided 可以在构建时不包括 Hadoop 生态项目，例如 ZooKeeper 和 Hadoop 本身。</p>
+<h2 id="构建适用于-Scala-2-10"><a href="#构建适用于-Scala-2-10" class="headerlink" title="构建适用于 Scala 2.10"></a>构建适用于 Scala 2.10</h2><p>如果希望使用 Scala 2.10 来编译 Spark 包，使用属性 -Dscala-2.10</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./dev/change-scala-version.sh 2.10</div><div class="line">./build/mvn -Pyarn -Phadoop-2.4 -Dscala-2.10 -DskipTests clean package</div></pre></td></tr></table></figure>
+<h2 id="构建单个子模块"><a href="#构建单个子模块" class="headerlink" title="构建单个子模块"></a>构建单个子模块</h2><p>可以使用选项 mvn -pl 来构建 Spark 的子模块。</p>
+<p>例如，您可以构建 Spark Streaming 通过 :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./build/mvn -pl  : spark-streaming_2.11 clean install</div></pre></td></tr></table></figure>
+<p>这里 spark-streaming_2.11 是在文件 streaming/pom.xml 中定义的 artifactId</p>
+<h2 id="连续的编译"><a href="#连续的编译" class="headerlink" title="连续的编译"></a>连续的编译</h2><p>我们使用插件 scala-maven-plugin 来支持增量和连续编译。例如 :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./build/mvn scala : cc</div></pre></td></tr></table></figure>
+<p>这里应该运行连续编译 (即等待变化)。然而这并没得到广泛的测试，有一些需要注意的陷阱 :</p>
+<ul>
+<li>它只扫描路径 src/main 和 src/test ，所以其只对含有该结构的某些子模块起作用</li>
+<li>您通常需要在工程的根目录运行 mvn install 在编译某些特定子模块时。这是因为依赖于其他子模块的子模块需要通过 spark-parent 模块实现。</li>
+</ul>
+<p>因此，运行 core 子模块的连续编译总流程如下 :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ ./build/mvn install</div><div class="line">$ <span class="built_in">cd</span> core</div><div class="line">$ ../build/mvn scala : cc</div></pre></td></tr></table></figure>
+<h2 id="用-Zinc-加速编译"><a href="#用-Zinc-加速编译" class="headerlink" title="用 Zinc 加速编译"></a>用 Zinc 加速编译</h2><p>Zinc 是 SBT 增量编译器的长期运行的服务器版本，当作为后台进程在本地运行时，它可有加速编译基于 Scala 的项目 : 如 Spark 。定期使用 Maven 重新编译 Spark 的开发人员会对 Zinc 最感兴趣。此章节将说明如何构建和运行 Zinc.OS X 用户可有通过 brew 安装 Zinc。</p>
+<p>如果使用 bulid/mvn 软件包，ZInc 将会自动下载并且用于所有版本。 此进程将会在第一次 build/mvn 编译后自动开启并绑定到 3030 端口，除非自定义设置了环境变量 ZINC_PORT。可有在任何时候通过运行 build/zinc-<version>/bin/zinc -shutdown 来停止 Zinc 进程，但每当通过 build/mvn 编译的时候它又会重新启动。</version></p>
+<h2 id="通过-SBT-编译"><a href="#通过-SBT-编译" class="headerlink" title="通过 SBT 编译"></a>通过 SBT 编译</h2><p>Maven 是 Spark 官方推荐的编译工具。但是当 SBT 能够提供快速迭代编译的功能时，它逐渐被应用于日常开发。更多高级的开发者希望能够运用 SBT 。</p>
+<p>SBT 通过 Maven POM 文件进行编译，因此也可以设置相同的 Maven 配置文件和变量来控制 SBT 的构建。 例如 :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./build/sbt -Pyarn -Phadoop-2.3 package</div></pre></td></tr></table></figure>
+<p>为了避免每次启动 SBT 都需要重新编译，可以通过运行 build/sbt 以交互模式来启动 SBT，然后在命令提示符下运行所有 build 命令。 有关减少构建时间的更多建议，请参阅 wiki 页面。</p>
+<h2 id="加密的文件系统"><a href="#加密的文件系统" class="headerlink" title="加密的文件系统"></a>加密的文件系统</h2><p>当构建在加密的文件系统上（例如，如果您的主目录被加密），那么 Spark 构建可能会失败，并出现 “Filename too long” 错误。 作为解决方法，在项目的 pom.xml 中的 scala-maven-plugin 的配置参数中添加以下代码 :</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">arg</span>&gt;</span>-Xmax-classfile-name<span class="tag">&lt;/<span class="name">arg</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">arg</span>&gt;</span>128<span class="tag">&lt;/<span class="name">arg</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>并在 project/SparkBuild.scala 中添加 :</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scalacOptions in <span class="type">Compile</span> ++= <span class="type">Seq</span>(<span class="string">"-Xmax-classfile-name"</span>, <span class="string">"128"</span>),</div></pre></td></tr></table></figure>
+<p>关于 sharedSettings val，如果您不确定在哪里添加这些行，请参阅此 PR。</p>
+<h2 id="IntelliJ-IDEA-或者-Eclipse"><a href="#IntelliJ-IDEA-或者-Eclipse" class="headerlink" title="IntelliJ IDEA 或者 Eclipse"></a>IntelliJ IDEA 或者 Eclipse</h2><p>有关设置 IntelliJ IDEA 或 Eclipse 以用来进行 Spark 开发和故障排除的帮助文档，请参阅 IDE 设置的 wiki 页面。</p>
+<h1 id="运行测试"><a href="#运行测试" class="headerlink" title="运行测试"></a>运行测试</h1><p>默认情况下通过 ScalaTest Maven 组件进行测试。</p>
+<p>一些测试需要首先打包 Spark ，因此，第一次总是使用 -DskipTests 运行 mvn package。 以下是正确（构建，测试）顺序的示例 :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./build/mvn -Pyarn -Phadoop-2.3 -DskipTests -Phive -Phive-thriftserver clean package</div><div class="line">./build/mvn -Pyarn -Phadoop-2.3 -Phive -Phive-thriftserver <span class="built_in">test</span></div></pre></td></tr></table></figure>
+<p>ScalaTest 组件还支持运行特定的 Scala test 套件。如下 :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./build/mvn -P... -D<span class="built_in">test</span>=none -DwildcardSuites=org.apache.spark.repl.ReplSuite <span class="built_in">test</span></div><div class="line">./build/mvn -P... -D<span class="built_in">test</span>=none -DwildcardSuites=org.apache.spark.repl.* <span class="built_in">test</span></div></pre></td></tr></table></figure>
+<p>或者一个 java 测试用例 :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./build/mvn <span class="built_in">test</span> -P... -DwildcardSuites=none -D<span class="built_in">test</span>=org.apache.spark.streaming.JavaAPISuite</div></pre></td></tr></table></figure>
+<h2 id="使用-SBT-测试"><a href="#使用-SBT-测试" class="headerlink" title="使用 SBT 测试"></a>使用 SBT 测试</h2><p>一些测试需要首先打包 Spark，所以总是第一次总是运行 build/sbt。 以下是正确（构建，测试）顺序的示例 :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./build/sbt -Pyarn -Phadoop-2.3 -Phive -Phive-thriftserver package</div><div class="line">./build/sbt -Pyarn -Phadoop-2.3 -Phive -Phive-thriftserver <span class="built_in">test</span></div></pre></td></tr></table></figure>
+<p>要运行特定的测试套件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./build/sbt -Pyarn -Phadoop-2.3 -Phive -Phive-thriftserver <span class="string">"test-only org.apache.spark.repl.ReplSuite"</span></div><div class="line">./build/sbt -Pyarn -Phadoop-2.3 -Phive -Phive-thriftserver <span class="string">"test-only org.apache.spark.repl.*"</span></div></pre></td></tr></table></figure>
+<p>要运行特定子项目的测试套件，如下所示 :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./build/sbt -Pyarn -Phadoop-2.3 -Phive -Phive-thriftserver core/<span class="built_in">test</span></div></pre></td></tr></table></figure>
+<h2 id="运行-JAVA-8-测试组件"><a href="#运行-JAVA-8-测试组件" class="headerlink" title="运行 JAVA 8 测试组件"></a>运行 JAVA 8 测试组件</h2><p>只能运行 JAVA 8 测试组件，不能运行其他版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./build/mvn install -DskipTests</div><div class="line">./build/mvn -pl  : java8-tests_2.11 <span class="built_in">test</span></div></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./build/sbt java8-tests/<span class="built_in">test</span></div></pre></td></tr></table></figure>
+<p>当检测到 Java 8 JDK 时，将自动启用 Java 8 测试。 如果您安装了 JDK 8，但它不是系统默认值，则可以在运行测试之前将 JAVA_HOME 设置为指向 JDK 8 。</p>
+<h2 id="用-Maven-做-PySpark-测试"><a href="#用-Maven-做-PySpark-测试" class="headerlink" title="用 Maven 做 PySpark 测试"></a>用 Maven 做 PySpark 测试</h2><p>如果您正在构建 PySpark 并希望运行 PySpark 测试，您将需要使用 Hive 支持构建 Spark 。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./build/mvn -DskipTests clean package -Phive</div><div class="line">./python/run-tests</div></pre></td></tr></table></figure>
+<p>运行测试脚本也可以限于特定的 Python 版本或特定的模块</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./python/run-tests --python-executables=python --modules=pyspark-sql</div></pre></td></tr></table></figure>
+<h2 id="运行-R-测试"><a href="#运行-R-测试" class="headerlink" title="运行 R 测试"></a>运行 R 测试</h2><p>要运行 SparkR 测试，您需要安装 R 包 testthat（从 R shell 运行 install.packages（testthat））。 您可以使用命令只运行 SparkR 测试 :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./R/run-tests.sh</div></pre></td></tr></table></figure>
+<p>注意 : 您还可以使用 SBT 构建运行 Python 测试，前提是您使用 Hive 支持构建 Spark 。</p>
+<p>运行基于 Docker 集成的测试组件</p>
+<p>为了运行 Docker 集成测试，您必须在您的盒子上安装 docker 引擎。 有关安装的说明，请访问 Docker 站点。 一旦安装，docker 服务需要启动，如果还没有运行。 在 Linux 上，这可以通过 sudo service docker start 来完成。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./build/mvn install -DskipTests</div><div class="line">./build/mvn -Pdocker-integration-tests -pl  : spark-docker-integration-tests_2.11</div></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./build/sbt docker-integration-tests/<span class="built_in">test</span></div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spark/" rel="tag"># Spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/24/spark-standalone/" rel="next" title="Spark Standalone 模式">
+                <i class="fa fa-chevron-left"></i> Spark Standalone 模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/24/spark-cluster-overview/" rel="prev" title="Spark 集群模式概述">
+                Spark 集群模式概述 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/12/24/spark-building-spark/"
+     data-title="构建 Spark"
+     data-content=""
+     data-url="https://tangpengcsu.github.io/2016/12/24/spark-building-spark/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/12/24/spark-building-spark/"
+           data-title="构建 Spark" data-url="https://tangpengcsu.github.io/2016/12/24/spark-building-spark/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="IAN" />
+          <p class="site-author-name" itemprop="name">IAN</p>
+           
+              <p class="site-description motion-element" itemprop="description">啊~ 五环</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangpengcsu" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/tangpcn" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tpeang" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-Maven"><span class="nav-number">1.</span> <span class="nav-text">Apache Maven</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#设置-Maven-的内存使用率"><span class="nav-number">1.1.</span> <span class="nav-text">设置 Maven 的内存使用率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#build-mvn"><span class="nav-number">1.2.</span> <span class="nav-text">build / mvn</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构建一个可运行的-Distribution-版本"><span class="nav-number">2.</span> <span class="nav-text">构建一个可运行的 Distribution 版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指定-Hadoop-版本"><span class="nav-number">3.</span> <span class="nav-text">指定 Hadoop 版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构建支持-Hive-和-JDBC-的支持"><span class="nav-number">4.</span> <span class="nav-text">构建支持 Hive 和 JDBC 的支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打包时排除针对-YARN-的-Hadoop-依赖"><span class="nav-number">5.</span> <span class="nav-text">打包时排除针对 YARN 的 Hadoop 依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构建适用于-Scala-2-10"><span class="nav-number">6.</span> <span class="nav-text">构建适用于 Scala 2.10</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构建单个子模块"><span class="nav-number">7.</span> <span class="nav-text">构建单个子模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#连续的编译"><span class="nav-number">8.</span> <span class="nav-text">连续的编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用-Zinc-加速编译"><span class="nav-number">9.</span> <span class="nav-text">用 Zinc 加速编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过-SBT-编译"><span class="nav-number">10.</span> <span class="nav-text">通过 SBT 编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加密的文件系统"><span class="nav-number">11.</span> <span class="nav-text">加密的文件系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IntelliJ-IDEA-或者-Eclipse"><span class="nav-number">12.</span> <span class="nav-text">IntelliJ IDEA 或者 Eclipse</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#运行测试"><span class="nav-number"></span> <span class="nav-text">运行测试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-SBT-测试"><span class="nav-number">1.</span> <span class="nav-text">使用 SBT 测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行-JAVA-8-测试组件"><span class="nav-number">2.</span> <span class="nav-text">运行 JAVA 8 测试组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用-Maven-做-PySpark-测试"><span class="nav-number">3.</span> <span class="nav-text">用 Maven 做 PySpark 测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行-R-测试"><span class="nav-number">4.</span> <span class="nav-text">运行 R 测试</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">IAN</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访问数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tangpeng"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="local-search-pop-overlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

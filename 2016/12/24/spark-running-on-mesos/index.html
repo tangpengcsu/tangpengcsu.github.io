@@ -1,0 +1,1190 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Spark 可以在 Apache Mesos 管理的硬件集群上运行。
+使用 Mesos 部署 Spark 的优点包括：
+
+Spark 和 其他框架 frameworks  之间的动态分区
+Spark 的多个实例之间的可扩展分区">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark on Mesos">
+<meta property="og:url" content="https://tangpengcsu.github.io/2016/12/24/spark-running-on-mesos/index.html">
+<meta property="og:site_name" content="北冥有鱼">
+<meta property="og:description" content="Spark 可以在 Apache Mesos 管理的硬件集群上运行。
+使用 Mesos 部署 Spark 的优点包括：
+
+Spark 和 其他框架 frameworks  之间的动态分区
+Spark 的多个实例之间的可扩展分区">
+<meta property="og:updated_time" content="2017-03-13T05:09:14.714Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spark on Mesos">
+<meta name="twitter:description" content="Spark 可以在 Apache Mesos 管理的硬件集群上运行。
+使用 Mesos 部署 Spark 的优点包括：
+
+Spark 和 其他框架 frameworks  之间的动态分区
+Spark 的多个实例之间的可扩展分区">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tangpengcsu.github.io/2016/12/24/spark-running-on-mesos/"/>
+
+
+
+
+
+  <title> Spark on Mesos | 北冥有鱼 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?dda06c0f41d225c14b70c9d51326cc61";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">北冥有鱼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-running-on-mesos/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Spark on Mesos
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-24T18:39:04+08:00">
+                2016-12-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/12/24/spark-running-on-mesos/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-running-on-mesos/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Spark 可以在 Apache Mesos 管理的硬件集群上运行。</p>
+<p>使用 Mesos 部署 Spark 的优点包括：</p>
+<ul>
+<li>Spark 和 其他框架 frameworks  之间的动态分区</li>
+<li>Spark 的多个实例之间的可扩展分区</li>
+</ul>
+<a id="more"></a>
+<hr>
+<h2 id="怎么运行"><a href="#怎么运行" class="headerlink" title="怎么运行"></a>怎么运行</h2><p>在一个独立集群部署中，下图的集群管理器是 Spark master 的一个实例。当使用 Mesos 管理时，Mesos master 会替代 Spark master 作为集群的管理器。</p>
+<p>现在，Driver 程序创建一个 job 并开始分发调度任务时，Mesos 会决定什么机器处理什么任务。 因为 Mesos 调度这些短期任务时会考虑到其他的框架，许多框架将会在同一个集群上共存，而不是借助资源的静态分区。</p>
+<p>开始，请按照以下步骤安装 Mesos 并通过 Mesos 部署 Spark 作业。</p>
+<hr>
+<h2 id="安装-Mesos"><a href="#安装-Mesos" class="headerlink" title="安装 Mesos"></a>安装 Mesos</h2><p>Spark 2.0.1 设计用于 Mesos 0.21.0 或更新版本，不需要任何特殊的 Mesos 补丁。</p>
+<p>如果你早已经有一个 Mesos 集群在运行，你可以跳过这个 Mesos 的安装步骤。</p>
+<p>否则，安装 Mesos for Spark 与安装 Mesos for 其他的框架没有什么不同。你可以通过源码或者预构建软件安装包来安装 Mesos。</p>
+<h3 id="通过源码："><a href="#通过源码：" class="headerlink" title="通过源码："></a>通过源码：</h3><p>通过源码安装 Apache Mesos，按照以下步骤：</p>
+<ol>
+<li>从 镜像 mirror 下载 Mesos 版本</li>
+<li>按照 Mesos 开始页面 Getting Started 来编译和安装 Mesos</li>
+</ol>
+<blockquote>
+<p>注意: 如果你希望运行 Mesos 又不希望安装在系统的默认位置（例如：如果你没有默认路径的管理权限），传递 –prefix 选项进行配置来告诉它安装在什么地方。例如： 传递 –prefix=/home/me/mesos。默认情况下，前缀是：/usr/local 。</p>
+</blockquote>
+<h3 id="第三方包"><a href="#第三方包" class="headerlink" title="第三方包"></a>第三方包</h3><p>Apache Mesos 项目只发布了源码的版本，而不是二进制包。但是其他的第三方项目发布的二进制版本，可能对设置 Mesos 有帮助。</p>
+<p>其中之一是中间层。用使用中间层提供的二进制版本安装 Mesos。</p>
+<ol>
+<li>从下载页面下载 Mesos 的安装包</li>
+<li>按照说明进行安装和配置</li>
+</ol>
+<p>中间层的安装文档建议设置 zookeeper 来处理 Mesos Master 的故障转移，但是 Mesos 通过使用 Single Master 模式，可以在没有 zookeeper 的情况下运行。</p>
+<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><p>要验证 Mesos 集群是否可用于 Spark，导航到 Mesos Master 的 Web UI 界面，端口是：5050 来确认所有预期的机器都会与从属选项卡中。</p>
+<hr>
+<h2 id="连接-Spark-到-Mesos"><a href="#连接-Spark-到-Mesos" class="headerlink" title="连接 Spark 到 Mesos"></a>连接 Spark 到 Mesos</h2><p>通过使用 Spark 中的 Mesos, 你需要一个 Spark 的二进制包放到 Mesos 可以访问的地方，然后配置 Spark driver 程序来连接 Mesos。</p>
+<p>或者你也可以在所有 Mesos slaves 位置安装 Spark，然后配置 spark.mesos.executor.home (默认是 SPARK_HOME) 来指向这个位置。</p>
+<h3 id="上传-Spark-包"><a href="#上传-Spark-包" class="headerlink" title="上传 Spark 包"></a>上传 Spark 包</h3><p>当 Mesos 第一次在 Mesos 从服务器上运行任务时，该从服务器必须有一个 Spark 二进制包来运行 Spark Mesos 执行器后端。 Spark 包可以在任何 Hadoop 可访问的 URI 上托管，包括 HTTP 通过 <a href="http://，Amazon" target="_blank" rel="external">http://，Amazon</a> Simple Storage Service 通过 s3n:// 或 HDFS 通过 hdfs://。</p>
+<p>要使用预编译包：</p>
+<ol>
+<li>从 Spark download page 下载 Spark 二进制包</li>
+<li>上传到 hdfs/http/s3</li>
+</ol>
+<p>要在 HDFS 上主机，请使用 Hadoop fs put 命令：hadoop fs -put spark-2.0.1.tar.gz /path/to/spark-2.0.1.tar.gz</p>
+<p>或者如果您使用的是自定义编译版本的 Spark，则需要使用包含在 Spark 源代码 tarball / checkout 中的 dev / make-distribution.sh 脚本创建一个包。</p>
+<ol>
+<li>使用 here 的说明下载并构建 Spark</li>
+<li>使用./dev/make-distribution.sh –tgz 创建二进制包。</li>
+<li>将归档文件上传到 http / s3 / hdfs</li>
+</ol>
+<h3 id="使用-Mesos-Master-的-URL"><a href="#使用-Mesos-Master-的-URL" class="headerlink" title="使用 Mesos Master 的 URL"></a>使用 Mesos Master 的 URL</h3><p>Mesos 的 Master URL 以 mesos://host:5050 形式表示 single-master Mesos 集群，或者 mesos://zk://host1:2181,host2:2181,host3:2181/mesos 为一个 multi-master Mesos 集群使用 ZooKeeper。</p>
+<h3 id="客户端模式"><a href="#客户端模式" class="headerlink" title="客户端模式"></a>客户端模式</h3><p>在客户端模式下，Spark Mesos 框架直接在客户端计算机上启动，并等待驱动程序输出。</p>
+<p>驱动程序需要在 spark-env.sh 中进行一些配置才能与 Mesos 正常交互：</p>
+<ol>
+<li>在 spark-env.sh 中设置一些环境变量：<ol>
+<li>export MESOS_NATIVE_JAVA_LIBRARY=<path to="" libmesos.so=""></path> 的路径。此路径通常为 &lt; prefix&gt;/lib/libmesos.so，其中前缀默认为 / usr/local。请参阅上面的 Mesos 安装说明。在 Mac OS X 上，库称为 libmesos.dylib，而不是 libmesos.so。</li>
+<li>export SPARK_EXECUTOR_URI=<url of="" spark-2.0.1.tar.gz="" 上传="">。</url></li>
+</ol>
+</li>
+<li>还将 spark.executor.uri 设置为 <url of="" spark-2.0.1.tar.gz="">。</url></li>
+</ol>
+<p>现在，当针对集群启动 Spark 应用程序时，在创建 SparkContext 时传递一个 mesos:// URL 作为主服务器。例如：</p>
+<p><strong>Scala</strong></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>()</div><div class="line">  .setMaster(<span class="string">"mesos://HOST:5050"</span>)</div><div class="line">  .setAppName(<span class="string">"My app"</span>)</div><div class="line">  .set(<span class="string">"spark.executor.uri"</span>, <span class="string">"&lt;path to spark-2.0.1.tar.gz uploaded above&gt;"</span>)</div><div class="line"><span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</div></pre></td></tr></table></figure>
+<p>（您还可以在 conf/spark-defaults.conf 文件中使用 spark-submit 并配置 spark.executor.uri。）<br>运行 shell 时，spark.executor.uri 参数从 SPARK_EXECUTOR_URI 继承，因此不需要作为系统属性冗余传递。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./bin/spark-shell --master mesos://host:5050</div></pre></td></tr></table></figure>
+<h3 id="集群模式"><a href="#集群模式" class="headerlink" title="集群模式"></a>集群模式</h3><p>Spark on Mesos 还支持集群模式，其中驱动程序在集群中启动，客户端可以从 Mesos Web UI 中查找驱动程序的结果。</p>
+<p>要使用集群模式，必须通过 sbin / start-mesos-dispatcher.sh 脚本启动集群中的 MesosClusterDispatcher，并传递 Mesos 主 URL（例如：mesos://host:5050）。这将启动 MesosClusterDispatcher 作为在主机上运行的守护程序。</p>
+<p>如果你喜欢用 Marathon 运行 MesosClusterDispatcher，你需要在前台运行 MesosClusterDispatcher（即：bin/spark-class org.apache.spark.deploy.mesos.MesosClusterDispatcher）。请注意，MesosClusterDispatcher 尚不支持 HA 的多个实例。</p>
+<p>MesosClusterDispatcher 还支持将恢复状态写入 Zookeeper。这将允许 MesosClusterDispatcher 能够在重新启动时恢复所有提交和运行的容器。为了启用此恢复模式，您可以通过配置 spark.deploy.recoveryMode 和相关的 spark.deploy.zookeeper.* 配置在 spark-env 中设置 SPARK_DAEMON_JAVA_OPTS。有关这些配置的更多信息，请参阅配置 (doc)[configurations.html#deploy]。</p>
+<p>从客户端，您可以通过运行 spark-submit 并指定到 MesosClusterDispatcher 的 URL（例如：mesos://dispatcher:7077）的主 URL 将作业提交到 Mesos 集群。您可以在 Spark 集群 Web UI 上查看驱动程序状态。</p>
+<p>例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">./bin/spark-submit \</div><div class="line">  --class org.apache.spark.examples.SparkPi \</div><div class="line">  --master mesos://207.184.161.138:7077 \</div><div class="line">  --deploy-mode cluster \</div><div class="line">  --supervise \</div><div class="line">  --executor-memory 20G \</div><div class="line">  --total-executor-cores 100 \</div><div class="line">  http://path/to/examples.jar \</div><div class="line">  1000</div></pre></td></tr></table></figure>
+<p>请注意，传递给 spark-submit 的 jar 或 python 文件应该是 Mesos 从设备可达的 URI，因为 Spark 驱动程序不会自动上传本地 jar。</p>
+<hr>
+<h2 id="Mesos-启动模式"><a href="#Mesos-启动模式" class="headerlink" title="Mesos 启动模式"></a>Mesos 启动模式</h2><p>Spark 可以在两种模式下运行 Mesos：”粗粒度”（默认）和 “细粒度”（已弃用）。</p>
+<h3 id="粗粒度"><a href="#粗粒度" class="headerlink" title="粗粒度"></a>粗粒度</h3><p>在 “粗粒度” 模式下，每个 Spark 执行程序作为单个 Mesos 任务运行。 Spark 执行程序的大小根据以下配置变量确定：</p>
+<ol>
+<li>执行器内存：spark.executor.memory</li>
+<li>执行器核心：spark.executor.cores</li>
+<li>执行器数：spark.cores.max / spark.executor.cores</li>
+</ol>
+<p>有关详细信息和默认值，请参阅 Spark Configuration 。</p>
+<p>应用程序启动时，热切地启动执行器，直到达到 spark.cores.max。如果不设置 spark.cores.max，Spark 应用程序将保留 Mesos 提供给它的所有资源，因此我们当然敦促您在任何类型的多租户集群中设置此变量，包括运行多个并发 Spark 应用程序。</p>
+<p>调度程序将启动执行者循环提供 Mesos 给它，但没有传播保证，因为 Mesos 不提供这样的保证提供流。<br>粗粒度模式的好处是启动开销低得多，但是在应用程序的整个持续时间内保留 Mesos 资源的代价。要配置作业以动态调整其资源要求，请查看 Dynamic Allocation 。</p>
+<h3 id="细粒度（已弃用）"><a href="#细粒度（已弃用）" class="headerlink" title="细粒度（已弃用）"></a>细粒度（已弃用）</h3><blockquote>
+<p>注意: 细粒度模式自 Spark 2.0.0 起已弃用。考虑使用 Dynamic Allocation 有一些好处。有关完整说明，请参阅 SPARK-11857</p>
+</blockquote>
+<p>在 “细粒度” 模式下，Spark 执行程序中的每个 Spark 任务作为单独的 Mesos 任务运行。这允许 Spark（和其他框架）的多个实例以非常精细的粒度共享核心，其中每个应用程序随着其上升和下降而获得更多或更少的核心，但是它在启动每个任务时带来额外的开销。此模式可能不适合低延迟要求，如交互式查询或服务 Web 请求。</p>
+<p>请注意，虽然细粒度的 Spark 任务会在核心终止时放弃核心，但它们不会放弃内存，因为 JVM 不会将内存回馈给操作系统。执行器在空闲时也不会终止。</p>
+<p>要以细粒度模式运行，请在 SparkConf 中将 spark.mesos.coarse 属性设置为 false：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">conf.set(<span class="string">"spark.mesos.coarse"</span>, <span class="string">"false"</span>)</div></pre></td></tr></table></figure>
+<p>您还可以使用 spark.mesos.constraints 在 Mesos 资源提供上设置基于属性的约束。默认情况下，所有资源优惠都将被接受。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">conf.set(<span class="string">"spark.mesos.constraints"</span>, <span class="string">"os:centos7;us-east-1:false"</span>)</div></pre></td></tr></table></figure>
+<p>例如，假设 spark.mesos.constraints 设置为 os:centos7;us-east-1:false，那么将检查资源提供以查看它们是否满足这两个约束，然后才会被接受以启动新的执行程序。</p>
+<hr>
+<h2 id="Mesos-Docker-的支持"><a href="#Mesos-Docker-的支持" class="headerlink" title="Mesos Docker 的支持"></a>Mesos Docker 的支持</h2><p>Spark 可以通过在你的 SparkConf 中 设置 spark.mesos.executor.docker.image 的属性，从而来使用 Mesos Docker 容器。</p>
+<p>所使用的 Docker 镜像必须有一个合适的版本的 Spark 已经是映像的一部分，或者您可以通过通常的方法让 Mesos 下载 Spark。</p>
+<p>需要 Mesos 版本 0.20.1 或更高版本。</p>
+<hr>
+<h2 id="独立于-Hadoop-运行"><a href="#独立于-Hadoop-运行" class="headerlink" title="独立于 Hadoop 运行"></a>独立于 Hadoop 运行</h2><p>您可以在现有的 Hadoop 集群旁边运行 Spark 和 Mesos，只需将它们作为计算机上的单独服务启动即可。 要从 Spark 访问 Hadoop 数据，需要一个完整的 hdfs:// URL（通常为 hdfs://<namenode>:9000/path，但您可以在 Hadoop Namenode Web UI 上找到正确的 URL）。</namenode></p>
+<p>此外，还可以在 Mesos 上运行 Hadoop MapReduce，以便在两者之间实现更好的资源隔离和共享。 在这种情况下，Mesos 将作为统一的调度程序，将核心分配给 Hadoop 或 Spark，而不是通过每个节点上的 Linux 调度程序共享资源。 请参考 Hadoop on Mesos 。</p>
+<p>在任一情况下，HDFS 与 Hadoop MapReduce 分开运行，而不通过 Mesos 调度。</p>
+<hr>
+<h2 id="通过-Mesos-动态分配资源"><a href="#通过-Mesos-动态分配资源" class="headerlink" title="通过 Mesos 动态分配资源"></a>通过 Mesos 动态分配资源</h2><p>Mesos 仅支持使用粗粒度模式的动态分配，这可以基于应用程序的统计信息调整执行器的数量。 有关一般信息，请参阅 Dynamic Resource Allocation 。</p>
+<p>要使用的外部 Shuffle 服务是 Mesos Shuffle 服务。 它在 Shuffle 服务之上提供 shuffle 数据清理功能，因为 Mesos 尚不支持通知另一个框架的终止。 要启动它，在所有从节点上运 $SPARK_HOME/sbin/start-mesos-shuffle-service.sh，并将 spark.shuffle.service.enabled 设置为 true。</p>
+<p>这也可以通过 Marathon，使用唯一的主机约束和以下命令实现：bin/spark-class org.apache.spark.deploy.mesos.MesosExternalShuffleService。</p>
+<hr>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>有关 Spark 配置的信息，请参阅 configuration page 。 以下配置特定于 Mesos 上的 Spark。</p>
+<h3 id="Spark-属性"><a href="#Spark-属性" class="headerlink" title="Spark 属性"></a>Spark 属性</h3><table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>默认值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spark.mesos.coarse</td>
+<td>true</td>
+<td>如果设置为 true，则以 “粗粒度” 共享模式在 Mesos 集群上运行，其中 Spark 在每台计算机上获取一个长期存在的 Mesos 任务。如果设置为 false，则以 “细粒度” 共享模式在 Mesos 集群上运行，其中每个 Spark 任务创建一个 Mesos 任务。’Mesos Run Modes’ 中的详细信息。</td>
+</tr>
+<tr>
+<td>spark.mesos.extra.cores</td>
+<td>0</td>
+<td>设置执行程序公布的额外核心数。这不会导致分配更多的内核。它代替意味着执行器将 “假装” 它有更多的核心，以便驱动程序将发送更多的任务。使用此来增加并行度。 此设置仅用于 Mesos 粗粒度模式。</td>
+</tr>
+<tr>
+<td>spark.mesos.mesosExecutor.cores</td>
+<td>1.0</td>
+<td>（仅限细粒度模式）给每个 Mesos 执行器的内核数。这不包括用于运行 Spark 任务的核心。换句话说，即使没有运行 Spark 任务，每个 Mesos 执行器将占用这里配置的内核数。 该值可以是浮点数。</td>
+</tr>
+<tr>
+<td>spark.mesos.executor.docker.image</td>
+<td>(none)</td>
+<td>设置 Spark 执行器将运行的 docker 映像的名称。所选映像必须安装 Spark，以及兼容版本的 Mesos 库。Spark 在图像中的安装路径可以通过 spark.mesos.executor.home 来指定; 可以使用 spark.executorEnv.MESOS_NATIVE_JAVA_LIBRARY 指定 Mesos 库的安装路径。</td>
+</tr>
+<tr>
+<td>spark.mesos.executor.docker.volumes</td>
+<td>(none)</td>
+<td>设置要装入到 Docker 镜像中的卷列表，这是使用 spark.mesos.executor.docker.image 设置的。此属性的格式是以逗号分隔的映射列表，后面的形式传递到 docker run -v。 这是他们采取的形式： [host_path:]container_path[:ro\</td>
+<td>:rw]</td>
+</tr>
+<tr>
+<td>spark.mesos.executor.docker.portmaps</td>
+<td>(none)</td>
+<td>设置由 Docker 镜像公开的入站端口的列表，这是使用 spark.mesos.executor.docker.image 设置的。此属性的格式是以逗号分隔的映射列表，格式如下：host_port:container_port[:tcp\</td>
+<td>:udp]</td>
+</tr>
+<tr>
+<td>spark.mesos.executor.home</td>
+<td>driver sideSPARK_HOME</td>
+<td>在 Mesos 中的执行器上设置 Spark 安装目录。默认情况下，执行器将只使用驱动程序的 Spark 主目录，它们可能不可见。请注意，这只有当 Spark 二进制包没有通过 spark.executor.uri 指定时才是相关的。</td>
+</tr>
+<tr>
+<td>spark.mesos.executor.memoryOverhead</td>
+<td>executor memory * 0.10, with minimum of 384</td>
+<td>以每个执行程序分配的额外内存量（以 MB 为单位）。默认情况下，开销将大于 spark.executor.memory 的 384 或 10％。如果设置，最终开销将是此值。</td>
+</tr>
+<tr>
+<td>spark.mesos.uris</td>
+<td>(none)</td>
+<td>当驱动程序或执行程序由 Mesos 启动时，要下载到沙箱的 URI 的逗号分隔列表。这适用于粗粒度和细粒度模式。</td>
+</tr>
+<tr>
+<td>spark.mesos.principal</td>
+<td>(none)</td>
+<td>设置 Spark 框架将用来与 Mesos 进行身份验证的主体。</td>
+</tr>
+<tr>
+<td>spark.mesos.secret</td>
+<td>(none)</td>
+<td>设置 Spark 框架将用来与 Mesos 进行身份验证的机密。</td>
+</tr>
+<tr>
+<td>spark.mesos.role</td>
+<td>*</td>
+<td>设置这个 Spark 框架对 Mesos 的作用。角色在 Mesos 中用于预留和资源权重共享。</td>
+</tr>
+<tr>
+<td>spark.mesos.constraints</td>
+<td>(none)</td>
+<td>基于属性的约束对 mesos 资源提供。 默认情况下，所有资源优惠都将被接受。有关属性的更多信息，请参阅 Mesos Attributes &amp; Resources 。标量约束与 “小于等于” 语义匹配，即约束中的值必须小于或等于资源提议中的值。范围约束与 “包含” 语义匹配，即约束中的值必须在资源提议的值内。集合约束与语义的 “子集” 匹配，即约束中的值必须是资源提供的值的子集。文本约束与 “相等” 语义匹配，即约束中的值必须完全等于资源提议的值。如果没有作为约束的一部分存在的值，则将接受具有相应属性的任何报价（没有值检查）。</td>
+</tr>
+<tr>
+<td>spark.mesos.driver.webui.url</td>
+<td>(none)</td>
+<td>设置 Spark Mesos 驱动程序 Web UI URL 以与框架交互。如果取消设置，它将指向 Spark 的内部 Web UI。</td>
+</tr>
+<tr>
+<td>spark.mesos.dispatcher.webui.url</td>
+<td>(none)</td>
+<td>设置 Spark Mesos 分派器 Web UI URL 以与框架交互。如果取消设置，它将指向 Spark 的内部 Web UI。</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="故障排查和调试"><a href="#故障排查和调试" class="headerlink" title="故障排查和调试"></a>故障排查和调试</h2><p>在调试中可以看的地方</p>
+<ul>
+<li>Mesos Master 的端口：5050<ul>
+<li>Slaves 应该出现在 Slavas 那一栏</li>
+<li>Spark 应用应该出现在框架那一栏</li>
+<li>任务应该出现在在一个框架的详情</li>
+<li>检查失败任务沙箱的输出和错误</li>
+</ul>
+</li>
+<li>Mesos 的日志<ul>
+<li>Master 和 Slave 的日志默认在： /var/log/mesos  目录</li>
+</ul>
+</li>
+</ul>
+<p>常见的陷阱：</p>
+<ul>
+<li>Spark 装配不可达、不可访问<ul>
+<li>Slave 必须可以从你给的 http://, hdfs:// or s3n:// URL 地址下载到 Spark 的二进制包</li>
+</ul>
+</li>
+<li>防火墙拦截通讯<ul>
+<li>检查信息是否是连接失败。</li>
+<li>临时禁用防火墙来调试，然后戳出适当的漏洞</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spark/" rel="tag"># Spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/24/spark-rdd/" rel="next" title="Spark RDD API详解(一) Map和Reduce">
+                <i class="fa fa-chevron-left"></i> Spark RDD API详解(一) Map和Reduce
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/24/spark-running-on-yarn/" rel="prev" title="Spark on YARN">
+                Spark on YARN <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/12/24/spark-running-on-mesos/"
+     data-title="Spark on Mesos"
+     data-content=""
+     data-url="https://tangpengcsu.github.io/2016/12/24/spark-running-on-mesos/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/12/24/spark-running-on-mesos/"
+           data-title="Spark on Mesos" data-url="https://tangpengcsu.github.io/2016/12/24/spark-running-on-mesos/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="IAN" />
+          <p class="site-author-name" itemprop="name">IAN</p>
+           
+              <p class="site-description motion-element" itemprop="description">啊~ 五环</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/tangpengcsu" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/tangpcn" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tpeang" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#怎么运行"><span class="nav-number">1.</span> <span class="nav-text">怎么运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-Mesos"><span class="nav-number">2.</span> <span class="nav-text">安装 Mesos</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过源码："><span class="nav-number">2.1.</span> <span class="nav-text">通过源码：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三方包"><span class="nav-number">2.2.</span> <span class="nav-text">第三方包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证"><span class="nav-number">2.3.</span> <span class="nav-text">验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#连接-Spark-到-Mesos"><span class="nav-number">3.</span> <span class="nav-text">连接 Spark 到 Mesos</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#上传-Spark-包"><span class="nav-number">3.1.</span> <span class="nav-text">上传 Spark 包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用-Mesos-Master-的-URL"><span class="nav-number">3.2.</span> <span class="nav-text">使用 Mesos Master 的 URL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端模式"><span class="nav-number">3.3.</span> <span class="nav-text">客户端模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集群模式"><span class="nav-number">3.4.</span> <span class="nav-text">集群模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mesos-启动模式"><span class="nav-number">4.</span> <span class="nav-text">Mesos 启动模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#粗粒度"><span class="nav-number">4.1.</span> <span class="nav-text">粗粒度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#细粒度（已弃用）"><span class="nav-number">4.2.</span> <span class="nav-text">细粒度（已弃用）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mesos-Docker-的支持"><span class="nav-number">5.</span> <span class="nav-text">Mesos Docker 的支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#独立于-Hadoop-运行"><span class="nav-number">6.</span> <span class="nav-text">独立于 Hadoop 运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过-Mesos-动态分配资源"><span class="nav-number">7.</span> <span class="nav-text">通过 Mesos 动态分配资源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置"><span class="nav-number">8.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark-属性"><span class="nav-number">8.1.</span> <span class="nav-text">Spark 属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#故障排查和调试"><span class="nav-number">9.</span> <span class="nav-text">故障排查和调试</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">IAN</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访问数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站访问总量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"tangpeng"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="local-search-pop-overlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
