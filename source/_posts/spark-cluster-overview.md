@@ -19,7 +19,7 @@ Spark 应用在集群上作为独立的进程组来运行，在您的 main 程�
 
 具体的说，为了运行在集群上，SparkContext 可以连接至几种类型的 Cluster Manager（既可以用 Spark 自己的 Standlone Cluster Manager，或者 Mesos，也可以使用 YARN），它们会分配应用的资源。一旦连接上，Spark 获得集群中节点上的 Executor，这些进程可以运行计算并且为您的应用存储数据。接下来，它将发送您的应用代码（通过 JAR 或者 Python 文件定义传递给 SparkContext）至 Executor。最终，SparkContext 将发送 Task 到 Executor 运行。
 
-![Spark cluster components](/images/cluster-overview.png "Spark cluster components")
+![Spark cluster components](/images/spark/cluster-overview.png "Spark cluster components")
 
 这里有几个关于这个架构需要注意的地方 :
 

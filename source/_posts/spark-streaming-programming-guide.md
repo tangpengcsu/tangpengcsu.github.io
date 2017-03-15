@@ -13,11 +13,11 @@ Spark Streaming 是 Spark 核心 API 的扩展，它支持弹性的，高吞吐�
 
 <!-- more -->
 
-![streaming-arch](/images/streaming-arch.png "streaming-arch")
+![streaming-arch](/images/spark/streaming-arch.png "streaming-arch")
 
 在内部，它工作原理如下，Spark Streaming 接收实时输入数据流并将数据切分成多个批数据，然后交由 Spark 引擎处理并分批的生成结果数据流。
 
-![streaming-flow](/images/streaming-flow.png "streaming-flow")
+![streaming-flow](/images/spark/streaming-flow.png "streaming-flow")
 
 Spark Streaming 提供了一个高层次的抽象叫做离散流 (discretized stream) 或者 DStream，它代表一个连续的数据流。DStream 可以通过来自数据源的输入数据流创建，例如 Kafka，Flume 以及 Kinesis，或者在其他 DStream 上进行高层次的操作创建。在内部，一个 DStream 是通过一个 [RDDs](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.rdd.RDD "http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.rdd.RDD") 的序列来表示。
 
@@ -213,11 +213,11 @@ val ssc = new StreamingContext(sc, Seconds(1))
 
 **离散化流** 或者 **离散流** 是 Spark Streaming 提供的基本抽象。它代表了一个连续的数据流，无论是从源接收到的输入数据流，还是通过变换输入流所产生的处理过的数据流。在内部，一个离散流（DStream）被表示为一系列连续的 RDDs，RDD 是 Spark 的一个不可改变的，分布式的数据集的抽象（查看 [Spark 编程指南](/2016/12/24/spark-programming-guides/#rdds "/2016/12/24/spark-programming-guides/#rdds") 了解更多）。在一个 DStream 中的每个 RDD 包含来自一定的时间间隔的数据，如下图所示。
 
-![streaming-dstream](/images/streaming-dstream.png "streaming-dstream")
+![streaming-dstream](/images/spark/streaming-dstream.png "streaming-dstream")
 
 应用于 DStream 的任何操作转化为对于底层的 RDDs 的操作。例如，在 [之前的例子](/2016/12/24/spark-streaming-programming-guide/#section "/2016/12/24/spark-streaming-programming-guide/#section")，转换一个行（lines）流成为单词（words）中，flatMap 操作被应用于在行离散流（lines DStream）中的每个 RDD 来生成单词离散流（words DStream）的 RDDs 。如下图所示。
 
-![streaming-dstream-ops](/images/streaming-dstream-ops.png "streaming-dstream-ops")
+![streaming-dstream-ops](/images/spark/streaming-dstream-ops.png "streaming-dstream-ops")
 
 这些底层的 RDD 变换由 Spark 引擎（engine）计算。 DStream 操作隐藏了大多数这些细节并为了方便起见，提供给了开发者一个更高级别的 API 。这些操作细节会在后边的章节中讨论。
 
@@ -416,7 +416,7 @@ cleanedDStream = wordCounts.transform(lambda rdd: rdd.join(spamInfoRDD).filter(.
 
 Spark Streaming 也支持窗口计算，它允许你在一个滑动窗口数据上应用 transformation 算子。下图阐明了这个滑动窗口
 
-![streaming-dstream-window](/images/streaming-dstream-window.png "streaming-dstream-window")
+![streaming-dstream-window](/images/spark/streaming-dstream-window.png "streaming-dstream-window")
 
 如上图显示，窗口在源 DStream 上滑动，合并和操作落入窗内的源 RDDs，产生窗口化的 DStream 的 RDDs。在这个具体的例子中，程序在三个时间单元的数据上进行窗口操作，并且每两个时间单元滑动一次。 这说明，任何一个窗口操作都需要指定两个参数：
 

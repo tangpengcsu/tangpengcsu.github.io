@@ -15,11 +15,11 @@ categories: [Docker]
 
 以 ubuntu15.04 为例，由四个镜像层堆叠而成，而且每层都是只读的。存储驱动负责堆叠这些镜像层并提供统一视口（The Docker storage driver is responsible for stacking these layers and providing a single unified view.）
 
-![storage_1](/images/storage_1.jpg)
+![storage_1](/images/docker/storage_1.jpg)
 
 如下图所示，当创建一个容器时，会在原有的 layer 上添加一个新的，稀疏的，可读写的 "容器层"，在容器上进行的所有读，写，删除文件的指令都会在容器层完成
 
-![storage_2](/images/storage_2.jpg)
+![storage_2](/images/docker/storage_2.jpg)
 
 <!-- more -->
 
@@ -29,7 +29,7 @@ categories: [Docker]
 
 如下图所示，用同一个 ubuntu15.04 镜像，启动多个 ubuntu15.04 容器，每个容器都有负责各自读写操作的 "容器层"，而底层的镜像层是容器间共享的。
 
-![storage_3](/images/storage_3.jpg)
+![storage_3](/images/docker/storage_3.jpg)
 
 Docker 模型的核心部分是有效利用分层镜像机制，镜像可以通过分层来进行继承，基于基础镜像（没有父镜像），可以制作各种具体的应用镜像。Docker 1.10 引入新的可寻址存储模型，使用安全内容哈希代替随机的 UUID 管理镜像。同时，Docker 提供了迁移工具，将已经存在的镜像迁移到新模型上。不同 Docker 容器就可以共享一些基础的文件系统层，同时再加上自己独有的可读写层，大大提高了存储的效率。其中主要的机制就是分层模型和将不同目录挂载到同一个虚拟文件系统。
 
@@ -45,7 +45,7 @@ Docker 模型的核心部分是有效利用分层镜像机制，镜像可以通�
 - 数据卷不由存储驱动器管理，对数据卷的读写等操作绕过了存储驱动器。
 -  多个容器可以共享一个或多个数据卷。
 
-![storage_4](/images/storage_4.jpg)
+![storage_4](/images/docker/storage_4.jpg)
 
 由上图可以看出，数据卷是属于 Docker  宿主机的本地存储空间内的，进一步加强了数据卷的独立，摆脱存储驱动器控制。当容器被删除时，数据卷中所有数据都将继续保留在 Docker  宿主机中。
 
@@ -115,7 +115,7 @@ zfs | zfs only | N/A
 
 AUFS（AnotherUnionFS）是一种 Union FS，是文件级的存储驱动。所谓 UnionFS 就是把不同物理位置的目录合并 mount 到同一个目录中。简单来说就是支持将不同目录挂载到同一个虚拟文件系统下的文件系统。这种文件系统可以一层一层地叠加修改文件。无论底下有多少层都是只读的，只有最上层的文件系统是可写的。当需要修改一个文件时，AUFS 创建该文件的一个副本，使用 CoW 将文件从只读层复制到可写层进行修改，结果也保存在可写层。在 Docker 中，底下的只读层就是 image，可写层就是 Container。结构如下图所示：
 
-![storage_5](/images/storage_5.jpg)
+![storage_5](/images/docker/storage_5.jpg)
 
 > layerID 和 docker 宿主机中的目录并不是一致的。
 
@@ -217,11 +217,11 @@ Snapshot 是 Lvm 提供的一种特性，它可以在不中断服务运行的情
 
 相比 AUFS 和 OverlayFS 是文件级存储，Device mapper 是块级存储，所有的操作都是直接对块进行操作，而不是文件。 Device mapper 驱动会先在块设备上创建一个资源池，然后在资源池上创建一个带有文件系统的基本设备，所有镜像都是这个基本设备的快照，而容器则是镜像的快照 。所以在容器里看到文件系统是资源池上基本设备的文件系统的快照，并没有为容器分配空间。当要写入一个新文件时，在容器的镜像内为其分配新的块并写入数据，这个叫用时分配。当要修改已有文件时，再使用 CoW 为容器快照分配块空间，将要修改的数据复制到在容器快照中新的块里再进行修改。Device mapper 驱动默认会创建一个 100G 的文件包含镜像和容器。每一个容器被限制在 10G 大小的卷内，可以自己配置调整。结构如下图所示：
 
-![storage_6](/images/storage_6.jpg)
+![storage_6](/images/docker/storage_6.jpg)
 
 可以通过"docker info" 或通过 dmsetup ls 获取想要的更多信息。查看 Docker 的 Device mapper 的信息：
 
-![storage_7](/images/storage_7.jpg)
+![storage_7](/images/docker/storage_7.jpg)
 
 #### 分析
 
@@ -234,7 +234,7 @@ Snapshot 是 Lvm 提供的一种特性，它可以在不中断服务运行的情
 
 Overlay 是 Linux 内核 3.18 后支持的，也是一种 Union FS，和 AUFS 的多层不同的是 Overlay 只有两层：一个 Upper 文件系统和一个 Lower 文件系统，分别代表 Docker 的镜像层和容器层。当需要修改一个文件时，使用 CoW 将文件从只读的 Lower 复制到可写的 Upper 进行修改，结果也保存在 Upper 层。在 Docker 中，底下的只读层就是 image，可写层就是 Container。结构如下图所示：
 
-![storage_8](/images/storage_8.jpg)
+![storage_8](/images/docker/storage_8.jpg)
 
 #### 分析
 
@@ -248,7 +248,7 @@ Overlay 是 Linux 内核 3.18 后支持的，也是一种 Union FS，和 AUFS �
 
 Btrfs 被称为下一代写时复制文件系统，并入 Linux 内核，也是文件级级存储，但可以像 Device mapper 一直接操作底层设备。Btrfs 利用  Subvolumes 和 Snapshots 管理镜像容器分层。Btrfs 把文件系统的一部分配置为一个完整的子文件系统，称之为 Subvolume，Snapshot 是 Subvolumn 的实时读写拷贝，chunk 是分配单位，通常是 1GB。那么采用  Subvolume，一个大的文件系统可以被划分为多个子文件系统，这些子文件系统共享底层的设备空间，在需要磁盘空间时便从底层设备中分配，类似应用程序调用  malloc() 分配内存一样。 为了灵活利用设备空间，Btrfs 将磁盘空间划分为多个 chunk 。每个 chunk 可以使用不同的磁盘空间分配策略。比如某些 chunk 只存放 metadata，某些 chunk 只存放数据。这种模型有很多优点，比如 Btrfs 支持动态添加设备。用户在系统中增加新的磁盘之后，可以使用 Btrfs 的命令将该设备添加到文件系统中。Btrfs 把一个大的文件系统当成一个资源池，配置成多个完整的子文件系统，还可以往资源池里加新的子文件系统，而基础镜像则是子文件系统的快照，每个子镜像和容器都有自己的快照，这些快照则都是 subvolume 的快照。
 
-![storage_9](/images/storage_9.jpg)
+![storage_9](/images/docker/storage_9.jpg)
 
 #### 分析
 
@@ -264,7 +264,7 @@ ZFS 文件系统是一个革命性的全新的文件系统，它从根本上改�
 
 下面看一下在 Docker 里 ZFS 的使用。首先从 zpool 里分配一个 ZFS 文件系统给镜像的基础层，而其他镜像层则是这个 ZFS 文件系统快照的克隆，快照是只读的，而克隆是可写的，当容器启动时则在镜像的最顶层生成一个可写层。如下图所示：
 
-![storage_10](/images/storage_10.jpg)
+![storage_10](/images/docker/storage_10.jpg)
 
 #### 分析
 

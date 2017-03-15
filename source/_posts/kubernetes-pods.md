@@ -9,7 +9,7 @@ categories: [Kubernetes]
 
 在 Kubernetes 中，最小的管理元素不是一个个独立的容器，而是 Pod 是最小的，管理，创建，计划的最小单元。
 
-![pods](/images/pods_1.jpg)
+![pods](/images/kubernetes/pods_1.jpg)
  
 ## 什么是 Pod
 

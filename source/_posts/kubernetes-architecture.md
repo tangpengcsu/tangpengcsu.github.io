@@ -9,7 +9,7 @@ categories: [Kubernetes]
 
 Kubernetes 集群包含有节点代理 kubelet 和 Master 组件 (APIs, scheduler, etc)，一切都基于分布式的存储系统。下面这张图是 Kubernetes 的架构图。
 
-![kubernetes 构架图](/images/architecture.png)
+![kubernetes 构架图](/images/kubernetes/architecture.png)
 
 > 原文：[kubernetes architecture](https://github.com/kubernetes/kubernetes/blob/release-1.3/docs/design/architecture.md "Kubernetes 构架设计")
 

@@ -177,16 +177,16 @@ ae224eafce6a        alpine                         "sh"                     3 mi
 
 4\. 启动界面（ip:8080）
 
- ![shipyard_1](/images/shipyard_1.png)
+ ![shipyard_1](/images/shipyard/shipyard_1.png)
 
 5\. 容器详细情况
 
-![shipyard_2](/images/shipyard_2.png)
+![shipyard_2](/images/shipyard/shipyard_2.png)
 
 6\. 镜像
 
-![shipyard_3](/images/shipyard_3.png)
+![shipyard_3](/images/shipyard/shipyard_3.png)
 
 7\. 节点
 
-![shipyard_4](/images/shipyard_4.png)
+![shipyard_4](/images/shipyard/shipyard_4.png)

@@ -429,7 +429,7 @@ Accumulators（累加器）是一个仅可以执行 "added"（添加）的变量
 
 创建 accumulators（累加器）并命名之后，在 Spark 的 UI 界面上将会显示它。这样可以帮助理解正在运行的阶段的运行情况（注意 : 该特性在 Python 中还不支持）。
 
-![accumulators](/images/spark-webui-accumulators.png)
+![accumulators](/images/spark/spark-webui-accumulators.png)
 
 可以通过调用 SparkContext.longAccumulator() 或 SparkContext.doubleAccumulator() 方法创建数值类型的 accumulator（累加器）以分别累加 Long 或 Double 类型的值。集群上正在运行的任务就可以使用 add 方法来累计数值。然而，它们不能够读取它的值。只有 driver program（驱动程序）才可以使用 value 方法读取累加器的值。
 

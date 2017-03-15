@@ -111,7 +111,7 @@ Kubernete Service 是一个定义了一组 Pod 的策略的抽象，我们也有
 
 最终的结果就是所有的对于这个服务的请求都会被转发到后台的 Pod 中，这一过程用户根本察觉不到。
 
-![虚拟 IP 和服务代理](/images/service_1.jpg "虚拟 IP 和服务代理")
+![虚拟 IP 和服务代理](/images/kubernetes/service_1.jpg "虚拟 IP 和服务代理")
 
 
 默认的，后台的选择是随机的，基于用户 session 机制的策略可以通过修改 service.spec.sessionAffinity 的值从 NONE 到 ClientIP。
