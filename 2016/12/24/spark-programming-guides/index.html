@@ -80,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
 
 
 
@@ -93,12 +93,12 @@
 <meta property="og:url" content="https://tangpengcsu.github.io/2016/12/24/spark-programming-guides/index.html">
 <meta property="og:site_name" content="北冥有鱼">
 <meta property="og:description" content="在一个较高的水平上，每一个 Spark 应用程序由一个在集群上运行着用户的 main 函数和执行各种并行操作的 driver program（驱动程序）组成。Spark 提供的主要抽象是一个弹性分布式数据集（RDD），它是可以执行并行操作且跨集群节点的元素的集合。RDD 可以从一个 Hadoop 文件系统（或者任何其它 Hadoop 支持的文件系统），或者一个在 driver program（驱动">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/spark-webui-accumulators.png">
-<meta property="og:updated_time" content="2017-03-14T05:19:59.290Z">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/spark/spark-webui-accumulators.png">
+<meta property="og:updated_time" content="2017-03-15T04:02:02.251Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spark 编程指南">
 <meta name="twitter:description" content="在一个较高的水平上，每一个 Spark 应用程序由一个在集群上运行着用户的 main 函数和执行各种并行操作的 driver program（驱动程序）组成。Spark 提供的主要抽象是一个弹性分布式数据集（RDD），它是可以执行并行操作且跨集群节点的元素的集合。RDD 可以从一个 Hadoop 文件系统（或者任何其它 Hadoop 支持的文件系统），或者一个在 driver program（驱动">
-<meta name="twitter:image" content="https://tangpengcsu.github.io/images/spark-webui-accumulators.png">
+<meta name="twitter:image" content="https://tangpengcsu.github.io/images/spark/spark-webui-accumulators.png">
 
 
 
@@ -714,7 +714,7 @@
 <p>在创建广播变量之后，在集群上执行的所有的函数中，应该使用该广播变量代替原来的 v 值，所以节点上的 v 最多分发一次。另外，对象 v 在广播后不应该再被修改，以保证分发到所有的节点上的广播变量具有同样的值（例如，如果以后该变量会被运到一个新的节点）。</p>
 <h3 id="Accumulators-（累加器）"><a href="#Accumulators-（累加器）" class="headerlink" title="Accumulators （累加器）"></a>Accumulators （累加器）</h3><p>Accumulators（累加器）是一个仅可以执行 “added”（添加）的变量来通过一个关联和交换操作，因此可以高效地执行支持并行。累加器可以用于实现 counter（ 计数，类似在 MapReduce 中那样）或者 sums（求和）。原生 Spark 支持数值型的累加器，并且程序员可以添加新的支持类型。</p>
 <p>创建 accumulators（累加器）并命名之后，在 Spark 的 UI 界面上将会显示它。这样可以帮助理解正在运行的阶段的运行情况（注意 : 该特性在 Python 中还不支持）。</p>
-<p><img src="/images/spark-webui-accumulators.png" alt="accumulators"></p>
+<p><img src="/images/spark/spark-webui-accumulators.png" alt="accumulators"></p>
 <p>可以通过调用 SparkContext.longAccumulator() 或 SparkContext.doubleAccumulator() 方法创建数值类型的 accumulator（累加器）以分别累加 Long 或 Double 类型的值。集群上正在运行的任务就可以使用 add 方法来累计数值。然而，它们不能够读取它的值。只有 driver program（驱动程序）才可以使用 value 方法读取累加器的值。</p>
 <p>下面的代码展示了一个 accumulator（累加器）被用于对一个数字中的元素求和。</p>
 <p><code>Scala</code></p>
@@ -777,8 +777,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/12/24/spark-rdd/" rel="next" title="Spark RDD API详解(一) Map和Reduce">
-                <i class="fa fa-chevron-left"></i> Spark RDD API详解(一) Map和Reduce
+              <a href="/2016/12/24/spark-job-scheduling/" rel="next" title="Spark 作业调度">
+                <i class="fa fa-chevron-left"></i> Spark 作业调度
               </a>
             
           </div>
@@ -787,8 +787,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/12/24/spark-running-on-mesos/" rel="prev" title="Spark on Mesos">
-                Spark on Mesos <i class="fa fa-chevron-right"></i>
+              <a href="/2016/12/24/spark-rdd/" rel="prev" title="Spark RDD API详解(一) Map和Reduce">
+                Spark RDD API详解(一) Map和Reduce <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -887,7 +887,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-count">84</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -896,7 +896,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

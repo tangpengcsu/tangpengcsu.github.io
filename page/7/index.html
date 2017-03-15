@@ -80,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
 
 
 
@@ -302,7 +302,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-standalone-example/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-submitting-applications/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -324,8 +324,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/12/24/spark-standalone-example/" itemprop="url">
-                  Spark Standalone 模式案例
+                <a class="post-title-link" href="/2016/12/24/spark-submitting-applications/" itemprop="url">
+                  Spark 提交应用
                 </a>
               
             
@@ -371,17 +371,6 @@
 
                 
                 
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spark/Examples/" itemprop="url" rel="index">
-                    <span itemprop="name">Examples</span>
-                  </a>
-                </span>
-
-                
-                
               
             </span>
           
@@ -393,8 +382,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/12/24/spark-standalone-example/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-standalone-example/" itemprop="commentCount"></span>
+                <a href="/2016/12/24/spark-submitting-applications/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-submitting-applications/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -421,15 +410,167 @@
 
       
         
-          <h2 id="先决条件："><a href="#先决条件：" class="headerlink" title="先决条件："></a>先决条件：</h2><h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><ul>
-<li>rhel 7.2</li>
-<li>jdk-8u102-linux-x64</li>
-<li>spark-2.0.2-bin-hadoop2.7</li>
-<li>Scala 2.11，注意：2.11.x 版本是不兼容的，见官网：<a href="http://spark.apache.org/docs/latest/">http://spark.apache.org/docs/latest/</a>。</li>
-</ul>
+          <p>在 Spark 的 bin 目录中的 spark-submit 脚本用于在集群上启动应用程序。它可以通过一个统一的接口使用所有 Spark 支持的 Cluster Manager，所以您不需要专门的为每个 <a href="cluster_overview" title="Cluster Manager">Cluster Manager</a> 来配置您的应用程序。</p>
+<hr>
+<h2 id="打包应用依赖"><a href="#打包应用依赖" class="headerlink" title="打包应用依赖"></a>打包应用依赖</h2><p>如果您的代码依赖了其它的项目，为了分发代码到 Spark 集群中您将需要将它们和您的应用程序一起打包。为此，创建一个包含您的代码以及依赖的 assembly jar（或 “uber” jar）。无论是 <a href="https://github.com/sbt/sbt-assembly" title="sbt">sbt</a> 还是 <a href="http://maven.apache.org/plugins/maven-shade-plugin/" title="Maven">Maven</a> 都有 assembly 插件。在创建 assembly jar 时，列出 Spark 和 Hadoop 提供的依赖。它们不需要被打包，因为在运行时它们已经被 Cluster Manager 提供了。如果您有一个 assembled jar 您就可以调用 bin/spark-submit 脚本（如下所示）来传递您的 jar。</p>
+<p>对于 Python 来说，您可以使用 spark-submit 的 –py-files 参数来添加 .py，.zip 和 .egg 文件以与您的应用程序一起分发。如果您依赖了多个 Python 文件我们推荐将它们打包成一个 .zip 或者 .egg 文件。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/12/24/spark-standalone-example/#more" rel="contents">
+            <a class="btn" href="/2016/12/24/spark-submitting-applications/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-standalone/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/12/24/spark-standalone/" itemprop="url">
+                  Spark Standalone 模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-24T18:39:04+08:00">
+                2016-12-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spark/" itemprop="url" rel="index">
+                    <span itemprop="name">Spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/12/24/spark-standalone/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-standalone/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>Spark 不仅可以运行在 Mesos 或者 Yarn 上，而且还提供独立部署模式。可以手动启动一个 master 和 多个 worker，或选用我们提供的 <a href="http://spark.apache.org/docs/latest/spark-standalone.html#cluster-launch-scripts" title="启动脚本">脚本</a> 来启动 standalone 集群。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/12/24/spark-standalone/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -969,162 +1110,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-syntax/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="IAN">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="北冥有鱼">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/28/linux-syntax/" itemprop="url">
-                  Linux 基础之语法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-28T18:39:04+08:00">
-                2016-10-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2016/10/28/linux-syntax/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-syntax/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>本文开始正式介绍 shell 脚本的编写方法以及 bash 的语法。</p>
-<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p><code>元字符</code> 用来分隔词 (token) 的单个字符，包括：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">| &amp; ; () &lt;&gt; space tab</div></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-syntax/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1174,7 +1159,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-count">84</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1183,7 +1168,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

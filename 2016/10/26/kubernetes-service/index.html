@@ -80,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
 
 
 
@@ -93,12 +93,12 @@
 <meta property="og:url" content="https://tangpengcsu.github.io/2016/10/26/kubernetes-service/index.html">
 <meta property="og:site_name" content="北冥有鱼">
 <meta property="og:description" content="概述Kubernetes　Pod 是平凡的，它门会被创建，也会死掉（生老病死），并且他们是不可复活的。 ReplicationControllers 动态的创建和销毁 Pods(比如规模扩大或者缩小，或者执行动态更新)。每个 pod 都由自己的 ip，这些 IP 也随着时间的变化也不能持续依赖。这样就引发了一个问题：如果一些 Pods（让我们叫它作后台，后端）提供了一些功能供其它的 Pod 使用（">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/service_1.jpg">
-<meta property="og:updated_time" content="2017-03-14T05:18:25.100Z">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/kubernetes/service_1.jpg">
+<meta property="og:updated_time" content="2017-03-15T04:06:49.737Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Service">
 <meta name="twitter:description" content="概述Kubernetes　Pod 是平凡的，它门会被创建，也会死掉（生老病死），并且他们是不可复活的。 ReplicationControllers 动态的创建和销毁 Pods(比如规模扩大或者缩小，或者执行动态更新)。每个 pod 都由自己的 ip，这些 IP 也随着时间的变化也不能持续依赖。这样就引发了一个问题：如果一些 Pods（让我们叫它作后台，后端）提供了一些功能供其它的 Pod 使用（">
-<meta name="twitter:image" content="https://tangpengcsu.github.io/images/service_1.jpg">
+<meta name="twitter:image" content="https://tangpengcsu.github.io/images/kubernetes/service_1.jpg">
 
 
 
@@ -439,7 +439,7 @@
 <p>这样的话，这个服务虽然没有 selector，但是却可以正常工作，所有的请求都会被转发到 1.2.3.4:80</p>
 <h2 id="Virtual-IPs-and-service-proxies（虚拟-IP-和服务代理）"><a href="#Virtual-IPs-and-service-proxies（虚拟-IP-和服务代理）" class="headerlink" title="Virtual IPs and service proxies（虚拟 IP 和服务代理）"></a>Virtual IPs and service proxies（虚拟 IP 和服务代理）</h2><p>每一个节点上都运行了一个 kube-proxy，这个应用监控着 Kubermaster 增加和删除服务，对于每一个服务，kube-proxy 会随机开启一个本机端口，任何发向这个端口的请求都会被转发到一个后台的 Pod 当中，而如何选择是哪一个后台的 pod 的是基于 SessionAffinity 进行的分配。kube-proxy 会增加 iptables rules 来实现捕捉这个服务的 Ip 和端口来并重定向到前面提到的端口。</p>
 <p>最终的结果就是所有的对于这个服务的请求都会被转发到后台的 Pod 中，这一过程用户根本察觉不到。</p>
-<p><img src="/images/service_1.jpg" alt="虚拟 IP 和服务代理" title="虚拟 IP 和服务代理"></p>
+<p><img src="/images/kubernetes/service_1.jpg" alt="虚拟 IP 和服务代理" title="虚拟 IP 和服务代理"></p>
 <p>默认的，后台的选择是随机的，基于用户 session 机制的策略可以通过修改 service.spec.sessionAffinity 的值从 NONE 到 ClientIP。</p>
 <h3 id="Multi-Port-Services（多端口服务）"><a href="#Multi-Port-Services（多端口服务）" class="headerlink" title="Multi-Port Services（多端口服务）"></a>Multi-Port Services（多端口服务）</h3><p>可能很多服务需要开发不止一个端口, 为了满足这样的情况，Kubernetes 允许在定义时候指定多个端口，当我们使用多个端口的时候，我们需要指定所有端口的名称，这样 endpoints 才能清楚，例如：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line"><span class="attr">"kind"</span>: <span class="string">"Service"</span>,</div><div class="line"><span class="attr">"apiVersion"</span>: <span class="string">"v1"</span>,</div><div class="line"><span class="attr">"metadata"</span>: &#123;</div><div class="line"><span class="attr">"name"</span>: <span class="string">"my-service"</span></div><div class="line">&#125;,</div><div class="line"><span class="attr">"spec"</span>: &#123;</div><div class="line"><span class="attr">"selector"</span>: &#123;</div><div class="line"><span class="attr">"app"</span>: <span class="string">"MyApp"</span></div><div class="line">&#125;,</div><div class="line"><span class="attr">"ports"</span>: [</div><div class="line">&#123;</div><div class="line"><span class="attr">"name"</span>: <span class="string">"http"</span>,</div><div class="line"><span class="attr">"protocol"</span>: <span class="string">"TCP"</span>,</div><div class="line"><span class="attr">"port"</span>: <span class="number">80</span>,</div><div class="line"><span class="attr">"targetPort"</span>: <span class="number">9376</span></div><div class="line">&#125;,</div><div class="line">&#123;</div><div class="line"><span class="attr">"name"</span>: <span class="string">"https"</span>,</div><div class="line"><span class="attr">"protocol"</span>: <span class="string">"TCP"</span>,</div><div class="line"><span class="attr">"port"</span>: <span class="number">443</span>,</div><div class="line"><span class="attr">"targetPort"</span>: <span class="number">9377</span></div><div class="line">&#125;</div><div class="line">]</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -524,8 +524,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/10/26/kubernetes-secrets/" rel="next" title="Secrets">
-                <i class="fa fa-chevron-left"></i> Secrets
+              <a href="/2016/10/26/kuberntes-ha/" rel="next" title="构建 High-Availability 集群">
+                <i class="fa fa-chevron-left"></i> 构建 High-Availability 集群
               </a>
             
           </div>
@@ -634,7 +634,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-count">84</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -643,7 +643,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

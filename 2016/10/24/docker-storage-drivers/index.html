@@ -80,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
 
 
 
@@ -99,24 +99,24 @@ images，container，storage driver
 images，container，storage driver
 
 镜像与层（Images and Layers）以 ubuntu15.04 为例，由四个镜像层堆叠而成，而且每层都是只读的。存储驱动负责堆叠这些镜像层并提供统一视口（The Docker storage driver is responsible for stacking these layers and pro">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/storage_1.jpg">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/storage_2.jpg">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/storage_3.jpg">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/storage_4.jpg">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/storage_5.jpg">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/storage_6.jpg">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/storage_7.jpg">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/storage_8.jpg">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/storage_9.jpg">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/storage_10.jpg">
-<meta property="og:updated_time" content="2017-03-14T05:17:36.802Z">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/docker/storage_1.jpg">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/docker/storage_2.jpg">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/docker/storage_3.jpg">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/docker/storage_4.jpg">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/docker/storage_5.jpg">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/docker/storage_6.jpg">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/docker/storage_7.jpg">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/docker/storage_8.jpg">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/docker/storage_9.jpg">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/docker/storage_10.jpg">
+<meta property="og:updated_time" content="2017-03-15T03:37:01.825Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="存储驱动">
 <meta name="twitter:description" content="镜像，容器与存储驱动
 images，container，storage driver
 
 镜像与层（Images and Layers）以 ubuntu15.04 为例，由四个镜像层堆叠而成，而且每层都是只读的。存储驱动负责堆叠这些镜像层并提供统一视口（The Docker storage driver is responsible for stacking these layers and pro">
-<meta name="twitter:image" content="https://tangpengcsu.github.io/images/storage_1.jpg">
+<meta name="twitter:image" content="https://tangpengcsu.github.io/images/docker/storage_1.jpg">
 
 
 
@@ -434,13 +434,13 @@ images，container，storage driver
 <p>images，container，storage driver</p>
 </blockquote>
 <h3 id="镜像与层（Images-and-Layers）"><a href="#镜像与层（Images-and-Layers）" class="headerlink" title="镜像与层（Images and Layers）"></a>镜像与层（Images and Layers）</h3><p>以 ubuntu15.04 为例，由四个镜像层堆叠而成，而且每层都是只读的。存储驱动负责堆叠这些镜像层并提供统一视口（The Docker storage driver is responsible for stacking these layers and providing a single unified view.）</p>
-<p><img src="/images/storage_1.jpg" alt="storage_1"></p>
+<p><img src="/images/docker/storage_1.jpg" alt="storage_1"></p>
 <p>如下图所示，当创建一个容器时，会在原有的 layer 上添加一个新的，稀疏的，可读写的 “容器层”，在容器上进行的所有读，写，删除文件的指令都会在容器层完成</p>
-<p><img src="/images/storage_2.jpg" alt="storage_2"></p>
+<p><img src="/images/docker/storage_2.jpg" alt="storage_2"></p>
 <a id="more"></a>
 <h3 id="容器与层（container-and-layer）"><a href="#容器与层（container-and-layer）" class="headerlink" title="容器与层（container and layer）"></a>容器与层（container and layer）</h3><p>容器和镜像最大的不同就在于顶层可读写的容器层。所有在容器层进行的读写操作，在容器被删除后，数据将会删除，而底层的镜像层保持不变</p>
 <p>如下图所示，用同一个 ubuntu15.04 镜像，启动多个 ubuntu15.04 容器，每个容器都有负责各自读写操作的 “容器层”，而底层的镜像层是容器间共享的。</p>
-<p><img src="/images/storage_3.jpg" alt="storage_3"></p>
+<p><img src="/images/docker/storage_3.jpg" alt="storage_3"></p>
 <p>Docker 模型的核心部分是有效利用分层镜像机制，镜像可以通过分层来进行继承，基于基础镜像（没有父镜像），可以制作各种具体的应用镜像。Docker 1.10 引入新的可寻址存储模型，使用安全内容哈希代替随机的 UUID 管理镜像。同时，Docker 提供了迁移工具，将已经存在的镜像迁移到新模型上。不同 Docker 容器就可以共享一些基础的文件系统层，同时再加上自己独有的可读写层，大大提高了存储的效率。其中主要的机制就是分层模型和将不同目录挂载到同一个虚拟文件系统。</p>
 <p>存储驱动器之所以能负责管理容器层和镜像层，主要依靠镜像分层机制和写时拷贝拷贝技术（stackable image layers and copy-on-write (CoW)）</p>
 <h3 id="数据卷与存储驱动（Data-volumes-and-the-storage-driver）"><a href="#数据卷与存储驱动（Data-volumes-and-the-storage-driver）" class="headerlink" title="数据卷与存储驱动（Data volumes and the storage driver）"></a>数据卷与存储驱动（Data volumes and the storage driver）</h3><p>当容器被删除时，除了数据卷的数据，其他容器层数据都将被删除。</p>
@@ -450,7 +450,7 @@ images，container，storage driver
 <li>数据卷不由存储驱动器管理，对数据卷的读写等操作绕过了存储驱动器。</li>
 <li>多个容器可以共享一个或多个数据卷。</li>
 </ul>
-<p><img src="/images/storage_4.jpg" alt="storage_4"></p>
+<p><img src="/images/docker/storage_4.jpg" alt="storage_4"></p>
 <p>由上图可以看出，数据卷是属于 Docker  宿主机的本地存储空间内的，进一步加强了数据卷的独立，摆脱存储驱动器控制。当容器被删除时，数据卷中所有数据都将继续保留在 Docker  宿主机中。</p>
 <h2 id="存储选型"><a href="#存储选型" class="headerlink" title="存储选型"></a>存储选型</h2><h3 id="可插入的存储驱动架构"><a href="#可插入的存储驱动架构" class="headerlink" title="可插入的存储驱动架构"></a>可插入的存储驱动架构</h3><p>Docker 提供一个可插入的的存储器架构，使之能根据用户需求灵活的选择存储驱动器。Docker 存储器是基于 Linux 文件系统或卷的。此外，每种存储驱动器可以自由地以其独特的方式镜像像层和容器层的管理。</p>
 <table>
@@ -546,7 +546,7 @@ images，container，storage driver
 <li>存储驱动是不断改善和进化发展的。</li>
 </ol>
 <h3 id="AUFS"><a href="#AUFS" class="headerlink" title="AUFS"></a>AUFS</h3><p>AUFS（AnotherUnionFS）是一种 Union FS，是文件级的存储驱动。所谓 UnionFS 就是把不同物理位置的目录合并 mount 到同一个目录中。简单来说就是支持将不同目录挂载到同一个虚拟文件系统下的文件系统。这种文件系统可以一层一层地叠加修改文件。无论底下有多少层都是只读的，只有最上层的文件系统是可写的。当需要修改一个文件时，AUFS 创建该文件的一个副本，使用 CoW 将文件从只读层复制到可写层进行修改，结果也保存在可写层。在 Docker 中，底下的只读层就是 image，可写层就是 Container。结构如下图所示：</p>
-<p><img src="/images/storage_5.jpg" alt="storage_5"></p>
+<p><img src="/images/docker/storage_5.jpg" alt="storage_5"></p>
 <blockquote>
 <p>layerID 和 docker 宿主机中的目录并不是一致的。</p>
 </blockquote>
@@ -589,9 +589,9 @@ images，container，storage driver
 <li>在 Snapshot 上可以创建一个逻辑卷，这个逻辑卷在实际写操作（ COW，Snapshot 写操作）发生之前是不占用磁盘空间的。</li>
 </ol>
 <p>相比 AUFS 和 OverlayFS 是文件级存储，Device mapper 是块级存储，所有的操作都是直接对块进行操作，而不是文件。 Device mapper 驱动会先在块设备上创建一个资源池，然后在资源池上创建一个带有文件系统的基本设备，所有镜像都是这个基本设备的快照，而容器则是镜像的快照 。所以在容器里看到文件系统是资源池上基本设备的文件系统的快照，并没有为容器分配空间。当要写入一个新文件时，在容器的镜像内为其分配新的块并写入数据，这个叫用时分配。当要修改已有文件时，再使用 CoW 为容器快照分配块空间，将要修改的数据复制到在容器快照中新的块里再进行修改。Device mapper 驱动默认会创建一个 100G 的文件包含镜像和容器。每一个容器被限制在 10G 大小的卷内，可以自己配置调整。结构如下图所示：</p>
-<p><img src="/images/storage_6.jpg" alt="storage_6"></p>
+<p><img src="/images/docker/storage_6.jpg" alt="storage_6"></p>
 <p>可以通过”docker info” 或通过 dmsetup ls 获取想要的更多信息。查看 Docker 的 Device mapper 的信息：</p>
-<p><img src="/images/storage_7.jpg" alt="storage_7"></p>
+<p><img src="/images/docker/storage_7.jpg" alt="storage_7"></p>
 <h4 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h4><ol>
 <li>Device mapper 文件系统兼容性比较好，并且存储为一个文件，减少了 inode 消耗。</li>
 <li>每次一个容器写数据都是一个新块，块必须从池中分配，真正写的时候是稀松文件, 虽然它的利用率很高，但性能不好，因为额外增加了 VFS 开销。</li>
@@ -599,7 +599,7 @@ images，container，storage driver
 <li>Docker 的 Device mapper 默认模式是 loop-lvm ，性能达不到生产要求。在生产环境推荐 direct-lvm 模式直接写原块设备，性能好。</li>
 </ol>
 <h3 id="OverlayFS"><a href="#OverlayFS" class="headerlink" title="OverlayFS"></a>OverlayFS</h3><p>Overlay 是 Linux 内核 3.18 后支持的，也是一种 Union FS，和 AUFS 的多层不同的是 Overlay 只有两层：一个 Upper 文件系统和一个 Lower 文件系统，分别代表 Docker 的镜像层和容器层。当需要修改一个文件时，使用 CoW 将文件从只读的 Lower 复制到可写的 Upper 进行修改，结果也保存在 Upper 层。在 Docker 中，底下的只读层就是 image，可写层就是 Container。结构如下图所示：</p>
-<p><img src="/images/storage_8.jpg" alt="storage_8"></p>
+<p><img src="/images/docker/storage_8.jpg" alt="storage_8"></p>
 <h4 id="分析-2"><a href="#分析-2" class="headerlink" title="分析"></a>分析</h4><ol>
 <li>从 kernel 3.18 进入主流 Linux 内核。设计简单，速度快，比 AUFS 和 Device mapper 速度快。在某些情况下，也比 Btrfs 速度快。是 Docker 存储方式选择的未来。因为 OverlayFS 只有两层，不是多层，所以 OverlayFS “copy-up” 操作快于 AUFS。以此可以减少操作延时。</li>
 <li>OverlayFS 支持页缓存共享，多个容器访问同一个文件能共享一个页缓存，以此提高内存使用。</li>
@@ -608,7 +608,7 @@ images，container，storage driver
 <li>不支持 rename 系统调用，执行 “copy” 和”unlink”时，将导致失败。</li>
 </ol>
 <h3 id="Btrfs"><a href="#Btrfs" class="headerlink" title="Btrfs"></a>Btrfs</h3><p>Btrfs 被称为下一代写时复制文件系统，并入 Linux 内核，也是文件级级存储，但可以像 Device mapper 一直接操作底层设备。Btrfs 利用  Subvolumes 和 Snapshots 管理镜像容器分层。Btrfs 把文件系统的一部分配置为一个完整的子文件系统，称之为 Subvolume，Snapshot 是 Subvolumn 的实时读写拷贝，chunk 是分配单位，通常是 1GB。那么采用  Subvolume，一个大的文件系统可以被划分为多个子文件系统，这些子文件系统共享底层的设备空间，在需要磁盘空间时便从底层设备中分配，类似应用程序调用  malloc() 分配内存一样。 为了灵活利用设备空间，Btrfs 将磁盘空间划分为多个 chunk 。每个 chunk 可以使用不同的磁盘空间分配策略。比如某些 chunk 只存放 metadata，某些 chunk 只存放数据。这种模型有很多优点，比如 Btrfs 支持动态添加设备。用户在系统中增加新的磁盘之后，可以使用 Btrfs 的命令将该设备添加到文件系统中。Btrfs 把一个大的文件系统当成一个资源池，配置成多个完整的子文件系统，还可以往资源池里加新的子文件系统，而基础镜像则是子文件系统的快照，每个子镜像和容器都有自己的快照，这些快照则都是 subvolume 的快照。</p>
-<p><img src="/images/storage_9.jpg" alt="storage_9"></p>
+<p><img src="/images/docker/storage_9.jpg" alt="storage_9"></p>
 <h4 id="分析-3"><a href="#分析-3" class="headerlink" title="分析"></a>分析</h4><ol>
 <li>Btrfs 是替换 Device mapper 的下一代文件系统， 很多功能还在开发阶段，还没有发布正式版本，相比 EXT4 或其它更成熟的文件系统，它在技术方面的优势包括丰富的特征，如：支持子卷、快照、文件系统内置压缩和内置 RAID 支持等。</li>
 <li>不支持页缓存共享，N 个容器访问相同的文件需要缓存 N 次。不适合高密度容器场景。</li>
@@ -618,7 +618,7 @@ images，container，storage driver
 </ol>
 <h3 id="ZFS"><a href="#ZFS" class="headerlink" title="ZFS"></a>ZFS</h3><p>ZFS 文件系统是一个革命性的全新的文件系统，它从根本上改变了文件系统的管理方式，ZFS 完全抛弃了 “卷管理”，不再创建虚拟的卷，而是把所有设备集中到一个存储池中来进行管理，用”存储池” 的概念来管理物理存储空间。过去，文件系统都是构建在物理设备之上的。为了管理这些物理设备，并为数据提供冗余，”卷管理”的概念提供了一个单设备的映像。而 ZFS 创建在虚拟的，被称为 “zpools” 的存储池之上。每个存储池由若干虚拟设备（virtual devices，vdevs）组成。这些虚拟设备可以是原始磁盘，也可能是一个 RAID1 镜像设备，或是非标准 RAID 等级的多磁盘组。于是 zpool 上的文件系统可以使用这些虚拟设备的总存储容量。Docker 的 ZFS 利用 snapshots 和 clones，它们是 ZFS 的实时拷贝，snapshots 是只读的，clones 是读写的，clones 从 snapshot 创建。</p>
 <p>下面看一下在 Docker 里 ZFS 的使用。首先从 zpool 里分配一个 ZFS 文件系统给镜像的基础层，而其他镜像层则是这个 ZFS 文件系统快照的克隆，快照是只读的，而克隆是可写的，当容器启动时则在镜像的最顶层生成一个可写层。如下图所示：</p>
-<p><img src="/images/storage_10.jpg" alt="storage_10"></p>
+<p><img src="/images/docker/storage_10.jpg" alt="storage_10"></p>
 <h4 id="分析-4"><a href="#分析-4" class="headerlink" title="分析"></a>分析</h4><ol>
 <li>ZFS 同 Btrfs 类似是下一代文件系统。ZFS 在 Linux(ZoL)port 是成熟的，但不推荐在生产环境上使用 Docker 的 ZFS 存储方式，除非你有 ZFS 文件系统的经验。</li>
 <li>警惕 ZFS 内存问题，因为，ZFS 最初是为了有大量内存的 Sun Solaris 服务器而设计 。</li>
@@ -773,7 +773,7 @@ images，container，storage driver
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-count">84</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -782,7 +782,7 @@ images，container，storage driver
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

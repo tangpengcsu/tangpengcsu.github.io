@@ -80,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
 
 
 
@@ -93,16 +93,16 @@
 <meta property="og:url" content="https://tangpengcsu.github.io/2016/12/24/spark-streaming-programming-guide/index.html">
 <meta property="og:site_name" content="北冥有鱼">
 <meta property="og:description" content="Spark Streaming 概述Spark Streaming 是 Spark 核心 API 的扩展，它支持弹性的，高吞吐的，容错的实时数据流的处理。数据可以通过多种数据源获取，例如 Kafka，Flume，Kinesis 以及 TCP sockets，也可以通过高阶函数例如 map，reduce，join，window 等组成的复杂算法处理。最终，处理后的数据可以输出到文件系统，数据库以及实">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/streaming-arch.png">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/streaming-flow.png">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/streaming-dstream.png">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/streaming-dstream-ops.png">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/streaming-dstream-window.png">
-<meta property="og:updated_time" content="2017-03-14T05:20:22.303Z">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/spark/streaming-arch.png">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/spark/streaming-flow.png">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/spark/streaming-dstream.png">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/spark/streaming-dstream-ops.png">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/spark/streaming-dstream-window.png">
+<meta property="og:updated_time" content="2017-03-15T04:07:37.288Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spark Streaming">
 <meta name="twitter:description" content="Spark Streaming 概述Spark Streaming 是 Spark 核心 API 的扩展，它支持弹性的，高吞吐的，容错的实时数据流的处理。数据可以通过多种数据源获取，例如 Kafka，Flume，Kinesis 以及 TCP sockets，也可以通过高阶函数例如 map，reduce，join，window 等组成的复杂算法处理。最终，处理后的数据可以输出到文件系统，数据库以及实">
-<meta name="twitter:image" content="https://tangpengcsu.github.io/images/streaming-arch.png">
+<meta name="twitter:image" content="https://tangpengcsu.github.io/images/spark/streaming-arch.png">
 
 
 
@@ -418,9 +418,9 @@
       
         <h2 id="Spark-Streaming-概述"><a href="#Spark-Streaming-概述" class="headerlink" title="Spark Streaming 概述"></a>Spark Streaming 概述</h2><p>Spark Streaming 是 Spark 核心 API 的扩展，它支持弹性的，高吞吐的，容错的实时数据流的处理。数据可以通过多种数据源获取，例如 Kafka，Flume，Kinesis 以及 TCP sockets，也可以通过高阶函数例如 map，reduce，join，window 等组成的复杂算法处理。最终，处理后的数据可以输出到文件系统，数据库以及实时仪表盘中。事实上，你还可以在数据流上使用 Spark <a href="http://spark.apache.org/docs/latest/ml-guide.html" title="http://spark.apache.org/docs/latest/ml-guide.html" target="_blank" rel="external">机器学习</a> 以及 <a href="http://spark.apache.org/docs/latest/graphx-programming-guide.html" title="http://spark.apache.org/docs/latest/graphx-programming-guide.html" target="_blank" rel="external">图形处理</a> 算法 。</p>
 <a id="more"></a>
-<p><img src="/images/streaming-arch.png" alt="streaming-arch" title="streaming-arch"></p>
+<p><img src="/images/spark/streaming-arch.png" alt="streaming-arch" title="streaming-arch"></p>
 <p>在内部，它工作原理如下，Spark Streaming 接收实时输入数据流并将数据切分成多个批数据，然后交由 Spark 引擎处理并分批的生成结果数据流。</p>
-<p><img src="/images/streaming-flow.png" alt="streaming-flow" title="streaming-flow"></p>
+<p><img src="/images/spark/streaming-flow.png" alt="streaming-flow" title="streaming-flow"></p>
 <p>Spark Streaming 提供了一个高层次的抽象叫做离散流 (discretized stream) 或者 DStream，它代表一个连续的数据流。DStream 可以通过来自数据源的输入数据流创建，例如 Kafka，Flume 以及 Kinesis，或者在其他 DStream 上进行高层次的操作创建。在内部，一个 DStream 是通过一个 <a href="http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.rdd.RDD" title="http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.rdd.RDD" target="_blank" rel="external">RDDs</a> 的序列来表示。</p>
 <p>本指南告诉你如何使用 DStream 来编写一个 Spark Streaming 程序。你可以使用 Scala，Java 或者 Python (Spark 1.2 版本后引进) 来编写程序。</p>
 <hr>
@@ -507,9 +507,9 @@
 <li>一个 SparkContext 可以被重新用于创建多个 StreamingContexts，只要是当前的 StreamingContext 被停止（不停止 SparkContext）之前创建下一个 StreamingContext 就可以。</li>
 </ol>
 <h3 id="Discretized-Streams-DStreams-（离散化流）"><a href="#Discretized-Streams-DStreams-（离散化流）" class="headerlink" title="Discretized Streams (DStreams)（离散化流）"></a>Discretized Streams (DStreams)（离散化流）</h3><p><strong>离散化流</strong> 或者 <strong>离散流</strong> 是 Spark Streaming 提供的基本抽象。它代表了一个连续的数据流，无论是从源接收到的输入数据流，还是通过变换输入流所产生的处理过的数据流。在内部，一个离散流（DStream）被表示为一系列连续的 RDDs，RDD 是 Spark 的一个不可改变的，分布式的数据集的抽象（查看 <a href="/2016/12/24/spark-programming-guides/#rdds" title="/2016/12/24/spark-programming-guides/#rdds">Spark 编程指南</a> 了解更多）。在一个 DStream 中的每个 RDD 包含来自一定的时间间隔的数据，如下图所示。</p>
-<p><img src="/images/streaming-dstream.png" alt="streaming-dstream" title="streaming-dstream"></p>
+<p><img src="/images/spark/streaming-dstream.png" alt="streaming-dstream" title="streaming-dstream"></p>
 <p>应用于 DStream 的任何操作转化为对于底层的 RDDs 的操作。例如，在 <a href="/2016/12/24/spark-streaming-programming-guide/#section" title="/2016/12/24/spark-streaming-programming-guide/#section">之前的例子</a>，转换一个行（lines）流成为单词（words）中，flatMap 操作被应用于在行离散流（lines DStream）中的每个 RDD 来生成单词离散流（words DStream）的 RDDs 。如下图所示。</p>
-<p><img src="/images/streaming-dstream-ops.png" alt="streaming-dstream-ops" title="streaming-dstream-ops"></p>
+<p><img src="/images/spark/streaming-dstream-ops.png" alt="streaming-dstream-ops" title="streaming-dstream-ops"></p>
 <p>这些底层的 RDD 变换由 Spark 引擎（engine）计算。 DStream 操作隐藏了大多数这些细节并为了方便起见，提供给了开发者一个更高级别的 API 。这些操作细节会在后边的章节中讨论。</p>
 <h3 id="输入-DStreams-以及接收"><a href="#输入-DStreams-以及接收" class="headerlink" title="输入 DStreams 以及接收"></a>输入 DStreams 以及接收</h3><p>输入 DStreams 是代表输入数据是从流的源数据（streaming sources）接收到的流的 DStream 。<a href="/2016/12/24/spark-streaming-programming-guide/#section" title="/2016/12/24/spark-streaming-programming-guide/#section">在快速简单的例子</a> 中，行（lines）是一个输入 DStream，因为它代表着从 netcat 服务器接收到的数据的流。每个输入离散流（input DStream）（除了文件流（file stream），在后面的章节进行讨论）都会与一个接收器（<a href="http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.streaming.receiver.Receiver" title="http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.streaming.receiver.Receiver" target="_blank" rel="external">Scala doc</a>，<a href="http://spark.apache.org/docs/latest/api/java/org/apache/spark/streaming/receiver/Receiver.html" title="http://spark.apache.org/docs/latest/api/java/org/apache/spark/streaming/receiver/Receiver.html" target="_blank" rel="external">Java doc</a>）对象联系，这个接收器对象从一个源头接收数据并且存储到 Sparks 的内存中用于处理。</p>
 <p>Spark Streaming 提供了两种内置的流来源（streaming source）。</p>
@@ -647,7 +647,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">spamInfoRDD = sc.pickleFile(...) <span class="comment"># RDD containing spam information</span></div><div class="line"></div><div class="line"><span class="comment"># join data stream with spam information to do data cleaning</span></div><div class="line">cleanedDStream = wordCounts.transform(<span class="keyword">lambda</span> rdd: rdd.join(spamInfoRDD).filter(...))</div></pre></td></tr></table></figure>
 <p>请注意， 每批间隔提供的函数被调用。 这允许你做 时变抽样操作， 即抽样操作， 数量的分区， 广播变量， 批次之间等可以改变。</p>
 <h4 id="窗口-window-操作"><a href="#窗口-window-操作" class="headerlink" title="窗口 (window) 操作"></a>窗口 (window) 操作</h4><p>Spark Streaming 也支持窗口计算，它允许你在一个滑动窗口数据上应用 transformation 算子。下图阐明了这个滑动窗口</p>
-<p><img src="/images/streaming-dstream-window.png" alt="streaming-dstream-window" title="streaming-dstream-window"></p>
+<p><img src="/images/spark/streaming-dstream-window.png" alt="streaming-dstream-window" title="streaming-dstream-window"></p>
 <p>如上图显示，窗口在源 DStream 上滑动，合并和操作落入窗内的源 RDDs，产生窗口化的 DStream 的 RDDs。在这个具体的例子中，程序在三个时间单元的数据上进行窗口操作，并且每两个时间单元滑动一次。 这说明，任何一个窗口操作都需要指定两个参数：</p>
 <ul>
 <li>窗口长度：窗口的持续时间</li>
@@ -1032,8 +1032,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/12/24/spark-tuning/" rel="next" title="Spark 优化指南">
-                <i class="fa fa-chevron-left"></i> Spark 优化指南
+              <a href="/2016/12/24/spark-monitoring/" rel="next" title="Spark 监控">
+                <i class="fa fa-chevron-left"></i> Spark 监控
               </a>
             
           </div>
@@ -1042,8 +1042,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/12/24/spark-sql-programming-guide/" rel="prev" title="Spark SQL">
-                Spark SQL <i class="fa fa-chevron-right"></i>
+              <a href="/2016/12/24/spark-hardware-provisioning/" rel="prev" title="Spark 硬件配置">
+                Spark 硬件配置 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -1142,7 +1142,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-count">84</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1151,7 +1151,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

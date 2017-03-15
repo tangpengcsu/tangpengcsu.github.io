@@ -80,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
 
 
 
@@ -292,6 +292,250 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2017/03/15/scala-collection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/03/15/scala-collection/" itemprop="url">
+                  scala 集合操作
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-15T09:53:45+08:00">
+                2017-03-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/scala-集合/" itemprop="url" rel="index">
+                    <span itemprop="name">scala 集合</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/03/15/scala-collection/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/15/scala-collection/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="常用操作符"><a href="#常用操作符" class="headerlink" title="常用操作符"></a>常用操作符</h2><ul>
+<li>++ ++[B](that: GenTraversableOnce[B]): List[B] 从列表的尾部添加另外一个列表</li>
+<li>++: ++:[B &gt;: A, That](that: collection.Traversable[B])(implicit bf: CanBuildFrom[List[A], B, That]): That 在列表的头部添加一个列表</li>
+<li>+: +:(elem: A): List[A] 在列表的头部添加一个元素</li>
+<li>:+ :+(elem: A): List[A] 在列表的尾部添加一个元素</li>
+<li>:: ::(x: A): List[A] 在列表的头部添加一个元素</li>
+<li>::: :::(prefix: List[A]): List[A] 在列表的头部添加另外一个列表</li>
+<li>:\ :[B](z: B)(op: (A, B) ⇒ B): B 与foldRight等价</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> left = <span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</div><div class="line"><span class="keyword">val</span> right = <span class="type">List</span>(<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>)</div><div class="line"></div><div class="line"><span class="comment">//以下操作等价</span></div><div class="line">left ++ right   <span class="comment">// List(1,2,3,4,5,6)</span></div><div class="line">left ++: right  <span class="comment">// List(1,2,3,4,5,6)</span></div><div class="line">right.++:(left)    <span class="comment">// List(1,2,3,4,5,6)</span></div><div class="line">right.:::(left)  <span class="comment">// List(1,2,3,4,5,6)</span></div><div class="line"></div><div class="line"><span class="comment">//以下操作等价</span></div><div class="line"><span class="number">0</span> +: left    <span class="comment">//List(0,1,2,3)</span></div><div class="line">left.+:(<span class="number">0</span>)   <span class="comment">//List(0,1,2,3)</span></div><div class="line"></div><div class="line"><span class="comment">//以下操作等价</span></div><div class="line">left :+ <span class="number">4</span>    <span class="comment">//List(1,2,3,4)</span></div><div class="line">left.:+(<span class="number">4</span>)   <span class="comment">//List(1,2,3,4)</span></div><div class="line"></div><div class="line"><span class="comment">//以下操作等价</span></div><div class="line"><span class="number">0</span> :: left      <span class="comment">//List(0,1,2,3)</span></div><div class="line">left.::(<span class="number">0</span>)     <span class="comment">//List(0,1,2,3)</span></div></pre></td></tr></table></figure>
+<p>看到这里大家应该跟我一样有一点晕吧，怎么这么多奇怪的操作符，这里给大家一个提示，任何以冒号结果的操作符，都是右绑定的，即 0 :: List(1,2,3) = List(1,2,3).::(0) = List(0,1,2,3) 从这里可以看出操作 :: 其实是右边 List 的操作符，而非左边 Int 类型的操作符</p>
+<h2 id="常用变换操作"><a href="#常用变换操作" class="headerlink" title="常用变换操作"></a>常用变换操作</h2><h3 id="map"><a href="#map" class="headerlink" title="map"></a>map</h3><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">map[<span class="type">B</span>](f: (<span class="type">A</span>) ⇒ <span class="type">B</span>): <span class="type">List</span>[<span class="type">B</span>]</div></pre></td></tr></table></figure>
+<p>定义一个变换，把该变换应用到列表的每个元素中，原列表不变，返回一个新的列表数据</p>
+<p>Example1 平方变换</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</div><div class="line"><span class="keyword">val</span> square = (x: <span class="type">Int</span>) =&gt; x*x   </div><div class="line"><span class="keyword">val</span> squareNums1 = nums.map(num =&gt; num*num)    <span class="comment">//List(1,4,9)</span></div><div class="line"><span class="keyword">val</span> squareNums2 = nums.map(math.pow(_,<span class="number">2</span>))    <span class="comment">//List(1,4,9)</span></div><div class="line"><span class="keyword">val</span> squareNums3 = nums.map(square)            <span class="comment">//List(1,4,9)</span></div></pre></td></tr></table></figure>
+<p>Example2 保存文本数据中的某几列</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> text = <span class="type">List</span>(<span class="string">"Homeway,25,Male"</span>,<span class="string">"XSDYM,23,Female"</span>)</div><div class="line"><span class="keyword">val</span> usersList = text.map(_.split(<span class="string">","</span>)(<span class="number">0</span>))    </div><div class="line"><span class="keyword">val</span> usersWithAgeList = text.map(line =&gt; &#123;</div><div class="line">    <span class="keyword">val</span> fields = line.split(<span class="string">","</span>)</div><div class="line">    <span class="keyword">val</span> user = fields(<span class="number">0</span>)</div><div class="line">    <span class="keyword">val</span> age = fields(<span class="number">1</span>).toInt</div><div class="line">    (user,age)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h3 id="flatMap-flatten"><a href="#flatMap-flatten" class="headerlink" title="flatMap, flatten"></a>flatMap, flatten</h3><p>flatten: flatten[B]: List[B] 对列表的列表进行平坦化操作 flatMap: flatMap[B](f: (A) ⇒ GenTraversableOnce[B]): List[B] map 之后对结果进行 flatten</p>
+<p>定义一个变换 f，把 f 应用列表的每个元素中，每个 f 返回一个列表，最终把所有列表连结起来。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> text = <span class="type">List</span>(<span class="string">"A,B,C"</span>,<span class="string">"D,E,F"</span>)</div><div class="line"><span class="keyword">val</span> textMapped = text.map(_.split(<span class="string">","</span>).toList) <span class="comment">// List(List("A","B","C"),List("D","E","F"))</span></div><div class="line"><span class="keyword">val</span> textFlattened = textMapped.flatten          <span class="comment">// List("A","B","C","D","E","F")</span></div><div class="line"><span class="keyword">val</span> textFlatMapped = text.flatMap(_.split(<span class="string">","</span>).toList) <span class="comment">// List("A","B","C","D","E","F")</span></div></pre></td></tr></table></figure>
+<h3 id="reduce"><a href="#reduce" class="headerlink" title="reduce"></a>reduce</h3><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">reduce[<span class="type">A1</span> &gt;: <span class="type">A</span>](op: (<span class="type">A1</span>, <span class="type">A1</span>) ⇒ <span class="type">A1</span>): <span class="type">A1</span></div></pre></td></tr></table></figure>
+<p>定义一个变换 f，f 把两个列表的元素合成一个，遍历列表，最终把列表合并成单一元素</p>
+<p>Example 列表求和</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</div><div class="line"><span class="keyword">val</span> sum1 = nums.reduce((a,b) =&gt; a+b)   <span class="comment">//6</span></div><div class="line"><span class="keyword">val</span> sum2 = nums.reduce(_+_)            <span class="comment">//6</span></div><div class="line"><span class="keyword">val</span> sum3 = nums.sum                 <span class="comment">//6</span></div></pre></td></tr></table></figure>
+<h3 id="reduceLeft，reduceRight"><a href="#reduceLeft，reduceRight" class="headerlink" title="reduceLeft，reduceRight"></a>reduceLeft，reduceRight</h3><p>reduceLeft: reduceLeft[B &gt;: A](f: (B, A) ⇒ B): B</p>
+<p>reduceRight: reduceRight[B &gt;: A](op: (A, B) ⇒ B): B</p>
+<p>reduceLeft从列表的左边往右边应用 reduce 函数，reduceRight 从列表的右边往左边应用reduce函数</p>
+<p>Example</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">2.0</span>,<span class="number">2.0</span>,<span class="number">3.0</span>)</div><div class="line"><span class="keyword">val</span> resultLeftReduce = nums.reduceLeft(math.pow)  <span class="comment">// = pow( pow(2.0,2.0) , 3.0) = 64.0</span></div><div class="line"><span class="keyword">val</span> resultRightReduce = nums.reduceRight(math.pow) <span class="comment">// = pow(2.0, pow(2.0,3.0)) = 256.0</span></div></pre></td></tr></table></figure>
+<h3 id="fold-foldLeft-foldRight"><a href="#fold-foldLeft-foldRight" class="headerlink" title="fold,foldLeft,foldRight"></a>fold,foldLeft,foldRight</h3><p>fold: fold[A1 &gt;: A](z: A1)(op: (A1, A1) ⇒ A1): A1 带有初始值的 reduce，从一个初始值开始，从左向右将两个元素合并成一个，最终把列表合并成单一元素。</p>
+<p>foldLeft: foldLeft[B](z: B)(f: (B, A) ⇒ B): B 带有初始值的reduceLeft</p>
+<p>foldRight: foldRight[B](z: B)(op: (A, B) ⇒ B): B 带有初始值的reduceRight</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</div><div class="line"><span class="keyword">val</span> sum = nums.fold(<span class="number">1</span>)(_+_)  <span class="comment">// = 1+2+3+4 = 9</span></div><div class="line"></div><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">2.0</span>,<span class="number">3.0</span>)</div><div class="line"><span class="keyword">val</span> result1 = nums.foldLeft(<span class="number">4.0</span>)(math.pow) <span class="comment">// = pow(pow(4.0,2.0),3.0) = 4096</span></div><div class="line"><span class="keyword">val</span> result2 = nums.foldRight(<span class="number">1.0</span>)(math.pow) <span class="comment">// = pow(1.0,pow(2.0,3.0)) = 8.0</span></div></pre></td></tr></table></figure>
+<h3 id="sortBy-sortWith-sorted"><a href="#sortBy-sortWith-sorted" class="headerlink" title="sortBy,sortWith,sorted"></a>sortBy,sortWith,sorted</h3><p>sortBy: sortBy[B](f: (A) ⇒ B)(implicit ord: math.Ordering[B]): List[A] 按照应用函数f之后产生的元素进行排序</p>
+<p>sorted： sorted[B &gt;: A](implicit ord: math.Ordering[B]): List[A] 按照元素自身进行排序</p>
+<p>sortWith： sortWith(lt: (A, A) ⇒ Boolean): List[A] 使用自定义的比较函数进行排序</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">1</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">4</span>)</div><div class="line"><span class="keyword">val</span> sorted = nums.sorted  <span class="comment">//List(1,2,3,4)</span></div><div class="line"></div><div class="line"><span class="keyword">val</span> users = <span class="type">List</span>((<span class="string">"HomeWay"</span>,<span class="number">25</span>),(<span class="string">"XSDYM"</span>,<span class="number">23</span>))</div><div class="line"><span class="keyword">val</span> sortedByAge = users.sortBy&#123;<span class="keyword">case</span>(user,age) =&gt; age&#125;  <span class="comment">//List(("XSDYM",23),("HomeWay",25))</span></div><div class="line"><span class="keyword">val</span> sortedWith = users.sortWith&#123;<span class="keyword">case</span>(user1,user2) =&gt; user1._2 &lt; user2._2&#125; <span class="comment">//List(("XSDYM",23),("HomeWay",25))</span></div></pre></td></tr></table></figure>
+<h3 id="filter-filterNot"><a href="#filter-filterNot" class="headerlink" title="filter, filterNot"></a>filter, filterNot</h3><p>filter: filter(p: (A) ⇒ Boolean): List[A]</p>
+<p>filterNot: filterNot(p: (A) ⇒ Boolean): List[A]</p>
+<p>filter 保留列表中符合条件p的列表元素 ， filterNot，保留列表中不符合条件p的列表元素</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</div><div class="line"><span class="keyword">val</span> odd = nums.filter( _ % <span class="number">2</span> != <span class="number">0</span>) <span class="comment">// List(1,3)</span></div><div class="line"><span class="keyword">val</span> even = nums.filterNot( _ % <span class="number">2</span> != <span class="number">0</span>) <span class="comment">// List(2,4)</span></div></pre></td></tr></table></figure>
+<h3 id="count"><a href="#count" class="headerlink" title="count"></a>count</h3><p>count(p: (A) ⇒ Boolean): Int</p>
+<p>计算列表中所有满足条件 p 的元素的个数，等价于 filter(p).length</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">-1</span>,<span class="number">-2</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>)</div><div class="line"><span class="keyword">val</span> plusCnt1 = nums.count( &gt; <span class="number">0</span>)</div><div class="line"><span class="keyword">val</span> plusCnt2 = nums.filter( &gt; <span class="number">0</span>).length</div></pre></td></tr></table></figure>
+<h3 id="diff-union-intersect"><a href="#diff-union-intersect" class="headerlink" title="diff, union, intersect"></a>diff, union, intersect</h3><p>diff:diff(that: collection.Seq[A]): List[A] 保存列表中那些不在另外一个列表中的元素，即从集合中减去与另外一个集合的交集</p>
+<p>union : union(that: collection.Seq[A]): List[A] 与另外一个列表进行连结</p>
+<p>intersect: intersect(that: collection.Seq[A]): List[A] 与另外一个集合的交集</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums1 = <span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</div><div class="line"><span class="keyword">val</span> nums2 = <span class="type">List</span>(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</div><div class="line"><span class="keyword">val</span> diff1 = nums1 diff nums2   <span class="comment">// List(1)</span></div><div class="line"><span class="keyword">val</span> diff2 = nums2.diff(num1)   <span class="comment">// List(4)</span></div><div class="line"><span class="keyword">val</span> union1 = nums1 union nums2  <span class="comment">// List(1,2,3,2,3,4)</span></div><div class="line"><span class="keyword">val</span> union2 = nums2 ++ nums1        <span class="comment">// List(2,3,4,1,2,3)</span></div><div class="line"><span class="keyword">val</span> intersection = nums1 intersect nums2  <span class="comment">//List(2,3)</span></div></pre></td></tr></table></figure>
+<h3 id="distinct"><a href="#distinct" class="headerlink" title="distinct"></a>distinct</h3><p>distinct: List[A] 保留列表中非重复的元素，相同的元素只会被保留一次</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> list = <span class="type">List</span>(<span class="string">"A"</span>,<span class="string">"B"</span>,<span class="string">"C"</span>,<span class="string">"A"</span>,<span class="string">"B"</span>) <span class="keyword">val</span> distincted = list.distinct <span class="comment">// List("A","B","C")</span></div></pre></td></tr></table></figure>
+<h3 id="groupBy-grouped"><a href="#groupBy-grouped" class="headerlink" title="groupBy, grouped"></a>groupBy, grouped</h3><p>groupBy : groupBy[K](f: (A) ⇒ K): Map[K, List[A]] 将列表进行分组，分组的依据是应用f在元素上后产生的新元素<br>grouped: grouped(size: Int): Iterator[List[A]] 按列表按照固定的大小进行分组</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> data = <span class="type">List</span>((<span class="string">"HomeWay"</span>,<span class="string">"Male"</span>),(<span class="string">"XSDYM"</span>,<span class="string">"Femail"</span>),(<span class="string">"Mr.Wang"</span>,<span class="string">"Male"</span>))</div><div class="line"><span class="keyword">val</span> group1 = data.groupBy(_._2) <span class="comment">// = Map("Male" -&gt; List(("HomeWay","Male"),("Mr.Wang","Male")),"Female" -&gt; List(("XSDYM","Femail")))</span></div><div class="line"><span class="keyword">val</span> group2 = data.groupBy&#123;<span class="keyword">case</span> (name,sex) =&gt; sex&#125; <span class="comment">// = Map("Male" -&gt; List(("HomeWay","Male"),("Mr.Wang","Male")),"Female" -&gt; List(("XSDYM","Femail")))</span></div><div class="line"><span class="keyword">val</span> fixSizeGroup = data.grouped(<span class="number">2</span>).toList <span class="comment">// = Map("Male" -&gt; List(("HomeWay","Male"),("XSDYM","Femail")),"Female" -&gt; List(("Mr.Wang","Male")))</span></div></pre></td></tr></table></figure>
+<h3 id="scan"><a href="#scan" class="headerlink" title="scan"></a>scan</h3><p>scan[B &gt;: A, That](z: B)(op: (B, B) ⇒ B)(implicit cbf: CanBuildFrom[List[A], B, That]): That</p>
+<p>由一个初始值开始，从左向右，进行积累的op操作，这个比较难解释，具体的看例子吧。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</div><div class="line"><span class="keyword">val</span> result = nums.scan(<span class="number">10</span>)(_+_)   <span class="comment">// List(10,10+1,10+1+2,10+1+2+3) = List(10,11,12,13)</span></div></pre></td></tr></table></figure>
+<h3 id="scanLeft-scanRight"><a href="#scanLeft-scanRight" class="headerlink" title="scanLeft,scanRight"></a>scanLeft,scanRight</h3><p>scanLeft: scanLeft[B, That](z: B)(op: (B, A) ⇒ B)(implicit bf: CanBuildFrom[List[A], B, That]): That</p>
+<p>scanRight: scanRight[B, That](z: B)(op: (A, B) ⇒ B)(implicit bf: CanBuildFrom[List[A], B, That]): That</p>
+<p>scanLeft: 从左向右进行scan函数的操作，scanRight：从右向左进行scan函数的操作</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">1.0</span>,<span class="number">2.0</span>,<span class="number">3.0</span>)</div><div class="line"><span class="keyword">val</span> result = nums.scanLeft(<span class="number">2.0</span>)(math.pow)   <span class="comment">// List(2.0,pow(2.0,1.0), pow(pow(2.0,1.0),2.0),pow(pow(pow(2.0,1.0),2.0),3.0) = List(2.0,2.0,4.0,64.0)</span></div><div class="line"><span class="keyword">val</span> result = nums.scanRight(<span class="number">2.0</span>)(math.pow)  <span class="comment">// List(2.0,pow(3.0,2.0), pow(2.0,pow(3.0,2.0)), pow(1.0,pow(2.0,pow(3.0,2.0))) = List(1.0,512.0,9.0,2.0</span></div></pre></td></tr></table></figure>
+<h3 id="take-takeRight-takeWhile"><a href="#take-takeRight-takeWhile" class="headerlink" title="take,takeRight,takeWhile"></a>take,takeRight,takeWhile</h3><p>take : takeRight(n: Int): List[A] 提取列表的前n个元素 takeRight: takeRight(n: Int): List[A] 提取列表的最后n个元素 takeWhile: takeWhile(p: (A) ⇒ Boolean): List[A] 从左向右提取列表的元素，直到条件p不成立</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">4</span>)</div><div class="line"><span class="keyword">val</span> left = nums.take(<span class="number">4</span>)   <span class="comment">// List(1,1,1,1)</span></div><div class="line"><span class="keyword">val</span> right = nums.takeRight(<span class="number">4</span>) <span class="comment">// List(4,4,4,4)</span></div><div class="line"><span class="keyword">val</span> headNums = nums.takeWhile( _ == nums.head)  <span class="comment">// List(1,1,1,1)</span></div></pre></td></tr></table></figure>
+<h3 id="drop-dropRight-dropWhile"><a href="#drop-dropRight-dropWhile" class="headerlink" title="drop,dropRight,dropWhile"></a>drop,dropRight,dropWhile</h3><p>drop: drop(n: Int): List[A] 丢弃前n个元素，返回剩下的元素 dropRight: dropRight(n: Int): List[A] 丢弃最后n个元素，返回剩下的元素 dropWhile: dropWhile(p: (A) ⇒ Boolean): List[A] 从左向右丢弃元素，直到条件p不成立</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">4</span>,<span class="number">4</span>)</div><div class="line"><span class="keyword">val</span> left = nums.drop(<span class="number">4</span>)   <span class="comment">// List(4,4,4,4)</span></div><div class="line"><span class="keyword">val</span> right = nums.dropRight(<span class="number">4</span>) <span class="comment">// List(1,1,1,1)</span></div><div class="line"><span class="keyword">val</span> tailNums = nums.dropWhile( _ == nums.head)  <span class="comment">// List(4,4,4,4)</span></div></pre></td></tr></table></figure>
+<h3 id="span-splitAt-partition"><a href="#span-splitAt-partition" class="headerlink" title="span, splitAt, partition"></a>span, splitAt, partition</h3><p>span : span(p: (A) ⇒ Boolean): (List[A], List[A]) 从左向右应用条件p进行判断，直到条件p不成立，此时将列表分为两个列表</p>
+<p>splitAt: splitAt(n: Int): (List[A], List[A]) 将列表分为前n个，与，剩下的部分</p>
+<p>partition: partition(p: (A) ⇒ Boolean): (List[A], List[A]) 将列表分为两部分，第一部分为满足条件p的元素，第二部分为不满足条件p的元素</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>)</div><div class="line"><span class="keyword">val</span> (prefix,suffix) = nums.span( _ == <span class="number">1</span>) <span class="comment">// prefix = List(1,1,1), suffix = List(2,3,2,1)</span></div><div class="line"><span class="keyword">val</span> (prefix,suffix) = nums.splitAt(<span class="number">3</span>)  <span class="comment">// prefix = List(1,1,1), suffix = List(2,3,2,1)</span></div><div class="line"><span class="keyword">val</span> (prefix,suffix) = nums.partition( _ == <span class="number">1</span>) <span class="comment">// prefix = List(1,1,1,1), suffix = List(2,3,2)</span></div></pre></td></tr></table></figure>
+<h3 id="padTo"><a href="#padTo" class="headerlink" title="padTo"></a>padTo</h3><p>padTo(len: Int, elem: A): List[A]</p>
+<p>将列表扩展到指定长度，长度不够的时候，使用elem进行填充，否则不做任何操作。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>)</div><div class="line"><span class="keyword">val</span> padded = nums.padTo(<span class="number">6</span>,<span class="number">2</span>)   <span class="comment">// List(1,1,1,2,2,2)</span></div></pre></td></tr></table></figure>
+<h3 id="combinations-permutations"><a href="#combinations-permutations" class="headerlink" title="combinations,permutations"></a>combinations,permutations</h3><p>combinations: combinations(n: Int): Iterator[List[A]] 取列表中的n个元素进行组合，返回不重复的组合列表，结果一个迭代器</p>
+<p>permutations: permutations: Iterator[List[A]] 对列表中的元素进行排列，返回不重得的排列列表，结果是一个迭代器</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">1</span>,<span class="number">1</span>,<span class="number">3</span>)</div><div class="line"><span class="keyword">val</span> combinations = nums.combinations(<span class="number">2</span>).toList <span class="comment">//List(List(1,1),List(1,3))</span></div><div class="line"><span class="keyword">val</span> permutations = nums.permutations.toList        <span class="comment">// List(List(1,1,3),List(1,3,1),List(3,1,1))</span></div></pre></td></tr></table></figure>
+<h3 id="zip-zipAll-zipWithIndex-unzip-unzip3"><a href="#zip-zipAll-zipWithIndex-unzip-unzip3" class="headerlink" title="zip, zipAll, zipWithIndex, unzip,unzip3"></a>zip, zipAll, zipWithIndex, unzip,unzip3</h3><p>zip: zip[B](that: GenIterable[B]): List[(A, B)] 与另外一个列表进行拉链操作，将对应位置的元素组成一个pair，返回的列表长度为两个列表中短的那个</p>
+<p>zipAll: zipAll[B](that: collection.Iterable[B], thisElem: A, thatElem: B): List[(A, B)] 与另外一个列表进行拉链操作，将对应位置的元素组成一个pair，若列表长度不一致，自身列表比较短的话使用thisElem进行填充，对方列表较短的话使用thatElem进行填充</p>
+<p>zipWithIndex：zipWithIndex: List[(A, Int)] 将列表元素与其索引进行拉链操作，组成一个 pair</p>
+<p>unzip: unzip[A1, A2](implicit asPair: (A) ⇒ (A1, A2)): (List[A1], List[A2]) 解开拉链操作</p>
+<p>unzip3: unzip3[A1, A2, A3](implicit asTriple: (A) ⇒ (A1, A2, A3)): (List[A1], List[A2], List[A3]) 3个元素的解拉链操作<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">val alphabet = List("A",B","C")</div><div class="line">val nums = List(1,2)</div><div class="line">val zipped = alphabet zip nums   // List(("A",1),("B",2))</div><div class="line">val zippedAll = alphabet.zipAll(nums,"*",-1)   // List(("A",1),("B",2),("C",-1))</div><div class="line">val zippedIndex = alphabet.zipWithIndex  // List(("A",0),("B",1),("C",3))</div><div class="line">val (list1,list2) = zipped.unzip        // list1 = List("A","B"), list2 = List(1,2)</div><div class="line">val (l1,l2,l3) = List((1, "one", '1'),(2, "two", '2'),(3, "three", '3')).unzip3   // l1=List(1,2,3),l2=List("one","two","three"),l3=List('1','2','3')</div></pre></td></tr></table></figure></p>
+<h3 id="slice"><a href="#slice" class="headerlink" title="slice"></a>slice</h3><p>slice(from: Int, until: Int): List[A] 提取列表中从位置from到位置until(不含该位置)的元素列表</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)</div><div class="line"><span class="keyword">val</span> sliced = nums.slice(<span class="number">2</span>,<span class="number">4</span>)  <span class="comment">//List(3,4)</span></div></pre></td></tr></table></figure>
+<h3 id="sliding"><a href="#sliding" class="headerlink" title="sliding"></a>sliding</h3><p>sliding(size: Int, step: Int): Iterator[List[A]] 将列表按照固定大小size进行分组，步进为step，step默认为1,返回结果为迭代器</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">4</span>)</div><div class="line"><span class="keyword">val</span> groupStep2 = nums.sliding(<span class="number">2</span>,<span class="number">2</span>).toList  <span class="comment">//List(List(1,1),List(2,2),List(3,3),List(4,4))</span></div><div class="line"><span class="keyword">val</span> groupStep1 = nums.sliding(<span class="number">2</span>).toList <span class="comment">//List(List(1,1),List(1,2),List(2,2),List(2,3),List(3,3),List(3,4),List(4,4))</span></div></pre></td></tr></table></figure>
+<h3 id="updated"><a href="#updated" class="headerlink" title="updated"></a>updated</h3><p>updated(index: Int, elem: A): List[A] 对列表中的某个元素进行更新操作</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> nums = <span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">3</span>)</div><div class="line"><span class="keyword">val</span> fixed = nums.updated(<span class="number">3</span>,<span class="number">4</span>)  <span class="comment">// List(1,2,3,4)</span></div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
       
 
@@ -960,187 +1204,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2017/02/27/java-effective/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="IAN">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="北冥有鱼">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/02/27/java-effective/" itemprop="url">
-                  Effective Java 笔记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-27T12:39:04+08:00">
-                2017-02-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA/" itemprop="url" rel="index">
-                    <span itemprop="name">JAVA</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA/Effective-Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Effective Java</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JAVA/Effective-Java/笔记/" itemprop="url" rel="index">
-                    <span itemprop="name">笔记</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/02/27/java-effective/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/27/java-effective/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="1-考虑静态工厂方法代替构造器"><a href="#1-考虑静态工厂方法代替构造器" class="headerlink" title="1. 考虑静态工厂方法代替构造器"></a>1. 考虑静态工厂方法代替构造器</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势:"></a>优势:</h3><ol>
-<li>它们有名称。</li>
-<li>不必在每次调用它们的时候都创建一个新对象。</li>
-<li>它们可以返回原返回类型的任何子类型的对象。</li>
-<li>在创建参数化类型实例的时候，它们使代码变得更加简洁。</li>
-</ol>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/02/27/java-effective/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1190,7 +1253,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-count">84</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1199,7 +1262,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

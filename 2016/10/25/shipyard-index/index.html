@@ -80,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
 
 
 
@@ -93,15 +93,15 @@
 <meta property="og:url" content="https://tangpengcsu.github.io/2016/10/25/shipyard-index/index.html">
 <meta property="og:site_name" content="北冥有鱼">
 <meta property="og:description" content="简介shipyard 是一个集成管理 Docker 容器、镜像、仓库的系统，他最大亮点应该是支持多节点的集成管理，可以动态加载节点，可托管 node 下的容器。">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/shipyard_1.png">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/shipyard_2.png">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/shipyard_3.png">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/shipyard_4.png">
-<meta property="og:updated_time" content="2017-03-14T05:19:14.637Z">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/shipyard/shipyard_1.png">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/shipyard/shipyard_2.png">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/shipyard/shipyard_3.png">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/shipyard/shipyard_4.png">
+<meta property="og:updated_time" content="2017-03-15T03:58:16.995Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker 集中化 Web 界面管理平台 shipyard">
 <meta name="twitter:description" content="简介shipyard 是一个集成管理 Docker 容器、镜像、仓库的系统，他最大亮点应该是支持多节点的集成管理，可以动态加载节点，可托管 node 下的容器。">
-<meta name="twitter:image" content="https://tangpengcsu.github.io/images/shipyard_1.png">
+<meta name="twitter:image" content="https://tangpengcsu.github.io/images/shipyard/shipyard_1.png">
 
 
 
@@ -477,13 +477,13 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="_">-s</span>SL https://shipyard-project.com/deploy | ACTION=node PREFIX=shipyard-node4  DISCOVERY=etcd://192.168.93.145:4001 bash –s</div></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ docker ps</div><div class="line">CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS                    NAMES</div><div class="line">b9a4f9f6d4c5        swarm:latest                   <span class="string">"/swarm j --addr 192."</span>   3 minutes ago       Up 3 minutes        2375/tcp                 shipyard-node4-swarm-agent</div><div class="line">765f3898c925        swarm:latest                   <span class="string">"/swarm m --replicati"</span>   3 minutes ago       Up 3 minutes        2375/tcp                 shipyard-node4-swarm-manager</div><div class="line">16e000eae193        shipyard/docker-proxy:latest   <span class="string">"/usr/local/bin/run"</span>     3 minutes ago       Up 3 minutes        0.0.0.0:2375-&gt;2375/tcp   shipyard-node4-proxy</div><div class="line">ae224eafce6a        alpine                         <span class="string">"sh"</span>                     3 minutes ago       Up 3 minutes                                 shipyard-node4-certs</div></pre></td></tr></table></figure>
 <p>4. 启动界面（ip:8080）</p>
-<p> <img src="/images/shipyard_1.png" alt="shipyard_1"></p>
+<p> <img src="/images/shipyard/shipyard_1.png" alt="shipyard_1"></p>
 <p>5. 容器详细情况</p>
-<p><img src="/images/shipyard_2.png" alt="shipyard_2"></p>
+<p><img src="/images/shipyard/shipyard_2.png" alt="shipyard_2"></p>
 <p>6. 镜像</p>
-<p><img src="/images/shipyard_3.png" alt="shipyard_3"></p>
+<p><img src="/images/shipyard/shipyard_3.png" alt="shipyard_3"></p>
 <p>7. 节点</p>
-<p><img src="/images/shipyard_4.png" alt="shipyard_4"></p>
+<p><img src="/images/shipyard/shipyard_4.png" alt="shipyard_4"></p>
 
       
     </div>
@@ -520,8 +520,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/10/24/docker-overview/" rel="next" title="Docker 概述">
-                <i class="fa fa-chevron-left"></i> Docker 概述
+              <a href="/2016/10/24/docker-network-containers/" rel="next" title="高级网络配置">
+                <i class="fa fa-chevron-left"></i> 高级网络配置
               </a>
             
           </div>
@@ -530,8 +530,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/10/26/kubernetes-install-kubernetes/" rel="prev" title="在 Linux 上安装 kubernetes">
-                在 Linux 上安装 kubernetes <i class="fa fa-chevron-right"></i>
+              <a href="/2016/10/26/kubernetes-labels/" rel="prev" title="Labels">
+                Labels <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -630,7 +630,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-count">84</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -639,7 +639,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

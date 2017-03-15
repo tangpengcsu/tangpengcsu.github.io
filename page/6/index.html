@@ -80,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
 
 
 
@@ -302,7 +302,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-tuning/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-configuration/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -324,8 +324,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/12/24/spark-tuning/" itemprop="url">
-                  Spark 优化指南
+                <a class="post-title-link" href="/2016/12/24/spark-configuration/" itemprop="url">
+                  Spark 配置
                 </a>
               
             
@@ -382,8 +382,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/12/24/spark-tuning/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-tuning/" itemprop="commentCount"></span>
+                <a href="/2016/12/24/spark-configuration/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-configuration/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -410,10 +410,15 @@
 
       
         
-          <p>大多数 Saprk 计算本质是内存，Spark 程序可以碰到集群中的 CPU、网络带宽或存储 资源上的瓶颈。大多数情况下，如果数据加载到内存中，网络带宽就是瓶颈。但有时候，还需要做一些调整，比如 <a href="/2016/12/24/spark-programming-guides/#rdd--2" title="/2016/12/24/spark-programming-guides/#rdd--2">序列化形式存储 RDD</a> （storing RDDs in serialized），以减少内存使用情况。还涉及两个主要方面：原始数据的系列化，良好的网络性能，以减少内存使用情况。下面做几个主要的讨论。</p>
+          <p>Spark 提供了三个位置对系统进行配置：</p>
+<ul>
+<li><a href="/2016/12/24/spark-configuration/#spark-">Spark 属性</a>：通过 <a href="http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.SparkConf">SparkConf</a> 对象或者通过 Java 系统参数来控制大多数的参数，</li>
+<li><a href="/2016/12/24/spark-configuration/#section-5">环境变量</a>：用于对每个节点进行设置， 例如通过 conf/spark-env.sh 脚本配置 IP 等。</li>
+<li><a href="/2016/12/24/spark-configuration/#logging">日志</a>：通过 log4j.properties 配置。</li>
+</ul>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/12/24/spark-tuning/#more" rel="contents">
+            <a class="btn" href="/2016/12/24/spark-configuration/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -764,7 +769,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-submitting-applications/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-sql-programming-guide/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -786,8 +791,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/12/24/spark-submitting-applications/" itemprop="url">
-                  Spark 提交应用
+                <a class="post-title-link" href="/2016/12/24/spark-sql-programming-guide/" itemprop="url">
+                  Spark SQL
                 </a>
               
             
@@ -844,8 +849,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/12/24/spark-submitting-applications/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-submitting-applications/" itemprop="commentCount"></span>
+                <a href="/2016/12/24/spark-sql-programming-guide/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-sql-programming-guide/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -872,13 +877,11 @@
 
       
         
-          <p>在 Spark 的 bin 目录中的 spark-submit 脚本用于在集群上启动应用程序。它可以通过一个统一的接口使用所有 Spark 支持的 Cluster Manager，所以您不需要专门的为每个 <a href="cluster_overview" title="Cluster Manager">Cluster Manager</a> 来配置您的应用程序。</p>
-<hr>
-<h2 id="打包应用依赖"><a href="#打包应用依赖" class="headerlink" title="打包应用依赖"></a>打包应用依赖</h2><p>如果您的代码依赖了其它的项目，为了分发代码到 Spark 集群中您将需要将它们和您的应用程序一起打包。为此，创建一个包含您的代码以及依赖的 assembly jar（或 “uber” jar）。无论是 <a href="https://github.com/sbt/sbt-assembly" title="sbt">sbt</a> 还是 <a href="http://maven.apache.org/plugins/maven-shade-plugin/" title="Maven">Maven</a> 都有 assembly 插件。在创建 assembly jar 时，列出 Spark 和 Hadoop 提供的依赖。它们不需要被打包，因为在运行时它们已经被 Cluster Manager 提供了。如果您有一个 assembled jar 您就可以调用 bin/spark-submit 脚本（如下所示）来传递您的 jar。</p>
-<p>对于 Python 来说，您可以使用 spark-submit 的 –py-files 参数来添加 .py，.zip 和 .egg 文件以与您的应用程序一起分发。如果您依赖了多个 Python 文件我们推荐将它们打包成一个 .zip 或者 .egg 文件。</p>
+          <h2 id="Spark-SQL-概述-DataFrames-Datasets-和-SQL"><a href="#Spark-SQL-概述-DataFrames-Datasets-和-SQL" class="headerlink" title="Spark SQL 概述 (DataFrames, Datasets 和 SQL)"></a>Spark SQL 概述 (DataFrames, Datasets 和 SQL)</h2><p>Spark SQL 是一个用户结构化数据处理的 Spark 模块。不像基础的 Spark RDD API 一样，Spark SQL 提供的接口提供了 Spark 与构造数据和执行计算之间的更多信息。在内部，Spark SQL 使用这个额外的信息去执行额外的优化。有几种方式可以跟 Spark SQL 进行交互，包括 SQL 和 Dataset API。当使用相同执行引擎进行计算时，无论使用哪种 API / 语言，都可以快速的计算。这种统一意味着开发人员能够在基于提供最自然的方式来表达一个给定的 transformation API 之间实现轻松的来回切换不同的 。</p>
+<p>该页面所有例子使用的示例数据都包含在 Spark 的发布中，并且可以使用 spark-shell，pyspark，或者 sparkR 来运行。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/12/24/spark-submitting-applications/#more" rel="contents">
+            <a class="btn" href="/2016/12/24/spark-sql-programming-guide/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -921,7 +924,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-standalone/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/12/24/spark-tuning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -943,8 +946,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/12/24/spark-standalone/" itemprop="url">
-                  Spark Standalone 模式
+                <a class="post-title-link" href="/2016/12/24/spark-tuning/" itemprop="url">
+                  Spark 优化指南
                 </a>
               
             
@@ -1001,8 +1004,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/12/24/spark-standalone/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-standalone/" itemprop="commentCount"></span>
+                <a href="/2016/12/24/spark-tuning/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/24/spark-tuning/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1029,10 +1032,10 @@
 
       
         
-          <p>Spark 不仅可以运行在 Mesos 或者 Yarn 上，而且还提供独立部署模式。可以手动启动一个 master 和 多个 worker，或选用我们提供的 <a href="http://spark.apache.org/docs/latest/spark-standalone.html#cluster-launch-scripts" title="启动脚本">脚本</a> 来启动 standalone 集群。</p>
+          <p>大多数 Saprk 计算本质是内存，Spark 程序可以碰到集群中的 CPU、网络带宽或存储 资源上的瓶颈。大多数情况下，如果数据加载到内存中，网络带宽就是瓶颈。但有时候，还需要做一些调整，比如 <a href="/2016/12/24/spark-programming-guides/#rdd--2" title="/2016/12/24/spark-programming-guides/#rdd--2">序列化形式存储 RDD</a> （storing RDDs in serialized），以减少内存使用情况。还涉及两个主要方面：原始数据的系列化，良好的网络性能，以减少内存使用情况。下面做几个主要的讨论。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/12/24/spark-standalone/#more" rel="contents">
+            <a class="btn" href="/2016/12/24/spark-tuning/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1115,7 +1118,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-count">84</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1124,7 +1127,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

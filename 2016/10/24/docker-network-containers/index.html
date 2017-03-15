@@ -80,7 +80,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
 
 
 
@@ -93,16 +93,16 @@
 <meta property="og:url" content="https://tangpengcsu.github.io/2016/10/24/docker-network-containers/index.html">
 <meta property="og:site_name" content="北冥有鱼">
 <meta property="og:description" content="使用 Docker 网络功能可以帮助我们在建设 web 应用时保证一致和安全性。网络的定义就是为容器之间提供完全的独立性。因此对应用运行的网络控制是非常重要的。Docker 容器网络功能正好给我们提供了这样的控制。下面主要会介绍 Docker Engine 原生发布的默认网络的特性，描述默认的网络类型以及如何自定义我们自己的网络，并且提供了关于如何在单机或者集群创建网络所需要的资源。">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/bridge.png">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/overlay_1.png">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/overlay_2.png">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/overlay_3.png">
-<meta property="og:image" content="https://tangpengcsu.github.io/images/overlay_4.png">
-<meta property="og:updated_time" content="2017-03-14T05:17:27.288Z">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/docker/bridge.png">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/docker/overlay_1.png">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/docker/overlay_2.png">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/docker/overlay_3.png">
+<meta property="og:image" content="https://tangpengcsu.github.io/images/docker/overlay_4.png">
+<meta property="og:updated_time" content="2017-03-15T03:37:03.788Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="高级网络配置">
 <meta name="twitter:description" content="使用 Docker 网络功能可以帮助我们在建设 web 应用时保证一致和安全性。网络的定义就是为容器之间提供完全的独立性。因此对应用运行的网络控制是非常重要的。Docker 容器网络功能正好给我们提供了这样的控制。下面主要会介绍 Docker Engine 原生发布的默认网络的特性，描述默认的网络类型以及如何自定义我们自己的网络，并且提供了关于如何在单机或者集群创建网络所需要的资源。">
-<meta name="twitter:image" content="https://tangpengcsu.github.io/images/bridge.png">
+<meta name="twitter:image" content="https://tangpengcsu.github.io/images/docker/bridge.png">
 
 
 
@@ -430,13 +430,13 @@
 <p>host 的网络将容器添加到了宿主的网络栈上，这样容器的网络配置信息与宿主主机的网络配置是一样的。</p>
 <p>bridge 网络是我们默认使用的网络，我们可以使用 docker network inspect bridge 查看它的详细信息。我们也可以自定义新的 bridge 驱动的网络，并且可以在我们不需要使用的时候删除掉自定义的网络，然而 bridge 名称的网络我们无法删除，它是 Docker 引擎安装时需要使用的。</p>
 <p>值得一提的是在 bridge 驱动的网络正常仅用于单机内部使用，对于宿主以外的主机如果想要访问容器就需要通过 docker run -p 或者 -P 参数将需要访问的服务端口开放映射到宿主主机的网络端口，并且配置放开本地防火墙的拦截规则。这样外部主机就可以访问容器的服务了。具体如下图:</p>
-<p><img src="/images/bridge.png" alt="bridge"></p>
+<p><img src="/images/docker/bridge.png" alt="bridge"></p>
 <p><em>bridge 网络比较适用于在单机运行相对较小的网络。对于比较大型的网络我们可以使用 overlay 网络来实现</em>。</p>
 <h2 id="overlay-网络"><a href="#overlay-网络" class="headerlink" title="overlay 网络"></a>overlay 网络</h2><p>Docker 的 overlay 网络驱动器支持多宿主主机互联。这种支撑能力得益于 libnetwork 库，libnetwork 是一个基于 VXLAN 的 overlay 网络驱动器。</p>
 <p>overlay 网络需要一个有效的 <em>key-value 存储服务</em>，目前 Docker 支持的有 <em>Consul,、Etcd 和 ZooKeeper (分布式存储)</em>。在创建 overlay 网络之前我们必须先安装并配置好我们指定的 key-value 存储服务，并且需要保证要接入网络的宿主主机和服务是可以通信的。示例如下图:</p>
-<p><img src="/images/overlay_1.png" alt="bridge">  </p>
+<p><img src="/images/docker/overlay_1.png" alt="bridge">  </p>
 <p>每个接入 overlay 网络的宿主主机必须运行了 Docker 引擎实例，比较简便的做法是使用 Docker Machine 来完成。</p>
-<p><img src="/images/overlay_2.png" alt="bridge">  </p>
+<p><img src="/images/docker/overlay_2.png" alt="bridge">  </p>
 <p>我们同时还需要开放如下几个端口服务：</p>
 <table>
 <thead>
@@ -487,11 +487,11 @@
 <p>执行如下命令在集群中的主机上创建一个 overlay 网络：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker network create --driver overlay my-multi-host-network</div></pre></td></tr></table></figure>
 <p>这样一个跨多个主机的网络就创建完成了， overlay 网络为这些容器提供了一个完全隔离的环境。</p>
-<p><img src="/images/overlay_3.png" alt="bridge">  </p>
+<p><img src="/images/docker/overlay_3.png" alt="bridge">  </p>
 <p>接下来，我们在每个宿主主机上就可以运行指定为使用 overlay 网络的容器了，执行命令为:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run -itd --net=my-multi-host-network busybox</div></pre></td></tr></table></figure>
 <p>一旦网络建立连接后，网络中的容器都可以互相访问，无论这个容器是否启动了。下图为我们最终创建的 overlay 网络结构。</p>
-<p><img src="/images/overlay_4.png" alt="bridge"></p>
+<p><img src="/images/docker/overlay_4.png" alt="bridge"></p>
 <h2 id="自定义网络插件"><a href="#自定义网络插件" class="headerlink" title="自定义网络插件"></a>自定义网络插件</h2><p>我们可以使用Docker提供的插件基础设施来实现自己的网络驱动器，这样的一个插件就是一个运行在宿主主机上同 daemon 进程一样的进程。<br>想了解关于如何编写网络驱动器参考下面两个站点：</p>
 <ol>
 <li>Docker 引擎扩展</li>
@@ -534,8 +534,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/10/24/docker-container-networking/" rel="next" title="使用网络">
-                <i class="fa fa-chevron-left"></i> 使用网络
+              <a href="/2016/10/24/docker-overview/" rel="next" title="Docker 概述">
+                <i class="fa fa-chevron-left"></i> Docker 概述
               </a>
             
           </div>
@@ -544,8 +544,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/10/24/harbor-configure-https-v05.0-rc2/" rel="prev" title="配置 HTTPS 访问的 Harbor:v05.0">
-                配置 HTTPS 访问的 Harbor:v05.0 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/10/25/shipyard-index/" rel="prev" title="Docker 集中化 Web 界面管理平台 shipyard">
+                Docker 集中化 Web 界面管理平台 shipyard <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -644,7 +644,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-count">84</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -653,7 +653,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
