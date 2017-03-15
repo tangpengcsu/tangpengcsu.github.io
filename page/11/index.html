@@ -302,7 +302,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-new/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-users-and-files/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -324,8 +324,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-new/" itemprop="url">
-                  Linux 基础之推陈出新
+                <a class="post-title-link" href="/2016/10/28/linux-users-and-files/" itemprop="url">
+                  Linux 基础之用户与文件
                 </a>
               
             
@@ -382,8 +382,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-new/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-new/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-users-and-files/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-users-and-files/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -410,12 +410,14 @@
 
       
         
-          <p>本文介绍ip、ss、journalctl和firewall-cmd，它们旨在代替linux中原有的一些命令或服务。</p>
-<p>1、ip<br>ip [OPTIONS] OBJECT COMMAND<br>ip是iproute2软件包里面的一个强大的网络配置工具，它能够替代一些传统的网络管理工具，例如ifconfig、route等，使用权限为超级用户。<br>OPTIONS是修改ip行为或改变其输出的选项。<br>OBJECT是要获取信息的对象。包括：</p>
-<p>address   表示设备的协议(IPv4或IPv6)地址<br>link      表示网络设备<br>monitor   表示监控网络连接信息<br>neighbour 表示管理ARP缓存表<br>netns     表示管理网络命名空间<br>route     表示路由表接口<br>tunnel    表示IP隧道<br>….<br>对象名可以是全称或简写格式，比如address可以简写为addr或a。<br>COMMAND设置针对指定对象执行的操作，它和对象的类型有关。</p>
+          <p>linux 系统是一个多用户多任务的分时操作系统，但系统并不能识别人，它通过账号来区别每个用户。每个 linux 系统在安装的过程中都要为 root 账号设置密码，这个 root 即为系统的第一个账号。每一个用这个账号登录系统的用户都是超级管理员，他们对此系统有绝对的控制权。通过向系统管理员进行申请，还可以为系统创建普通账号。每个用普通账号登录系统的用户，对系统都只有部分控制权。</p>
+<p>我们知道计算机中的数据是以二进制 0、1 的形式存储在硬件之上的。在 linux 中，为了管理的方便，系统将这些数据组织成目录和文件，并以一个树形的结构呈现给用户。如下图所示：</p>
+<p><img src="/images/linux/directory-tree.png" alt="Linux 目录树结构"></p>
+<p>其中处于顶端的 / 是根目录，linux 下所有的文件均起始于根目录。另外很重要的一点，linux 中不仅普通文档是文件，目录是文件，甚至设备、进程等等都被抽象成文件。这样做的目的是为了简化操作和方便管理。</p>
+<p>于是，本文开始所说的控制权，即为用户对系统中文件的控制权。通常所说的某某文件的权限，是针对特定用户而言的。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-new/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-users-and-files/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -458,7 +460,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-networking/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-grep/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -480,8 +482,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-networking/" itemprop="url">
-                  Linux 基础之网络
+                <a class="post-title-link" href="/2016/10/28/linux-grep/" itemprop="url">
+                  Linux 基础之文本过滤 grep
                 </a>
               
             
@@ -538,8 +540,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-networking/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-networking/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-grep/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-grep/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -566,11 +568,12 @@
 
       
         
-          <p>本文将讲述网络相关命令，作者假定读者具备 TCP/IP 协议栈的基础知识。对于相关命令及其输出只介绍它的基本的使用方法和大概的描述，具体协议将不作详细解释。</p>
-<p>如今网络无疑是很重要的，linux 系统中提供了丰富的网络测试与管理命令。我们来一起看看它们。</p>
+          <p>在 linux 中经常需要对文本或输出内容进行过滤，最常用的过滤命令是 <code>grep</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">grep [OPTIONS] PATTERN [FILE...]</div></pre></td></tr></table></figure>
+<p><code>grep</code> 按行检索输入的每一行，如果输入行包含模式 <code>PATTERN</code>，则输出这一行。这里的 <code>PATTERN</code> 是正则表达式 (参考前一篇，本文将结合 grep 一同举例)。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-networking/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-grep/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -613,7 +616,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-process-and-memory/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-variable/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -635,8 +638,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-process-and-memory/" itemprop="url">
-                  Linux 基础之进程与内存
+                <a class="post-title-link" href="/2016/10/28/linux-variable/" itemprop="url">
+                  Linux 基础之变量
                 </a>
               
             
@@ -693,8 +696,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-process-and-memory/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-process-and-memory/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-variable/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-variable/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -721,11 +724,12 @@
 
       
         
-          <p>计算机存在的目的就是为了运行各种各样的程序，迄今我们介绍的绝大多数命令，都是为了完成某种计算而用编程语言编写的程序，它们以文件的形式保存在操作系统之中 (比如 /bin 下的各种命令)；但静态的程序并不能“自发的” 产生结果，只有在操作系统中为其指定输入数据并运行起来，才能得到输出结果。而操作系统中程序运行的最主要表现形式便是进程。</p>
-<p>静态程序可以长久的存在，动态的进程具有有限的生命周期。每次程序运行的开始 (如键入一条命令后按下回车键)，操作系统都要为程序的运行准备各种资源，这些资源绝大多数都处于内存之中。为了限制多用户进程的权限，linux 还定义了两种进程运行时态：内核态和用户态；当进程想要请求系统服务时(比如操作一个物理设备)，必须通过系统调用(操作系统提供给用户空间的接口函数) 来实现，此时系统切换到内核态，代表程序执行该系统调用，执行完毕后系统切换回用户态，继续执行程序代码。<br>本文介绍 linux 中关于进程与内存的管理命令 (更多的是查看命令)</p>
+          <p>本篇开始，介绍 shell 脚本编程，更确切的说是 bash 脚本编程 (版本：4.2.46(1)-release)。我们从变量开始。</p>
+<p>和所有的编程语言一样，bash 也提供变量，变量是一些用来指代数据并支持数据操作的名称。</p>
+<h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><h3 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h3><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>当我们通过 ssh 等工具登录系统时，便获得一个 shell(一个 bash 进程)，bash 在启动过程中会加载一系列的配置文件，这些配置文件的作用就是为用户准备好 bash 环境，大部分 <code>环境变量</code> 都是在这些文件中被设置的。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-process-and-memory/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-variable/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -768,7 +772,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-rpm/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-vim/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -790,8 +794,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-rpm/" itemprop="url">
-                  Linux 基础之软件包管理
+                <a class="post-title-link" href="/2016/10/28/linux-vim/" itemprop="url">
+                  Linux 基础之文本编辑 vim
                 </a>
               
             
@@ -848,8 +852,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-rpm/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-rpm/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-vim/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-vim/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -876,12 +880,14 @@
 
       
         
-          <p>linux 中软件包的管理随着系统发行版本的不同而不同，RPM 和 DPKG 为最常见的两类软件包管理工具，分别应用于基于 rpm 软件包的 linux 发行版和基于 deb 软件包的 linux 发行版。本文只描述 RPM 的使用方法，另一种命令不同，但用法类似，就不做介绍了。</p>
-<h2 id="1、RPM-包管理器"><a href="#1、RPM-包管理器" class="headerlink" title="1、RPM 包管理器"></a>1、RPM 包管理器</h2><p>选项 -q 表示查询系统安装的软件包</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@centos7 ~]<span class="comment"># rpm -q sudo</span></div><div class="line">sudo-1.8.6p7-16.el7.x86_64</div><div class="line">[root@centos7 ~]<span class="comment"># rpm -q nginx</span></div><div class="line">未安装软件包 nginx</div><div class="line">[root@centos7 ~]<span class="comment">#</span></div></pre></td></tr></table></figure>
+          <p>本文介绍 vim(版本 7.4) 的一般用法</p>
+<p>vim 是功能强大的文本编辑器，是 vi 的增强版。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim [options] [file ..]</div></pre></td></tr></table></figure>
+<p>使用 vim 编辑一个文件的最常用命令就是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim file</div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-rpm/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-vim/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -924,7 +930,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/26/kubernetes-what-is-k8s/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-sed/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -946,8 +952,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/26/kubernetes-what-is-k8s/" itemprop="url">
-                  什么是 Kubernetes?
+                <a class="post-title-link" href="/2016/10/28/linux-sed/" itemprop="url">
+                  Linux 基础之文本流编辑 sed
                 </a>
               
             
@@ -963,8 +969,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-26T18:39:04+08:00">
-                2016-10-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-28T18:39:04+08:00">
+                2016-10-28
               </time>
             
 
@@ -986,8 +992,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Kubernetes/" itemprop="url" rel="index">
-                    <span itemprop="name">Kubernetes</span>
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
                   </a>
                 </span>
 
@@ -1004,8 +1010,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/26/kubernetes-what-is-k8s/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/26/kubernetes-what-is-k8s/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-sed/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-sed/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1032,10 +1038,12 @@
 
       
         
-          <p>Kubernetes 是一个开源的自动化部署，</p>
+          <p>与 vim 不同，sed 是一种非交互式的文本编辑器，同时它又是面向字符流的，每行数据经过 sed 处理后输出。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sed [OPTION]... [script] [file]...</div></pre></td></tr></table></figure>
+<p>sed 的工作过程是这样的：首先，初始化两个数据缓冲区模式空间和保持空间；sed 读取一行输入 (来自标准输入或文件)，去掉结尾的换行符(\n) 后置于模式空间中，然后针对模式空间中的字符串开始执行‘sed 命令’，每个命令都可以有地址与之相关联，地址可以看成是条件，只有在条件成立时，相关的命令才被执行；所有可执行命令都处理完毕后，仍处于模式空间中的字符串会被追加一个换行符后打印输出；之后读取下一行输入做同样的处理，直到主动退出 (q) 或输入结束。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/26/kubernetes-what-is-k8s/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-sed/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1118,7 +1126,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">84</span>
+                <span class="site-state-item-count">85</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1127,7 +1135,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

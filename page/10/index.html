@@ -302,7 +302,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-disk-and-fs/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-process-and-memory/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -324,8 +324,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-disk-and-fs/" itemprop="url">
-                  Linux 基础之磁盘与文件系统
+                <a class="post-title-link" href="/2016/10/28/linux-process-and-memory/" itemprop="url">
+                  Linux 基础之进程与内存
                 </a>
               
             
@@ -382,8 +382,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-disk-and-fs/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-disk-and-fs/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-process-and-memory/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-process-and-memory/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -410,169 +410,11 @@
 
       
         
-          <p>本篇讲述磁盘管理相关的命令。计算机中需要持久化存储的数据一般是保存在硬盘等辅助存储器中。硬盘一般容量较大，为了便于管理和使用，可以将硬盘分成一到多个逻辑磁盘，称为分区；为使分区中的文件组织成操作系统能够处理的形式，需要对分区进行格式化 (创建文件系统)；在 linux 中，对于格式化后的分区，还必须经过挂载(可简单理解为将分区关联至 linux 目录树中某个已知目录) 之后才能使用。</p>
-<h2 id="1、df-显示文件系统磁盘空间使用量"><a href="#1、df-显示文件系统磁盘空间使用量" class="headerlink" title="1、df 显示文件系统磁盘空间使用量"></a>1、df 显示文件系统磁盘空间使用量</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[root@centos7 temp]<span class="comment"># df -h</span></div><div class="line">文件系统                 容量  已用  可用 已用 % 挂载点</div><div class="line">/dev/mapper/centos-root   49G   18G   31G   36% /</div><div class="line">devtmpfs                 3.9G     0  3.9G    0% /dev</div><div class="line">tmpfs                    3.9G     0  3.9G    0% /dev/shm</div><div class="line">tmpfs                    3.9G  367M  3.5G   10% /run</div><div class="line">tmpfs                    3.9G     0  3.9G    0% /sys/fs/cgroup</div><div class="line">/dev/sda1                497M  125M  373M   26% /boot</div><div class="line">/dev/mapper/centos-home   24G  4.0G   20G   17% /home</div><div class="line">tmpfs                    783M     0  783M    0% /run/user/0</div></pre></td></tr></table></figure>
+          <p>计算机存在的目的就是为了运行各种各样的程序，迄今我们介绍的绝大多数命令，都是为了完成某种计算而用编程语言编写的程序，它们以文件的形式保存在操作系统之中 (比如 /bin 下的各种命令)；但静态的程序并不能“自发的” 产生结果，只有在操作系统中为其指定输入数据并运行起来，才能得到输出结果。而操作系统中程序运行的最主要表现形式便是进程。</p>
+<p>静态程序可以长久的存在，动态的进程具有有限的生命周期。每次程序运行的开始 (如键入一条命令后按下回车键)，操作系统都要为程序的运行准备各种资源，这些资源绝大多数都处于内存之中。为了限制多用户进程的权限，linux 还定义了两种进程运行时态：内核态和用户态；当进程想要请求系统服务时(比如操作一个物理设备)，必须通过系统调用(操作系统提供给用户空间的接口函数) 来实现，此时系统切换到内核态，代表程序执行该系统调用，执行完毕后系统切换回用户态，继续执行程序代码。<br>本文介绍 linux 中关于进程与内存的管理命令 (更多的是查看命令)</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-disk-and-fs/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-file-search/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="IAN">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="北冥有鱼">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/28/linux-file-search/" itemprop="url">
-                  Linux 基础之文件搜索及其它
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-28T18:39:04+08:00">
-                2016-10-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2016/10/28/linux-file-search/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-file-search/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="1、linux-中包含大量的文件，对于文件查找，linux-提供了-find-命令。"><a href="#1、linux-中包含大量的文件，对于文件查找，linux-提供了-find-命令。" class="headerlink" title="1、linux 中包含大量的文件，对于文件查找，linux 提供了 find 命令。"></a>1、linux 中包含大量的文件，对于文件查找，linux 提供了 find 命令。</h2><p>find 是一个非常有效的工具，它可以遍历目标目录甚至整个文件系统来查找某些文件或目录：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find [path...] [expression]</div></pre></td></tr></table></figure>
-<p>其中 expression 包括三种：options、tests 和 actions。多个表达式之间被操作符分隔，当操作符被省略时，表示使用了默认操作符 -and。</p>
-<p>当表达式中不包含任何 actions 时，默认使用 -print，也就是打印出搜索到的所有文件，用换行分隔。</p>
-<p>其实可以将三种表达式均视为选项，表示对搜索的某种限制 (如 -maxdepth 表示搜索路径的最大深度)、或对找到的目标文件的某种测试 (如 -readable 判断是否可读)、或对结果采取的某种动作 (如 -print)。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-file-search/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-process-and-memory/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -769,7 +611,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-grep/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-rpm/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -791,8 +633,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-grep/" itemprop="url">
-                  Linux 基础之文本过滤 grep
+                <a class="post-title-link" href="/2016/10/28/linux-rpm/" itemprop="url">
+                  Linux 基础之软件包管理
                 </a>
               
             
@@ -849,8 +691,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-grep/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-grep/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-rpm/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-rpm/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -877,12 +719,12 @@
 
       
         
-          <p>在 linux 中经常需要对文本或输出内容进行过滤，最常用的过滤命令是 <code>grep</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">grep [OPTIONS] PATTERN [FILE...]</div></pre></td></tr></table></figure>
-<p><code>grep</code> 按行检索输入的每一行，如果输入行包含模式 <code>PATTERN</code>，则输出这一行。这里的 <code>PATTERN</code> 是正则表达式 (参考前一篇，本文将结合 grep 一同举例)。</p>
+          <p>linux 中软件包的管理随着系统发行版本的不同而不同，RPM 和 DPKG 为最常见的两类软件包管理工具，分别应用于基于 rpm 软件包的 linux 发行版和基于 deb 软件包的 linux 发行版。本文只描述 RPM 的使用方法，另一种命令不同，但用法类似，就不做介绍了。</p>
+<h2 id="1、RPM-包管理器"><a href="#1、RPM-包管理器" class="headerlink" title="1、RPM 包管理器"></a>1、RPM 包管理器</h2><p>选项 -q 表示查询系统安装的软件包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@centos7 ~]<span class="comment"># rpm -q sudo</span></div><div class="line">sudo-1.8.6p7-16.el7.x86_64</div><div class="line">[root@centos7 ~]<span class="comment"># rpm -q nginx</span></div><div class="line">未安装软件包 nginx</div><div class="line">[root@centos7 ~]<span class="comment">#</span></div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-grep/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-rpm/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -925,7 +767,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-network-transmission-and-security/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-ssh-authentication/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -947,8 +789,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/28/linux-network-transmission-and-security/" itemprop="url">
-                  Linux 基础之网络传输与安全
+                <a class="post-title-link" href="/2016/10/28/linux-ssh-authentication/" itemprop="url">
+                  Redhat 7/CentOS 7 SSH 免密登录
                 </a>
               
             
@@ -1005,8 +847,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/28/linux-network-transmission-and-security/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-network-transmission-and-security/" itemprop="commentCount"></span>
+                <a href="/2016/10/28/linux-ssh-authentication/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-ssh-authentication/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1033,12 +875,192 @@
 
       
         
-          <p>本篇接着介绍网络相关命令</p>
-<h2 id="1、wget-文件下载工具"><a href="#1、wget-文件下载工具" class="headerlink" title="1、wget 文件下载工具"></a>1、wget 文件下载工具</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget [option]... [URL]...</div></pre></td></tr></table></figure>
-<p>wget 是一个非交互的下载器，支持 HTTP, HTTPS 和 FTP 协议，也可以使用代理。所谓’非交互’意思是说，可以在一个系统中启动一个 wget 下载任务，然后退出系统，wget 会在完成下载 (或出现异常) 之后才退出，不需要用户参与。</p>
+          <h2 id="先决条件"><a href="#先决条件" class="headerlink" title="先决条件"></a>先决条件</h2><p><strong>3 台 CentOS 7</strong></p>
+<table>
+<thead>
+<tr>
+<th>HOSTNAME</th>
+<th>IP</th>
+<th>ROLE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>server1</td>
+<td>10.8.26.197</td>
+<td>Master</td>
+</tr>
+<tr>
+<td>server2</td>
+<td>10.8.26.196</td>
+<td>Slave1</td>
+</tr>
+<tr>
+<td>server3</td>
+<td>10.8.26.195</td>
+<td>Slave2</td>
+</tr>
+</tbody>
+</table>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/28/linux-network-transmission-and-security/#more" rel="contents">
+            <a class="btn" href="/2016/10/28/linux-ssh-authentication/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/28/linux-syntax/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="IAN">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北冥有鱼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/10/28/linux-syntax/" itemprop="url">
+                  Linux 基础之语法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-28T18:39:04+08:00">
+                2016-10-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/10/28/linux-syntax/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/28/linux-syntax/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>本文开始正式介绍 shell 脚本的编写方法以及 bash 的语法。</p>
+<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p><code>元字符</code> 用来分隔词 (token) 的单个字符，包括：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">| &amp; ; () &lt;&gt; space tab</div></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/10/28/linux-syntax/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1121,7 +1143,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">84</span>
+                <span class="site-state-item-count">85</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1130,7 +1152,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

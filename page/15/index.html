@@ -302,7 +302,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/24/docker-network-containers/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/25/shipyard-index/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -324,8 +324,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/24/docker-network-containers/" itemprop="url">
-                  高级网络配置
+                <a class="post-title-link" href="/2016/10/25/shipyard-index/" itemprop="url">
+                  Docker 集中化 Web 界面管理平台 shipyard
                 </a>
               
             
@@ -341,8 +341,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-24T12:39:04+08:00">
-                2016-10-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-25T18:39:04+08:00">
+                2016-10-25
               </time>
             
 
@@ -364,8 +364,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Docker/" itemprop="url" rel="index">
-                    <span itemprop="name">Docker</span>
+                  <a href="/categories/Shipyard/" itemprop="url" rel="index">
+                    <span itemprop="name">Shipyard</span>
                   </a>
                 </span>
 
@@ -382,8 +382,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/24/docker-network-containers/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/24/docker-network-containers/" itemprop="commentCount"></span>
+                <a href="/2016/10/25/shipyard-index/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/25/shipyard-index/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -410,10 +410,10 @@
 
       
         
-          <p>使用 Docker 网络功能可以帮助我们在建设 web 应用时保证一致和安全性。网络的定义就是为容器之间提供完全的独立性。因此对应用运行的网络控制是非常重要的。Docker 容器网络功能正好给我们提供了这样的控制。下面主要会介绍 Docker Engine 原生发布的默认网络的特性，描述默认的网络类型以及如何自定义我们自己的网络，并且提供了关于如何在单机或者集群创建网络所需要的资源。</p>
+          <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>shipyard 是一个集成管理 Docker 容器、镜像、仓库的系统，他最大亮点应该是支持多节点的集成管理，可以动态加载节点，可托管 node 下的容器。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/24/docker-network-containers/#more" rel="contents">
+            <a class="btn" href="/2016/10/25/shipyard-index/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -456,7 +456,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/24/docker-overview/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/24/docker-registry/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -478,8 +478,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/24/docker-overview/" itemprop="url">
-                  Docker 概述
+                <a class="post-title-link" href="/2016/10/24/docker-registry/" itemprop="url">
+                  仓库
                 </a>
               
             
@@ -536,8 +536,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/24/docker-overview/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/24/docker-overview/" itemprop="commentCount"></span>
+                <a href="/2016/10/24/docker-registry/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/24/docker-registry/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -564,17 +564,12 @@
 
       
         
-          <p><code>Docker 是一个开源的应用容器引擎</code>，让开发者可以打包他们的<code>应用</code>及<code>依赖包</code>到一个可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。</p>
-<p>容器是完全 <code>沙箱机制</code>，相互之间不会有任何接口（类似 ios app ）。几乎没有任何性能开销，可以很容易地在机器和数据中心运行。最重要的是，他们不依赖于任何语言、框架或包括系统。</p>
-<p>Docker 自开源后受到广泛的关注和讨论，以至于 dotCloud 公司后来都改名为 Docker Inc。Redhat 已经在其 RHEL 6.5 中集中支持 Docker，也在其 PaaS 产品中广泛应用。</p>
-<p>Docker 项目的目标是实现轻量级的操作系统虚拟化解决方案。Docker 的基础是 Linux 容器（<code>LXC</code>）等技术。</p>
-<p>在 LXC 的基础上 Docker 进一步封装，让用户不需要去关心容器的管理，使得操作更加简便，用户操作 Docker 的容器就像一个快速轻量级的虚拟机一样简单。</p>
-<p>下面对比 Docker 和传统虚拟化（KVM、XEN 等）方式的不同之处，<code>容器</code> 是在操作系统层面上实现的虚拟化，直接复用本地主机的操作系统；而 <code>传统方式</code> 则是在硬件基础上，虚拟出自己的系统，再在系统上部署相关的 APP 应用。</p>
-<p>下图为传统虚拟化方案与 Docker 虚拟化方案对比：</p>
-<p><img src="/images/docker/docker-overview.png" alt="传统虚拟化方案与 Docker 虚拟化方案对比图"></p>
+          <p><code>仓库（Repository）</code>是集中 <em>存放镜像</em> 的地方。仓库概念的引入，为 Docker 镜像文件的分发和管理提供了便捷的途径。</p>
+<p>一个容易混淆的概念是<code>注册服务器（Registry）</code>。实际上注册服务器是管理仓库的具体服务器，每个服务器上可以有多个仓库，而每个仓库下面有多个镜像。从这方面来说，仓库可以被认为是一个具体的项目或目录。例如对于仓库地址 store.docker.com/ubuntu 来说，store.docker.com 是注册服务器地址，ubuntu 是仓库名。大部分时候，并 <em>不需要严格区分这两者的概念</em> 。</p>
+<p>仓库分为<code>公有仓库</code>和<code>私有仓库</code>。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/24/docker-overview/#more" rel="contents">
+            <a class="btn" href="/2016/10/24/docker-registry/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -617,7 +612,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/24/docker-container-networking/">
+    <link itemprop="mainEntityOfPage" href="https://tangpengcsu.github.io/2016/10/24/harbor-configure-https-v05.0-rc2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="IAN">
@@ -639,8 +634,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/10/24/docker-container-networking/" itemprop="url">
-                  使用网络
+                <a class="post-title-link" href="/2016/10/24/harbor-configure-https-v05.0-rc2/" itemprop="url">
+                  配置 HTTPS 访问的 Harbor:v05.0
                 </a>
               
             
@@ -679,8 +674,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Docker/" itemprop="url" rel="index">
-                    <span itemprop="name">Docker</span>
+                  <a href="/categories/Harbor/" itemprop="url" rel="index">
+                    <span itemprop="name">Harbor</span>
                   </a>
                 </span>
 
@@ -697,8 +692,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/10/24/docker-container-networking/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/24/docker-container-networking/" itemprop="commentCount"></span>
+                <a href="/2016/10/24/harbor-configure-https-v05.0-rc2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/24/harbor-configure-https-v05.0-rc2/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -725,19 +720,14 @@
 
       
         
-          <p>大量的互联网应用服务包括多个服务组件，这往往需要多个容器之间通过网络进行相互配合。Docker 目前提供映射端口到宿主机和容器互联机制为容器提供网络服务。</p>
-<h2 id="端口映射实现访问容器"><a href="#端口映射实现访问容器" class="headerlink" title="端口映射实现访问容器"></a>端口映射实现访问容器</h2><h3 id="外部访问容器"><a href="#外部访问容器" class="headerlink" title="外部访问容器"></a>外部访问容器</h3><p>容器中可以运行一些网络应用，要让外部也可以访问这些应用，可以通过 <code>-P</code> 或 <code>-p</code> 参数来指定端口映射。</p>
-<p>当使用 <code>-P</code> 标记时，Docker 会随机映射一个 <strong>49000~49900</strong> 的端口到内部容器开放的网络端口。</p>
-<p>使用 <code>docker ps</code> 可以看到，本地主机的 49155 被映射到了容器的 5000 端口。此时访问本机的 49155 端口即可访问容器内 web 应用提供的界面。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ sudo docker run <span class="_">-d</span> -P training/webapp python app.py</div><div class="line">$ sudo docker ps <span class="_">-l</span></div><div class="line">CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES</div><div class="line">bc533791f3f5 training/webapp:latest python app.py 5 seconds ago Up 2 seconds 0.0.0.0:49155-&gt;5000/tcp nostalgic_morse</div></pre></td></tr></table></figure>
-<p>同样的，可以通过 <code>docker logs</code> 命令来 <em>查看应用的信息</em> 。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ sudo docker logs <span class="_">-f</span> nostalgic_morse</div><div class="line">* Running on http://0.0.0.0:5000/</div><div class="line">10.0.2.2 - - [23/May/2014 20:16:31] <span class="string">"GET / HTTP/1.1"</span> 200 -</div><div class="line">10.0.2.2 - - [23/May/2014 20:16:31] <span class="string">"GET /favicon.ico HTTP/1.1"</span> 404 -</div></pre></td></tr></table></figure>
-<blockquote>
-<p>-p（小写的）则可以指定要映射的端口，并且，在一个指定端口上只可以绑定一个容器。支持的格式有 ip:hostPort:containerPort | ip:containerPort | hostPort:containerPort。</p>
-</blockquote>
+          <p>Harbor 默认 HTTP 请求注册服务器，并不分发任何证书。使得其配置相对简单。然而，强烈建议在生产环境中增强安全性。Harbor 有一个 Nginx 实例为所有服务提供反向代理，你可以在 Nginx 配置中启用 HTTPS 。</p>
+<h2 id="获取证书"><a href="#获取证书" class="headerlink" title="获取证书"></a>获取证书</h2><p>假定你的仓库的 <strong>hostname</strong> 是 <strong>reg.yourdomain.com</strong>，并且其 DNS 记录指向主机正在运行的 Harbor。首先，你需要获取一个 CA 证书。证书通常包含一个 .crt 文件和 .key 文件，例如， <strong>yourdomain.com.crt</strong> 和 <strong>yourdomain.com.key</strong>。</p>
+<p>在测试或开发环境中，你可能会选择使用自签名证书，而不是购买 CA 证书。下面的命令会生成自签名证书：</p>
+<p>1) 生成自签名 CA 证书:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">openssl req \</div><div class="line">  -newkey rsa:4096 -nodes -sha256 -keyout ca.key \</div><div class="line">  -x509 -days 365 -out ca.crt</div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/10/24/docker-container-networking/#more" rel="contents">
+            <a class="btn" href="/2016/10/24/harbor-configure-https-v05.0-rc2/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1145,7 +1135,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">84</span>
+                <span class="site-state-item-count">85</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1154,7 +1144,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
